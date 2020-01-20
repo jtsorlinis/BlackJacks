@@ -9,15 +9,22 @@ Card::Card(std::string rank, std::string suit)
 }
 
 std::string Card::print() {
-	return mRank + " of " + mSuit;
+	if (mFaceDown) {
+		return "X";
+	}
+	else {
+		return mRank;
+	}
 }
 
 int Card::evaluate() {
 		if(std::string("JQK").find(mRank) != std::string::npos) {
 			return 10;
-		} else if(mRank == "A") {
+		} 
+		else if(mRank == "A") {
 			return 11;
-		} else {
+		} 
+		else {
 			return std::stoi(mRank);
 		}
 }
