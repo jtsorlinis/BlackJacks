@@ -11,20 +11,20 @@ Deck::Deck() {
 	mSuits = { "Clubs", "Hearts", "Spades", "Diamonds" };
 	for (int i = 0; i < mRanks.size(); i++) {
 		for (int j = 0; j < mSuits.size(); j++) {
-			mDeck.push_back(Card(mRanks[i], mSuits[j]));
+			mCards.push_back(Card(mRanks[i], mSuits[j]));
 		}
 	}
 }
 
 std::string Deck::print() {
 	std::string output;
-	for (int x = 0; x < mDeck.size(); x++) {
-		output += mDeck[x].print() + "\n";
+	for (int x = 0; x < mCards.size(); x++) {
+		output += mCards[x].print() + "\n";
 	}
 	return output;
 }
 
 void Deck::shuffle() {
 	std::random_device rd;
-	std::shuffle(mDeck.begin(), mDeck.end(), rd);
+	std::shuffle(mCards.begin(), mCards.end(), rd);
 }

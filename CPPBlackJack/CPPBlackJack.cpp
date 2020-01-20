@@ -2,12 +2,12 @@
 //
 
 #include <iostream>
-#include "deck.h"
+#include "cardpile.h"
 
 int main()
 {
-    Deck myDeck;
-    myDeck.shuffle();
-    std::cout << myDeck.print();
+    CardPile cardpile(5);
+    cardpile.shuffle();
+    std::cout << cardpile.print();
 }
 

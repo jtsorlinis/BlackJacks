@@ -7,7 +7,7 @@ class Deck
 {
 	public:
 		Deck();
-		std::vector<Card> mDeck;
+		std::vector<Card> mCards;
 		std::vector<std::string> mRanks;
 		std::vector<std::string> mSuits;
 		std::string print();
