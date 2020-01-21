@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 
-Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose):mCardPile(CardPile(numOfDecks)) {
+Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose) :mCardPile(CardPile(numOfDecks)) {
 	mVerbose = verbose;
 	mBetSize = betSize;
 	mNumOfdecks = numOfDecks;
@@ -19,7 +19,7 @@ Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verb
 }
 
 void Table::dealRound() {
-	for (auto &player : mPlayers) {
+	for (auto& player : mPlayers) {
 		mCurrentPlayer = &player;
 		deal();
 		player.evaluate();
@@ -35,7 +35,7 @@ void Table::deal(bool faceDown) {
 }
 
 void Table::preDeal() {
-	for (auto &player : mPlayers) {
+	for (auto& player : mPlayers) {
 		selectBet(&player);
 	}
 }
@@ -66,7 +66,8 @@ void Table::startRound() {
 	mCurrentPlayer = &mPlayers.front();
 	if (checkDealerNatural()) {
 		finishRound();
-	} else {
+	}
+	else {
 		checkPlayerNatural();
 		if (mVerbose > 0) {
 			print();
@@ -89,7 +90,7 @@ void Table::getNewcards() {
 }
 
 void Table::clear() {
-	mPlayers.erase(std::remove_if(mPlayers.begin(), mPlayers.end(), [](auto& player) { return player.mSplitFrom;}), mPlayers.end());
+	mPlayers.erase(std::remove_if(mPlayers.begin(), mPlayers.end(), [](auto& player) { return player.mSplitFrom; }), mPlayers.end());
 	for (auto& player : mPlayers) {
 		player.resetHand();
 	}
@@ -98,7 +99,7 @@ void Table::clear() {
 
 void Table::updatecount(Card* card) {
 	mRunningcount += card->count();
-	mTrueCount = mRunningcount / (mCardPile.mCards.size() / 52);
+	mTrueCount = mRunningcount / (mCardPile.mCards.size() / (float)52);
 }
 
 void Table::hit() {
@@ -117,7 +118,7 @@ void Table::stand() {
 }
 
 void Table::split() {
-	Player splitPlayer(this,mCurrentPlayer);
+	Player splitPlayer(this, mCurrentPlayer);
 	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
 	if (itr != mPlayers.cend()) {
 		mPlayers.insert(++itr, std::move(splitPlayer));
@@ -127,10 +128,11 @@ void Table::split() {
 		itr++;
 		itr->evaluate();
 		if (mVerbose > 0) {
-			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits";
+			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits\n";
 		}
-		
-	} else {
+
+	}
+	else {
 		std::cout << "Couldn't split player.";
 		exit(1);
 	}
@@ -138,7 +140,7 @@ void Table::split() {
 
 void Table::splitAces() {
 	if (mVerbose > 0) {
-		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits aces";
+		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits aces\n";
 	}
 	Player splitPlayer(this, mCurrentPlayer);
 	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
@@ -158,7 +160,8 @@ void Table::splitAces() {
 			print();
 		}
 
-	} else {
+	}
+	else {
 		std::cout << "Couldn't split player.";
 		exit(1);
 	}
@@ -166,6 +169,14 @@ void Table::splitAces() {
 }
 
 void Table::doubleBet() {
+	if (mCurrentPlayer->mBetMult == 1 && mCurrentPlayer->mHand.size() == 2) {
+		mCurrentPlayer->doubleBet();
+		if (mVerbose > 0) {
+			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " doubles";
+		}
+		hit();
+		stand();
+	}
 }
 
 void Table::playHard() {
@@ -178,15 +189,64 @@ void Table::playSplit() {
 }
 
 void Table::autoPlay() {
+	while (mCurrentPlayer->mHand.size() < 5 && mCurrentPlayer->mValue < 17) {
+		hit();
+		if (mVerbose > 0) {
+			print();
+		}
+		
+	}
+	stand();
+	nextPlayer();
 }
 
 void Table::action(std::string action) {
 }
 
 void Table::dealerPlay() {
+	bool allBusted = true;
+	for (auto& player : mPlayers) {
+		if (player.mValue < 22) {
+			allBusted = false;
+		}
+	}
+	mDealer.mHand[1].mFaceDown = false;
+	updatecount(&mDealer.mHand[1]);
+	mDealer.evaluate();
+	if (mVerbose > 0) {
+		std::cout << "Dealer's turn\n";
+		print();
+	}
+	if (allBusted) {
+		if (mVerbose > 0) {
+			std::cout << "Dealer automatically wins cause all players busted\n";
+		}
+		finishRound();
+	}
+	else {
+		while (mDealer.mValue < 17 && mDealer.mHand.size() < 5) {
+			deal();
+			mDealer.evaluate();
+			if (mVerbose > 0) {
+				std::cout << "Dealer hits\n";
+				print();
+			}
+		}
+		finishRound();
+	}
 }
 
 void Table::nextPlayer() {
+	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
+	if (itr + 1 != mPlayers.end()) {
+		itr++;
+		mCurrentPlayer = &*itr;
+		autoPlay();
+	}
+	else {
+		mCurrentPlayer = &mDealer;
+		dealerPlay();
+	}
 }
 
 void Table::checkPlayerNatural() {
@@ -200,10 +260,59 @@ void Table::checkEarnings() {
 }
 
 void Table::finishRound() {
+	if (mVerbose > 0) {
+		std::cout << "Scoring round\n";
+	}
+	for (auto& player : mPlayers) {
+		if (player.mHasNatural) {
+			player.win(1.5);
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Wins " << (1.5 * player.mBetMult * player.mInitialBet) << " with a natural 21\n";
+			}
+		}
+		else if (player.mValue > 21) {
+			player.lose();
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Busts and Loses " << (player.mBetMult * player.mInitialBet) << "\n";
+			}
+
+		}
+		else if (mDealer.mValue > 21) {
+			player.win();
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Wins " << (player.mBetMult * player.mInitialBet) << "\n";
+			}
+		}
+		else if (player.mValue > mDealer.mValue) {
+			player.win();
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Wins " << (player.mBetMult * player.mInitialBet) << "\n";
+			}
+		}
+		else if (player.mValue == mDealer.mValue) {
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Draws\n";
+			}
+		}
+		else {
+			player.lose();
+			if (mVerbose > 0) {
+				std::cout << "Player " << player.mPlayerNum << " Loses " << (player.mBetMult * player.mInitialBet) << "\n";
+			}
+		}
+	}
+	if (mVerbose > 0) {
+		for (auto& player : mPlayers) {
+			if (!player.mSplitFrom) {
+				std::cout << "Player " << player.mPlayerNum << " Earnings: " << player.mEarnings << "\n";
+			}
+		}
+		std::cout << "\n";
+	}
 }
 
 void Table::print() {
-	for (auto &player : mPlayers) {
+	for (auto& player : mPlayers) {
 		std::cout << player.print() + "\n";
 	}
 	std::cout << mDealer.print() + "\n\n";

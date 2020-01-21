@@ -80,8 +80,8 @@ void Player::lose() {
 	if (mSplitFrom) {
 		mSplitFrom->lose();
 	} else {
-		mEarnings += (mInitialBet * mBetMult);
-		mTable->mCasinoEarnings -= (mInitialBet * mBetMult);
+		mEarnings -= (mInitialBet * mBetMult);
+		mTable->mCasinoEarnings += (mInitialBet * mBetMult);
 	}
 }
 
