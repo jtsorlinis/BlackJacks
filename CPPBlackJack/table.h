@@ -33,9 +33,6 @@ public:
 	void split();
 	void splitAces();
 	void doubleBet();
-	void playHard();
-	void playSoft();
-	void playSplit();
 	void autoPlay();
 	void action(std::string action);
 	void dealerPlay();

@@ -169,20 +169,6 @@ void Table::doubleBet() {
 	}
 }
 
-// TODO: Implement this
-void Table::playHard() {
-
-}
-
-// TODO: Implement this
-void Table::playSoft() {
-}
-
-// TODO: Implement this
-void Table::playSplit() {
-}
-
-// TODO: Add Strategy
 void Table::autoPlay() {
 	while (!mCurrentPlayer->mIsDone) {
 		// check if player just split
@@ -215,7 +201,6 @@ void Table::autoPlay() {
 	nextPlayer();
 }
 
-// TODO: Implement this
 void Table::action(std::string action) {
 	if (action == "H") {
 		hit();
