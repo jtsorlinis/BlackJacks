@@ -33,6 +33,7 @@ int main() {
 		table1.startRound();
 		table1.checkEarnings();
 	}
+	table1.clear();
 
 	for (auto& player : table1.mPlayers) {
 		std::cout << "Player " << player.mPlayerNum << " earnings: " << player.mEarnings << "\t\tWin Percentage: " << (50 + (player.mEarnings / (rounds * baseBet) * 50)) << "\n";

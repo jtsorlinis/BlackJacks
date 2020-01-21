@@ -9,23 +9,24 @@ Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verb
 	mNumOfdecks = numOfDecks;
 	mMinCards = minCards;
 	mDealer = Dealer();
-	mCurrentPlayer = NULL;
+	mCurrentPlayer = mPlayers.end();
 	mCasinoEarnings = 0;
 	mRunningcount = 0;
 	mTrueCount = 0;
-	mPlayers.reserve(50);
 
 	for (int i = 0; i < numPlayers; i++) {
 		mPlayers.push_back(Player(this));
 	}
+
 }
 
 void Table::dealRound() {
-	for (auto& player : mPlayers) {
-		mCurrentPlayer = &player;
+	for (std::list<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) {
+		mCurrentPlayer = it;
 		deal();
-		player.evaluate();
+		mCurrentPlayer->evaluate();
 	}
+	mCurrentPlayer = mPlayers.begin();
 }
 
 void Table::deal(bool faceDown) {
@@ -49,8 +50,13 @@ void Table::selectBet(Player* player) {
 }
 
 void Table::dealDealer(bool faceDown) {
-	mCurrentPlayer = &mDealer;
-	deal(faceDown);
+	Card card = mCardPile.mCards.back();
+	mCardPile.mCards.pop_back();
+	card.mFaceDown = faceDown;
+	mDealer.mHand.push_back(card);
+	if (!faceDown) {
+		updatecount(&card);
+	}
 }
 
 void Table::startRound() {
@@ -65,7 +71,7 @@ void Table::startRound() {
 	dealDealer();
 	dealRound();
 	dealDealer(true);
-	mCurrentPlayer = &mPlayers.front();
+	mCurrentPlayer = mPlayers.begin();
 	if (checkDealerNatural()) {
 		finishRound();
 	}
@@ -120,22 +126,13 @@ void Table::stand() {
 }
 
 void Table::split() {
-	Player splitPlayer(this, mCurrentPlayer);
-	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
-	if (itr != mPlayers.cend()) {
-		std::vector<Player>::iterator splititr = mPlayers.insert(++itr, splitPlayer);
-		splititr->mSplitFrom = &*splititr - 1;
-		mCurrentPlayer = &*--splititr;
-		mCurrentPlayer->mHand.pop_back();
-		mCurrentPlayer->evaluate();
-		splititr++->evaluate();
-		if (mVerbose > 0) {
-			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits\n";
-		}
-	}
-	else {
-		std::cout << "Couldn't split player.";
-		exit(1);
+	Player splitPlayer(this, &*mCurrentPlayer);
+	mCurrentPlayer->mHand.pop_back();
+	mPlayers.insert(next(mCurrentPlayer), splitPlayer);
+	mCurrentPlayer->evaluate();
+	next(mCurrentPlayer)->evaluate();
+	if (mVerbose > 0) {
+		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits\n";
 	}
 }
 
@@ -143,30 +140,19 @@ void Table::splitAces() {
 	if (mVerbose > 0) {
 		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits aces\n";
 	}
-	Player splitPlayer(this,mCurrentPlayer);
-	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
-	if (itr != mPlayers.cend()) {
-		std::vector<Player>::iterator splititr = mPlayers.insert(++itr, splitPlayer);
-		splititr->mSplitFrom = &*splititr-1;
-		mCurrentPlayer = &*--splititr;
-		mCurrentPlayer->mHand.pop_back();
-		deal();
-		mCurrentPlayer->evaluate();
-		stand();
-		mCurrentPlayer = &*++splititr;
-		deal();
-		mCurrentPlayer->evaluate();
-		stand();
-		if (mVerbose > 0) {
-			print();
-		}
-
+	Player splitPlayer(this, &*mCurrentPlayer);
+	mCurrentPlayer->mHand.pop_back();
+	mPlayers.insert(next(mCurrentPlayer), splitPlayer);
+	deal();
+	mCurrentPlayer->evaluate();
+	stand();
+	mCurrentPlayer++;
+	deal();
+	mCurrentPlayer->evaluate();
+	stand();
+	if (mVerbose > 0) {
+		print();
 	}
-	else {
-		std::cout << "Couldn't split player.";
-		exit(1);
-	}
-
 }
 
 void Table::doubleBet() {
@@ -271,7 +257,7 @@ void Table::dealerPlay() {
 	}
 	else {
 		while (mDealer.mValue < 17 && mDealer.mHand.size() < 5) {
-			deal();
+			dealDealer();
 			mDealer.evaluate();
 			if (mVerbose > 0) {
 				std::cout << "Dealer hits\n";
@@ -283,13 +269,11 @@ void Table::dealerPlay() {
 }
 
 void Table::nextPlayer() {
-	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
-	if (itr + 1 != mPlayers.end()) {
-		mCurrentPlayer = &*++itr;
+	if (next(mCurrentPlayer) != mPlayers.end()) {
+		mCurrentPlayer++;
 		autoPlay();
 	}
 	else {
-		mCurrentPlayer = &mDealer;
 		dealerPlay();
 	}
 }

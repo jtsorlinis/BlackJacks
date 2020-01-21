@@ -2,17 +2,18 @@
 #include <vector>
 #include "dealer.h"
 #include "cardpile.h"
+#include <list>
 
 class Table {
 public:
 	int mVerbose;
 	int mBetSize;
-	std::vector<Player> mPlayers;
+	std::list<Player> mPlayers;
 	int mNumOfdecks;
 	CardPile mCardPile;
 	int mMinCards;
 	Dealer mDealer;
-	Player* mCurrentPlayer = NULL;
+	std::list<Player>::iterator mCurrentPlayer;
 	float mCasinoEarnings;
 	int mRunningcount;
 	float mTrueCount;
