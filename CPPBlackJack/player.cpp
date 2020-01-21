@@ -37,6 +37,7 @@ Player::Player(Table* table, Player* split) {
 		mSplitCount++;
 		mPlayerNum = split->mPlayerNum + "S";
 		mInitialBet = split->mInitialBet;
+		mSplitFrom = split;
 	} else {
 		playerNumCount++;
 		mPlayerNum = std::to_string(playerNumCount);
