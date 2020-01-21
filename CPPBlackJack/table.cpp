@@ -179,15 +179,20 @@ void Table::doubleBet() {
 	}
 }
 
+// TODO: Implement this
 void Table::playHard() {
+
 }
 
+// TODO: Implement this
 void Table::playSoft() {
 }
 
+// TODO: Implement this
 void Table::playSplit() {
 }
 
+// TODO: Add Strategy
 void Table::autoPlay() {
 	while (mCurrentPlayer->mHand.size() < 5 && mCurrentPlayer->mValue < 17) {
 		hit();
@@ -200,6 +205,7 @@ void Table::autoPlay() {
 	nextPlayer();
 }
 
+// TODO: Implement this
 void Table::action(std::string action) {
 }
 
@@ -250,10 +256,27 @@ void Table::nextPlayer() {
 }
 
 void Table::checkPlayerNatural() {
+	for (auto& player : mPlayers) {
+		if (player.mValue == 21 && player.mHand.size() == 2 && !player.mSplitFrom) {
+			player.mHasNatural = 1;
+		}
+	}
 }
 
 bool Table::checkDealerNatural() {
-	return false;
+	if (mDealer.evaluate() == 21) {
+		mDealer.mHand[1].mFaceDown = false;
+		updatecount(&mDealer.mHand[1]);
+		if (mVerbose > 0) {
+			print();
+			std::cout << "Dealer has a natural 21\n\n";
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+	
 }
 
 void Table::checkEarnings() {

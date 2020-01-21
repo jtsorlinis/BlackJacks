@@ -40,6 +40,7 @@ int main() {
 	std::cout << "Casino earnings: " << table1.mCasinoEarnings << "\n";
 
 	duration = (clock() - start)/(double)CLOCKS_PER_SEC;
-	std::cout << "\nPlayed " << x << " rounds in " << duration << " seconds.";
+	std::cout << "\nPlayed " << x << " rounds in " << duration << " seconds.\n\n";
+	/*system("pause");*/
 }
 
