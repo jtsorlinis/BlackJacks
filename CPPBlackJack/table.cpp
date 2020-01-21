@@ -1,6 +1,7 @@
 #include "table.h"
 #include <iostream>
 #include <algorithm>
+#include "strategies.h"
 
 Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose) :mCardPile(CardPile(numOfDecks)) {
 	mVerbose = verbose;
@@ -12,6 +13,7 @@ Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verb
 	mCasinoEarnings = 0;
 	mRunningcount = 0;
 	mTrueCount = 0;
+	mPlayers.reserve(50);
 
 	for (int i = 0; i < numPlayers; i++) {
 		mPlayers.push_back(Player(this));
@@ -121,16 +123,15 @@ void Table::split() {
 	Player splitPlayer(this, mCurrentPlayer);
 	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
 	if (itr != mPlayers.cend()) {
-		mPlayers.insert(++itr, std::move(splitPlayer));
-		std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
+		std::vector<Player>::iterator splititr = mPlayers.insert(++itr, splitPlayer);
+		splititr->mSplitFrom = &*splititr - 1;
+		mCurrentPlayer = &*--splititr;
 		mCurrentPlayer->mHand.pop_back();
 		mCurrentPlayer->evaluate();
-		itr++;
-		itr->evaluate();
+		splititr++->evaluate();
 		if (mVerbose > 0) {
 			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits\n";
 		}
-
 	}
 	else {
 		std::cout << "Couldn't split player.";
@@ -142,17 +143,17 @@ void Table::splitAces() {
 	if (mVerbose > 0) {
 		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " splits aces\n";
 	}
-	Player splitPlayer(this, mCurrentPlayer);
+	Player splitPlayer(this,mCurrentPlayer);
 	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
 	if (itr != mPlayers.cend()) {
-		mPlayers.insert(++itr, std::move(splitPlayer));
-		std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
+		std::vector<Player>::iterator splititr = mPlayers.insert(++itr, splitPlayer);
+		splititr->mSplitFrom = &*splititr-1;
+		mCurrentPlayer = &*--splititr;
 		mCurrentPlayer->mHand.pop_back();
 		deal();
 		mCurrentPlayer->evaluate();
 		stand();
-		itr++;
-		mCurrentPlayer = &*itr;
+		mCurrentPlayer = &*++splititr;
 		deal();
 		mCurrentPlayer->evaluate();
 		stand();
@@ -177,6 +178,9 @@ void Table::doubleBet() {
 		hit();
 		stand();
 	}
+	else {
+		hit();
+	}
 }
 
 // TODO: Implement this
@@ -194,19 +198,55 @@ void Table::playSplit() {
 
 // TODO: Add Strategy
 void Table::autoPlay() {
-	while (mCurrentPlayer->mHand.size() < 5 && mCurrentPlayer->mValue < 17) {
-		hit();
-		if (mVerbose > 0) {
-			print();
+	while (!mCurrentPlayer->mIsDone) {
+		// check if player just split
+		if (mCurrentPlayer->mHand.size() == 1) {
+			if (mVerbose > 0) {
+				std::cout << "Player " << mCurrentPlayer->mPlayerNum << " gets 2nd card after splitting";
+			}
+			deal();
+			mCurrentPlayer->evaluate();
 		}
-		
+
+		if (mCurrentPlayer->mHand.size() < 5 && mCurrentPlayer->mValue < 21) {
+			if (mCurrentPlayer->canSplit() == "A") {
+				splitAces();
+			}
+			else if (!mCurrentPlayer->canSplit().empty() && (mCurrentPlayer->canSplit() != "5" && mCurrentPlayer->canSplit() != "10" && mCurrentPlayer->canSplit() != "J" && mCurrentPlayer->canSplit() != "Q" && mCurrentPlayer->canSplit() != "K")) {
+				action(getAction(std::stoi(mCurrentPlayer->canSplit()), mDealer.upCard(), stratSplit));
+			}
+			else if (mCurrentPlayer->mIsSoft) {
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), stratSoft));
+			}
+			else {
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), stratHard));
+			}
+		}
+		else {
+			stand();
+		}
 	}
-	stand();
 	nextPlayer();
 }
 
 // TODO: Implement this
 void Table::action(std::string action) {
+	if (action == "H") {
+		hit();
+	}
+	else if (action == "S") {
+		stand();
+	}
+	else if (action == "D") {
+		doubleBet();
+	}
+	else if (action == "P") {
+		split();
+	}
+	else {
+		std::cout << "No action found";
+		exit(1);
+	}
 }
 
 void Table::dealerPlay() {
@@ -245,8 +285,7 @@ void Table::dealerPlay() {
 void Table::nextPlayer() {
 	std::vector<Player>::iterator itr = std::find(mPlayers.begin(), mPlayers.end(), *mCurrentPlayer);
 	if (itr + 1 != mPlayers.end()) {
-		itr++;
-		mCurrentPlayer = &*itr;
+		mCurrentPlayer = &*++itr;
 		autoPlay();
 	}
 	else {

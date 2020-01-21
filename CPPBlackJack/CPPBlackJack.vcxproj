@@ -160,6 +160,8 @@
     <ClInclude Include="cardpile.h" />
     <ClInclude Include="dealer.h" />
     <ClInclude Include="deck.h" />
+    <ClInclude Include="strategies.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="table.h" />
   </ItemGroup>
