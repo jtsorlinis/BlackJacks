@@ -20,7 +20,7 @@ public:
 
 	Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose = 0);
 	void dealRound();
-	void deal(bool faceDown = false);
+	void deal();
 	void preDeal();
 	void selectBet(Player* player);
 	void dealDealer(bool faceDown = false);

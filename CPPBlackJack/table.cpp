@@ -29,10 +29,9 @@ void Table::dealRound() {
 	mCurrentPlayer = mPlayers.begin();
 }
 
-void Table::deal(bool faceDown) {
+void Table::deal() {
 	Card card = mCardPile.mCards.back();
 	mCardPile.mCards.pop_back();
-	card.mFaceDown = faceDown;
 	mCurrentPlayer->mHand.push_back(card);
 	updatecount(&card);
 }
@@ -111,16 +110,17 @@ void Table::updatecount(Card* card) {
 }
 
 void Table::hit() {
+	deal();
+	mCurrentPlayer->evaluate();
 	if (mVerbose > 0) {
 		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " hits\n";
 	}
-	deal();
-	mCurrentPlayer->evaluate();
 }
 
 void Table::stand() {
 	if (mVerbose > 0 && mCurrentPlayer->mValue <= 21) {
 		std::cout << "Player " << mCurrentPlayer->mPlayerNum << " stands\n";
+		print();
 	}
 	mCurrentPlayer->mIsDone = true;
 }
@@ -159,7 +159,7 @@ void Table::doubleBet() {
 	if (mCurrentPlayer->mBetMult == 1 && mCurrentPlayer->mHand.size() == 2) {
 		mCurrentPlayer->doubleBet();
 		if (mVerbose > 0) {
-			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " doubles";
+			std::cout << "Player " << mCurrentPlayer->mPlayerNum << " doubles\n";
 		}
 		hit();
 		stand();

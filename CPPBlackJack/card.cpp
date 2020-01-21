@@ -26,15 +26,16 @@ int Card::evaluate() {
 }
 
 int Card::count() {
-	if (mFaceDown) {
-		return 0;
-	} else if (std::string("10JQKA").find(mRank) != std::string::npos) {
+	if (std::string("10JQKA").find(mRank) != std::string::npos) {
 		return -1;
-	} else if (std::string("789").find(mRank) != std::string::npos) {
+	} 
+	else if (std::string("789").find(mRank) != std::string::npos) {
 		return 0;
-	} else if (std::string("23456").find(mRank) != std::string::npos) {
+	} 
+	else if (std::string("23456").find(mRank) != std::string::npos) {
 		return 1;
-	} else {
+	} 
+	else {
 		std::cout << "Errored with " + mRank;
 		exit(1);
 	}
