@@ -3,9 +3,9 @@
 #include "card.h"
 #include "deck.h"
 
-class CardPile
-{
+class CardPile {
 public:
+	int mNumOfdecks;
 	std::vector<Card> mCards;
 	CardPile(int numOfdecks);
 	std::string print();

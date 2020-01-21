@@ -149,13 +149,19 @@
   <ItemGroup>
     <ClCompile Include="card.cpp" />
     <ClCompile Include="cardpile.cpp" />
-    <ClCompile Include="CPPBlackJack.cpp" />
+    <ClCompile Include="dealer.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="deck.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="card.h" />
     <ClInclude Include="cardpile.h" />
+    <ClInclude Include="dealer.h" />
     <ClInclude Include="deck.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

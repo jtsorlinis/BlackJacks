@@ -1,8 +1,7 @@
 #include "cardpile.h"
 #include <random>
 
-CardPile::CardPile(int numOfdecks)
-{
+CardPile::CardPile(int numOfdecks) {
 	for (int x = 0; x < numOfdecks; x++) {
 		Deck tempDeck;
 		mCards.insert(mCards.end(), tempDeck.mCards.begin(), tempDeck.mCards.end());
@@ -11,8 +10,8 @@ CardPile::CardPile(int numOfdecks)
 
 std::string CardPile::print() {
 	std::string output;
-	for (int x = 0; x < mCards.size(); x++) {
-		output += mCards[x].print() + "\n";
+	for (auto &i : mCards) {
+		output += i.print() + "\n";
 	}
 	return output;
 }
