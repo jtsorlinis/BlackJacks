@@ -257,6 +257,14 @@ bool Table::checkDealerNatural() {
 }
 
 void Table::checkEarnings() {
+	float check = 0;
+	for (auto& player : mPlayers) {
+		check += player.mEarnings;
+	}
+	if (check * -1 != mCasinoEarnings) {
+		std::cout << "NO MATCH";
+		exit(1);
+	}
 }
 
 void Table::finishRound() {

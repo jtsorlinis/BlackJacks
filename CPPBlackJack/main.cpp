@@ -10,7 +10,7 @@ int numOfDecks = 8;
 int baseBet = 10;
 int minCards = 40;
 
-int rounds = 10000;
+int rounds = 100000;
 int verbose = 0;
 
 int main() {
