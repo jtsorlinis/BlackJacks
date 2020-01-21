@@ -56,9 +56,6 @@
     <ClInclude Include="dealer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="strategies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
