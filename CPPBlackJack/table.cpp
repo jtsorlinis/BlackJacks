@@ -203,7 +203,7 @@ void Table::autoPlay() {
 	nextPlayer();
 }
 
-void Table::action(std::string action) {
+void Table::action(std::string const &action) {
 	if (action == "H") {
 		hit();
 	}

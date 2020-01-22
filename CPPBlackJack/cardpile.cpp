@@ -22,6 +22,12 @@ std::string CardPile::print() {
 }
 
 void CardPile::shuffle() {
-	std::random_device rd;
-	std::shuffle(mCards.begin(), mCards.end(), rd);
+	//std::random_device rd;
+	//std::shuffle(mCards.begin(), mCards.end(), rd);
+
+	// Fisher yates
+	for (int i = mCards.size() - 1; i > 0; i--) {
+		int j = rand() % (i + 1);
+		std::swap(mCards[i], mCards[j]);
+	}
 }

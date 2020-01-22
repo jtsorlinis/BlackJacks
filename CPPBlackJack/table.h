@@ -38,7 +38,7 @@ public:
 	void splitAces();
 	void doubleBet();
 	void autoPlay();
-	void action(std::string action);
+	void action(std::string const &action);
 	void dealerPlay();
 	void nextPlayer();
 	void checkPlayerNatural();

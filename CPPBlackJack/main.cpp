@@ -14,6 +14,7 @@ int rounds = 100000;
 int verbose = 0;
 
 int main() {
+	srand(time(NULL));
 	Table table1(numOfPlayers,numOfDecks,baseBet,minCards,verbose);
 	table1.mCardPile.shuffle();
 
