@@ -1,4 +1,5 @@
 #include <string>
+#include <map>
 
 std::vector<std::vector<std::string>> stratHard = {
 	{"X", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", },
@@ -49,18 +50,18 @@ std::vector<std::vector<std::string>> stratSplit = {
 	{"A", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
 };
 
-std::string getAction(int playerVal, int dealerVal, std::vector<std::vector<std::string>> strategy) {
-	int rows = strategy.size();
-	int cols = strategy[0].size();
-	for (int row = 0; row < rows; row++) {
-		if (strategy[row][0] == std::to_string(playerVal)) {
-			for (int col = 0; col < cols; col++) {
-				if (strategy[0][col] == std::to_string(dealerVal)) {
-					return strategy[row][col];
-					break;
-				}
-			}
-			break;
+std::string getAction(int playerVal, int dealerVal, std::map<std::string, std::string> &strategy) {
+	std::string key = std::to_string(playerVal) + "/" + std::to_string(dealerVal);
+	return strategy[key];
+};
+
+std::map<std::string, std::string> vecToMap(std::vector<std::vector<std::string>> vec) {
+	std::map<std::string,std::string> temp;
+	for (int row = 0; row < vec.size(); row++) {
+		for (int col = 0; col < vec[0].size(); col++) {
+			std::string key = vec[row][0] + "/" + vec[0][col];
+			temp.insert({ key, vec[row][col] });
 		}
 	}
-};
+	return temp;
+}

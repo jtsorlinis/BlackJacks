@@ -9,9 +9,9 @@
 Deck::Deck() {
 	mRanks = { "A", "2", "3", "4", "5", "6", "7", "8","9","10","J","Q","K" };
 	mSuits = { "Clubs", "Hearts", "Spades", "Diamonds" };
-	for (auto &i : mRanks) {
-		for (auto &j :mSuits) {
-			mCards.push_back(Card(i, j));
+	for (auto &suit : mSuits) {
+		for (auto &rank :mRanks) {
+			mCards.push_back(Card(rank, suit));
 		}
 	}
 }

@@ -22,7 +22,7 @@ int main() {
 	start = clock();
 
 	int x = 0;
-	while (++x < rounds) {
+	while (x++ < rounds) {
 		if (verbose > 0) {
 			std::cout << "Round " << x << "\n";
 		}
@@ -41,7 +41,7 @@ int main() {
 	std::cout << "Casino earnings: " << table1.mCasinoEarnings << "\n";
 
 	duration = (clock() - start)/(double)CLOCKS_PER_SEC;
-	std::cout << "\nPlayed " << x << " rounds in " << duration << " seconds.\n\n";
+	std::cout << "\nPlayed " << x-1 << " rounds in " << duration << " seconds.\n\n";
 	/*system("pause");*/
 }
 

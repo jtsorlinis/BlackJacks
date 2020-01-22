@@ -6,6 +6,11 @@ CardPile::CardPile(int numOfdecks) {
 		Deck tempDeck;
 		mCards.insert(mCards.end(), tempDeck.mCards.begin(), tempDeck.mCards.end());
 	}
+	mOriginalCards = mCards;
+}
+
+void CardPile::refresh() {
+	mCards = mOriginalCards;
 }
 
 std::string CardPile::print() {

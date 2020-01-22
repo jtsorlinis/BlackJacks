@@ -17,7 +17,9 @@ Table::Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verb
 	for (int i = 0; i < numPlayers; i++) {
 		mPlayers.push_back(Player(this));
 	}
-
+	mStratHard = vecToMap(stratHard);
+	mStratSoft = vecToMap(stratSoft);
+	mStratSplit = vecToMap(stratSplit);
 }
 
 void Table::dealRound() {
@@ -86,7 +88,7 @@ void Table::startRound() {
 
 void Table::getNewcards() {
 	if (mCardPile.mCards.size() < mMinCards) {
-		mCardPile = CardPile(mNumOfdecks);
+		mCardPile.refresh();
 		mCardPile.shuffle();
 		mTrueCount = 0;
 		mRunningcount = 0;
@@ -185,13 +187,13 @@ void Table::autoPlay() {
 				splitAces();
 			}
 			else if (!mCurrentPlayer->canSplit().empty() && (mCurrentPlayer->canSplit() != "5" && mCurrentPlayer->canSplit() != "10" && mCurrentPlayer->canSplit() != "J" && mCurrentPlayer->canSplit() != "Q" && mCurrentPlayer->canSplit() != "K")) {
-				action(getAction(std::stoi(mCurrentPlayer->canSplit()), mDealer.upCard(), stratSplit));
+				action(getAction(std::stoi(mCurrentPlayer->canSplit()), mDealer.upCard(), mStratSplit));
 			}
 			else if (mCurrentPlayer->mIsSoft) {
-				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), stratSoft));
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), mStratSoft));
 			}
 			else {
-				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), stratHard));
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), mStratHard));
 			}
 		}
 		else {

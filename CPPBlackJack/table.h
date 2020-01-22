@@ -3,6 +3,7 @@
 #include "dealer.h"
 #include "cardpile.h"
 #include <list>
+#include <map>
 
 class Table {
 public:
@@ -17,6 +18,9 @@ public:
 	float mCasinoEarnings;
 	int mRunningcount;
 	float mTrueCount;
+	std::map<std::string, std::string> mStratHard;
+	std::map<std::string, std::string> mStratSoft;
+	std::map<std::string, std::string> mStratSplit;
 
 	Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose = 0);
 	void dealRound();

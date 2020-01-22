@@ -16,7 +16,7 @@ std::string Card::print() {
 }
 
 int Card::evaluate() {
-	if (std::string("JQK").find(mRank) != std::string::npos) {
+	if (mRank == "J" || mRank == "Q" || mRank == "K") {
 		return 10;
 	} else if (mRank == "A") {
 		return 11;
@@ -26,17 +26,13 @@ int Card::evaluate() {
 }
 
 int Card::count() {
-	if (std::string("10JQKA").find(mRank) != std::string::npos) {
+	if (mRank == "10" || mRank == "J" || mRank == "Q" || mRank == "K" || mRank == "A") {
 		return -1;
-	} 
-	else if (std::string("789").find(mRank) != std::string::npos) {
+	}
+	else if (mRank == "7" || mRank == "8" || mRank == "9") {
 		return 0;
-	} 
-	else if (std::string("23456").find(mRank) != std::string::npos) {
-		return 1;
-	} 
+	}
 	else {
-		std::cout << "Errored with " + mRank;
-		exit(1);
+		return 1;
 	}
 }
