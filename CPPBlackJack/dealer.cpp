@@ -2,7 +2,7 @@
 #include "card.h"
 #include <iostream>
 
-Dealer::Dealer() : Player(0) {
+Dealer::Dealer() {
 	mPlayerNum = "D";
 	mValue = 0;
 	mHideSecond = true;

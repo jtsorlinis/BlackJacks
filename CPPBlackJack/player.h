@@ -25,7 +25,6 @@ public:
 	int mInitialBet;
 	bool operator==(const Player& obj2) const;
 
-	Player(int real);
 	Player(Table* table = NULL, Player* split = NULL);
 	void doubleBet();
 	virtual void resetHand();

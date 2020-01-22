@@ -13,10 +13,6 @@ bool Player::operator==(const Player& obj2) const {
 	}
 }
 
-Player::Player(int real) {
-
-}
-
 Player::Player(Table* table, Player* split) {
 	mValue = 0;
 	mEarnings = 0;

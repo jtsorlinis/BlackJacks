@@ -4,6 +4,7 @@
 #include "table.h"
 #include <algorithm>
 #include <time.h>
+#include <iomanip>
 
 int numOfPlayers = 5;
 int numOfDecks = 8;
@@ -17,7 +18,7 @@ int main() {
 	srand(time(NULL));
 	Table table1(numOfPlayers,numOfDecks,baseBet,minCards,verbose);
 	table1.mCardPile.shuffle();
-
+	std::cout << std::fixed << std::setprecision(2);
 	clock_t start;
 	double duration;
 	start = clock();
@@ -28,7 +29,7 @@ int main() {
 			std::cout << "Round " << x << "\n";
 		}
 		if (verbose == 0 && rounds > 1000 and x % (rounds / 100) == 0) {
-			std::cout << "\tProgress: " << ((float)x/rounds)*100 << "%\r";
+			std::cout << "\tProgress: " << (int)(((float)x/rounds)*100) << "%\r";
 		}
 		
 		table1.startRound();
@@ -37,7 +38,7 @@ int main() {
 	table1.clear();
 
 	for (auto& player : table1.mPlayers) {
-		std::cout << "Player " << player.mPlayerNum << " earnings: " << player.mEarnings << "\t\tWin Percentage: " << (50 + (player.mEarnings / (rounds * baseBet) * 50)) << "\n";
+		std::cout << "Player " << player.mPlayerNum << " earnings: " << player.mEarnings << "\t\tWin Percentage: " << (50 + (player.mEarnings / (rounds * baseBet) * 50)) << "%\n";
 	}
 	std::cout << "Casino earnings: " << table1.mCasinoEarnings << "\n";
 
