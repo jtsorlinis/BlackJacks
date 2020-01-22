@@ -1,5 +1,4 @@
 #include <iostream>
-#include "cardpile.h"
 #include "player.h"
 #include "table.h"
 #include <algorithm>
@@ -28,7 +27,7 @@ int main() {
 		if (verbose > 0) {
 			std::cout << "Round " << x << "\n";
 		}
-		if (verbose == 0 && rounds > 1000 and x % (rounds / 100) == 0) {
+		if (verbose == 0 && rounds > 1000 && x % (rounds / 100) == 0) {
 			std::cout << "\tProgress: " << (int)(((float)x/rounds)*100) << "%\r";
 		}
 		

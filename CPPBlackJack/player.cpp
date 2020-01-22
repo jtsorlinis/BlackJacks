@@ -1,7 +1,6 @@
 #include "player.h"
 #include <iostream>
 #include "table.h"
-#include "card.h"
 
 int Player::playerNumCount = 0;
 
@@ -114,7 +113,7 @@ int Player::evaluate() {
 		}
 	}
 
-	while (mValue > 21 and mAces > 0) {
+	while (mValue > 21 && mAces > 0) {
 		mValue -= 10;
 		mAces--;
 	}

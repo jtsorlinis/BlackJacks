@@ -1,5 +1,6 @@
 #include <string>
 #include <map>
+#include <vector>
 
 std::vector<std::vector<std::string>> stratHard = {
 	{"X", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", },

@@ -1,4 +1,3 @@
-#pragma once
 #include <vector>
 #include "dealer.h"
 #include "cardpile.h"

@@ -1,6 +1,5 @@
 #include "deck.h"
 #include <vector>
-#include "card.h"
 #include <iostream>
 #include <algorithm>
 #include <random>
