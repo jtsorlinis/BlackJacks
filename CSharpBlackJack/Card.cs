@@ -1,6 +1,6 @@
 namespace NETCoreBlackJack {
     class Card {
-        string mRank;
+        public string mRank;
         string mSuit;
         bool mFaceDown = false;
         public Card(string rank, string suit) {
