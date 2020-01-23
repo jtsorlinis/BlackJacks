@@ -10,5 +10,7 @@ public:
 	std::string mRank;
 	std::string mSuit;
 	bool mFaceDown;
+	int mValue;
+	int mCount;
 };
 

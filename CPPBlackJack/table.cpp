@@ -107,7 +107,7 @@ void Table::clear() {
 }
 
 void Table::updatecount(Card* card) {
-	mRunningcount += card->count();
+	mRunningcount += card->mCount;
 	mTrueCount = mRunningcount / (mCardPile.mCards.size() / (float)52);
 }
 

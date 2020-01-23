@@ -14,6 +14,6 @@ void Dealer::resetHand() {
 	mHideSecond = true;
 }
 
-int Dealer::upCard() {
-	return mHand[0].evaluate();
+int& Dealer::upCard() {
+	return mHand[0].mValue;
 }

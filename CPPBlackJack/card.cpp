@@ -5,6 +5,8 @@ Card::Card(std::string rank, std::string suit) {
 	mRank = rank;
 	mSuit = suit;
 	mFaceDown = false;
+	mValue = evaluate();
+	mCount = count();
 }
 
 std::string Card::print() {

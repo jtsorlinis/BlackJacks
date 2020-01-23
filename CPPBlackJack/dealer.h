@@ -7,6 +7,6 @@ public:
 
 	Dealer();
 	void resetHand();
-	int upCard();
+	int& upCard();
 };
 

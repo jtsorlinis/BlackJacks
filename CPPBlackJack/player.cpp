@@ -81,7 +81,7 @@ void Player::lose() {
 	}
 }
 
-std::string Player::print() {
+std::string& Player::print() {
 	std::string output = "Player " + mPlayerNum + ": ";
 	for (auto &i : mHand) {
 		output += i.print() + " ";
@@ -104,10 +104,10 @@ std::string Player::print() {
 int Player::evaluate() {
 	mAces = 0;
 	mValue = 0;
-	for (auto &i : mHand) {
-		mValue += i.evaluate();
+	for (auto &card : mHand) {
+		mValue += card.mValue;
 		// Check for ace
-		if (i.mRank == "A") {
+		if (card.mRank == "A") {
 			mAces++;
 			mIsSoft = true;
 		}

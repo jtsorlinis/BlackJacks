@@ -8,7 +8,7 @@ public:
 	std::vector<Card> mOriginalCards;
 	CardPile(int numOfdecks);
 	void refresh();
-	std::string print();
+	std::string& print();
 	void shuffle();
 };
 
