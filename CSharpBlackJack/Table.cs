@@ -1,0 +1,5 @@
+namespace NETCoreBlackJack {
+    class Table {
+        
+    }
+}
