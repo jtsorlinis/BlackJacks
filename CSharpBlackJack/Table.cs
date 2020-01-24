@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace NETCoreBlackJack {
@@ -8,21 +9,33 @@ namespace NETCoreBlackJack {
         int mNumOfDecks;
         CardPile mCardPile;
         int mMinCards;
-        Dealer mDealer;
-        Player mCurrentPlayer;
-        public float mCasinoEarnings;
-        int mRunningCount;
-        float mTrueCount;
-        List<List<string>> mStratHard;
-        List<List<string>> mStratSoft;
-        List<List<string>> mStratSplit;
+        Dealer mDealer = new Dealer();
+        Player mCurrentPlayer = null;
+        public float mCasinoEarnings = 0;
+        int mRunningCount = 0;
+        float mTrueCount = 0;
+        Dictionary<int, string> mStratHard = Strategies.Array2dToMap(Strategies.stratHard);
+        Dictionary<int, string> mStratSoft = Strategies.Array2dToMap(Strategies.stratSoft);
+        Dictionary<int, string> mStratSplit = Strategies.Array2dToMap(Strategies.stratSplit);
 
-        public Table(int numPlayers, int numDecks, int minCards, int verbose = 0) {
+        public Table(int numPlayers, int numDecks, int betsize, int minCards, int verbose = 0) {
+            mVerbose = verbose;
+            mBetSize = betsize;
+            mNumOfDecks = numDecks;
+            mMinCards = minCards;
 
+            for(int i = 0; i < numPlayers; i++) {
+                mPlayers.Add(new Player(this));
+            }
         }
 
-        public void DealRound() {
-            
+        void DealRound() {
+            foreach(Player it in mPlayers) {
+                mCurrentPlayer = it;
+                Deal();
+                mCurrentPlayer.Evaluate();
+
+            }
         }
 
         void Deal() {
@@ -35,6 +48,87 @@ namespace NETCoreBlackJack {
 
         void SelectBet(Player player) {
 
+        }
+
+        void DealDealer(bool faceDown) {
+
+        }
+
+        public void StartRound() {
+            DealRound();
+            Print();
+
+        }
+
+        void GetNewCards() {
+
+        }
+
+        void Clear() {
+
+        }
+
+        void UpdateCount() {
+
+        }
+
+        void Hit() {
+
+        }
+
+        void Stand() {
+
+        }
+
+        void Split() {
+
+        }
+
+        void SplitAces() {
+
+        }
+
+        void DoubleBet() {
+
+        }
+
+        void AutoPlay() {
+
+        }
+
+        void Action() {
+
+        }
+
+        void DealerPlay() {
+
+        }
+
+        void NextPlayer() {
+
+        }
+
+        void CheckPlayerNatural() {
+
+        }
+
+        bool CheckDealerNatural() {
+            return true;
+        }
+
+        void CheckEarnings() {
+
+        }
+
+        void FinishRound() {
+
+        }
+
+        void Print() {
+            foreach (Player player in mPlayers) {
+                Console.WriteLine(player.Print());
+            }
+            Console.WriteLine(mDealer.Print() + "\n");
         }
     }
 }

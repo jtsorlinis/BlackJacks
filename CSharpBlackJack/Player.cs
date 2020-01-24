@@ -21,7 +21,10 @@ namespace NETCoreBlackJack {
 
         public Player(Table table = null, Player split = null) {
             mTable = table;
-            mInitialBet = mTable.mBetSize;
+            if(table != null) {
+                mInitialBet = mTable.mBetSize;
+            }
+            
 
             if(split != null) {
                 mHand.Add(split.mHand[1]);
