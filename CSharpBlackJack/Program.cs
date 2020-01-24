@@ -6,9 +6,8 @@ namespace NETCoreBlackJack
     {
         static void Main(string[] args)
         {
-            CardPile test = new CardPile(5);
-            test.Shuffle();
-            Console.WriteLine(test.Print());
+
+            Console.WriteLine(Strategies.getAction(9, 10, Strategies.Array2dToMap(Strategies.stratHard)));
         }
     }
 }

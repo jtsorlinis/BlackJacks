@@ -3,9 +3,14 @@ namespace NETCoreBlackJack {
         public string mRank;
         string mSuit;
         bool mFaceDown = false;
+        public int mValue;
+        public int mCount;
+
         public Card(string rank, string suit) {
             mRank = rank;
             mSuit = suit;
+            mValue = Evaluate();
+            mCount = Count();
 
         }
 

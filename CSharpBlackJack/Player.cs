@@ -19,7 +19,7 @@ namespace NETCoreBlackJack {
         public Table mTable;
         public int mInitialBet;
 
-        public Player(Table table, Player split = null) {
+        public Player(Table table = null, Player split = null) {
             mTable = table;
             mInitialBet = mTable.mBetSize;
 
