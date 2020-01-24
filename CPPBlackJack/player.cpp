@@ -25,17 +25,16 @@ Player::Player(Table* table, Player* split) {
 	mTable = table;
 	if (mTable) {
 		mInitialBet = mTable->mBetSize;
-	}
-
-	if (split) {
-		mHand.push_back(split->mHand[1]);
-		mSplitCount++;
-		mPlayerNum = split->mPlayerNum + "S";
-		mInitialBet = split->mInitialBet;
-		mSplitFrom = split;
-	} else {
-		playerNumCount++;
-		mPlayerNum = std::to_string(playerNumCount);
+		if (split) {
+			mHand.push_back(split->mHand[1]);
+			mSplitCount++;
+			mPlayerNum = split->mPlayerNum + "S";
+			mInitialBet = split->mInitialBet;
+			mSplitFrom = split;
+		} else {
+			playerNumCount++;
+			mPlayerNum = std::to_string(playerNumCount);
+		}
 	}
 }
 
