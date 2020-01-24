@@ -81,7 +81,7 @@ void Player::lose() {
 	}
 }
 
-std::string& Player::print() {
+std::string Player::print() {
 	std::string output = "Player " + mPlayerNum + ": ";
 	for (auto &i : mHand) {
 		output += i.print() + " ";

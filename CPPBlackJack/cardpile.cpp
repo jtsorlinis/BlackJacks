@@ -13,7 +13,7 @@ void CardPile::refresh() {
 	mCards = mOriginalCards;
 }
 
-std::string& CardPile::print() {
+std::string CardPile::print() {
 	std::string output;
 	for (auto &i : mCards) {
 		output += i.print() + "\n";

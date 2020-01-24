@@ -31,6 +31,6 @@ public:
 	std::string canSplit();
 	void win(float mult = 1);
 	void lose();
-	std::string& print();
+	std::string print();
 	int evaluate();
 };
