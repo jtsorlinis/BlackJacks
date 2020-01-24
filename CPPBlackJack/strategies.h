@@ -3,7 +3,7 @@
 #include <vector>
 
 std::vector<std::vector<std::string>> stratHard = {
-	{"X", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", },
+	{"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", },
 	{"2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"},
 	{"3", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H" },
 	{"4", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H" },
@@ -27,7 +27,7 @@ std::vector<std::vector<std::string>> stratHard = {
 };
 
 std::vector<std::vector<std::string>> stratSoft = {
-	{"X", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
+	{"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
 	{"13", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H" },
 	{"14", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H" },
 	{"15", "H", "H", "D", "D", "D", "H", "H", "H", "H", "H" },
@@ -40,7 +40,7 @@ std::vector<std::vector<std::string>> stratSoft = {
 };
 
 std::vector<std::vector<std::string>> stratSplit = {
-	{"X", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
+	{"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
 	{"2", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H" },
 	{"3", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H" },
 	{"4", "H", "H", "H", "P", "P", "H", "H", "H", "H", "H" },
@@ -48,19 +48,21 @@ std::vector<std::vector<std::string>> stratSplit = {
 	{"7", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H" },
 	{"8", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" },
 	{"9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S" },
-	{"A", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
+	{"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
 };
 
-std::string getAction(int playerVal, int dealerVal, std::map<std::string, std::string> &strategy) {
-	std::string key = std::to_string(playerVal) + "/" + std::to_string(dealerVal);
+std::string getAction(int playerVal, int dealerVal, std::unordered_map<int, std::string> &strategy) {
+	int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1))/ 2 + dealerVal;
 	return strategy[key];
 };
 
-std::map<std::string, std::string> vecToMap(std::vector<std::vector<std::string>> vec) {
-	std::map<std::string,std::string> temp;
+std::unordered_map<int, std::string> vecToMap(std::vector<std::vector<std::string>> vec) {
+	std::unordered_map<int,std::string> temp;
 	for (int row = 0; row < vec.size(); row++) {
 		for (int col = 0; col < vec[0].size(); col++) {
-			std::string key = vec[row][0] + "/" + vec[0][col];
+			int playerVal = std::stoi(vec[row][0]);
+			int dealerVal = std::stoi(vec[0][col]);
+			int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
 			temp.insert({ key, vec[row][col] });
 		}
 	}

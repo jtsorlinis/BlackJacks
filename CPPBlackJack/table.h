@@ -2,7 +2,7 @@
 #include "dealer.h"
 #include "cardpile.h"
 #include <list>
-#include <map>
+#include <unordered_map>
 
 class Table {
 public:
@@ -17,9 +17,9 @@ public:
 	float mCasinoEarnings;
 	int mRunningcount;
 	float mTrueCount;
-	std::map<std::string, std::string> mStratHard;
-	std::map<std::string, std::string> mStratSoft;
-	std::map<std::string, std::string> mStratSplit;
+	std::unordered_map<int, std::string> mStratHard;
+	std::unordered_map<int, std::string> mStratSoft;
+	std::unordered_map<int, std::string> mStratSplit;
 
 	Table(int numPlayers, int numOfDecks, int betSize, int minCards, int verbose = 0);
 	void dealRound();
