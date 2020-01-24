@@ -32,10 +32,10 @@ void Table::dealRound() {
 }
 
 void Table::deal() {
-	Card card = mCardPile.mCards.back();
-	mCardPile.mCards.pop_back();
+	Card& card = mCardPile.mCards.back();
 	mCurrentPlayer->mHand.push_back(card);
 	updatecount(&card);
+	mCardPile.mCards.pop_back();
 }
 
 void Table::preDeal() {
