@@ -23,17 +23,15 @@ namespace NETCoreBlackJack {
             mTable = table;
             if(table != null) {
                 mInitialBet = mTable.mBetSize;
-            }
-            
-
-            if(split != null) {
-                mHand.Add(split.mHand[1]);
-                mSplitCount++;
-                mPlayerNum = split.mPlayerNum + "S";
-                mSplitFrom = split;
-            } else {
-                playerNumCount++;
-                mPlayerNum = playerNumCount.ToString();
+                if(split != null) {
+                    mHand.Add(split.mHand[1]);
+                    mSplitCount++;
+                    mPlayerNum = split.mPlayerNum + "S";
+                    mSplitFrom = split;
+                } else {
+                    playerNumCount++;
+                    mPlayerNum = playerNumCount.ToString();
+                }
             }
         }
 

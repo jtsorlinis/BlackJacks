@@ -2,7 +2,7 @@ namespace NETCoreBlackJack {
     class Card {
         public string mRank;
         string mSuit;
-        bool mFaceDown = false;
+        public bool mFaceDown = false;
         public int mValue;
         public int mCount;
 
