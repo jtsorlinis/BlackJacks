@@ -53,7 +53,7 @@ namespace NETCoreBlackJack {
 			{"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
 		};
 
-		public static string getAction(int playerVal, int dealerVal, Dictionary<int, string> strategy) {
+		public static string GetAction(int playerVal, int dealerVal, Dictionary<int, string> strategy) {
 			int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
 			return strategy[key];
 		}

@@ -16,7 +16,17 @@ namespace NETCoreBlackJack
             int verbosity = 1;
 
             Table table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards, verbosity);
-            table1.StartRound();
+            table1.mCardPile.Shuffle();
+            
+            int x = 0;
+            while(x++ < rounds) {
+                table1.StartRound();
+                table1.CheckEarnings();
+            }
+
+            table1.Clear();
+
+            
        
         }
     }

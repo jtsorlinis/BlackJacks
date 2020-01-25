@@ -1,4 +1,6 @@
-﻿namespace NETCoreBlackJack {
+﻿using System;
+
+namespace NETCoreBlackJack {
     class Dealer : Player {
         public bool mHideSecond = true;
 

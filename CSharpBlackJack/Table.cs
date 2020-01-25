@@ -7,7 +7,7 @@ namespace NETCoreBlackJack {
         public int mBetSize;
         LinkedList<Player> mPlayers = new LinkedList<Player>();
         int mNumOfDecks;
-        CardPile mCardPile;
+        public CardPile mCardPile;
         int mMinCards;
         Dealer mDealer = new Dealer();
         LinkedListNode<Player> mCurrentPlayer = null;
@@ -107,14 +107,14 @@ namespace NETCoreBlackJack {
             }
         }
 
-        void Clear() {
+        public void Clear() {
             var node = mPlayers.First;
             while(node != null) {
                 var nextNode = node.Next;
                 if(node.Value.mSplitFrom != null) {
-                    node.Value.ResetHand();
                     mPlayers.Remove(node);
                 }
+                node.Value.ResetHand();
                 node = nextNode;
             }
             mDealer.ResetHand();
@@ -153,50 +153,226 @@ namespace NETCoreBlackJack {
         }
 
         void SplitAces() {
+            if(mVerbose > 0) {
+                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " splits Aces");
+            }
+            Player splitPlayer = new Player(this, mCurrentPlayer.Value);
+            mCurrentPlayer.Value.mHand.RemoveAt(mCurrentPlayer.Value.mHand.Count-1);
+            mPlayers.AddAfter(mCurrentPlayer,splitPlayer);
+            Deal();
+            mCurrentPlayer.Value.Evaluate();
+            Stand();
+            mCurrentPlayer = mCurrentPlayer.Next;
+            Deal();
+            mCurrentPlayer.Value.Evaluate();
+            Stand();
+            if(mVerbose > 0) {
+                Print();
+            }
 
         }
 
         void DoubleBet() {
+            if(mCurrentPlayer.Value.mBetMult == 1 && mCurrentPlayer.Value.mHand.Count == 2) {
+                mCurrentPlayer.Value.Doublebet();
+                if(mVerbose > 0) {
+                    Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " doubles");
+                }
+                Hit();
+                Stand();
+            }
+            else {
+                Hit();
+            }
 
         }
 
         void AutoPlay() {
+            while (!mCurrentPlayer.Value.mIsDone) {
+                // check if player just split
+                if (mCurrentPlayer.Value.mHand.Count == 1) {
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " gets 2nd card after splitting");
+                    }
+                    Deal();
+                    mCurrentPlayer.Value.Evaluate();
+                }
 
+                if (mCurrentPlayer.Value.mHand.Count < 5 && mCurrentPlayer.Value.mValue < 21) {
+                    string canSplit = mCurrentPlayer.Value.CanSplit();
+                    if (canSplit == "A") {
+                        SplitAces();
+                    }
+                    else if (canSplit != null && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K")) {
+                        Action(Strategies.GetAction(int.Parse(canSplit), mDealer.UpCard(), mStratSplit));
+                    }
+                    else if (mCurrentPlayer.Value.mIsSoft) {
+                        Action(Strategies.GetAction(mCurrentPlayer.Value.mValue, mDealer.UpCard(), mStratSoft));
+                    }
+                    else {
+                        Action(Strategies.GetAction(mCurrentPlayer.Value.mValue, mDealer.UpCard(), mStratHard));
+                    }
+                }
+                else {
+                    Stand();
+                }
+            }
+            NextPlayer();
         }
 
-        void Action() {
-
+        void Action(string action) {
+            if (action == "H") {
+                Hit();
+            }
+            else if (action == "S") {
+                Stand();
+            }
+            else if (action == "D") {
+                DoubleBet();
+            }
+            else if (action == "P") {
+                Split();
+            }
+            else {
+                Console.WriteLine("No action found");
+                Environment.Exit(1);
+            }
         }
 
         void DealerPlay() {
-
+            bool allBusted = true;
+            foreach( var player in mPlayers) {
+                if(player.mValue < 22) {
+                    allBusted = false;
+                }
+            }
+            mDealer.mHand[1].mFaceDown = false;
+            UpdateCount(mDealer.mHand[1]);
+            mDealer.Evaluate();
+            if(mVerbose > 0) {
+                Console.WriteLine("Dealer's turn");
+                Print();
+            }
+            if(allBusted) {
+                if(mVerbose > 0) {
+                    Console.WriteLine("Dealer automatically wins cause all players busted");
+                }
+                FinishRound();
+            } 
+            else {
+                while(mDealer.mValue < 17 && mDealer.mHand.Count < 5) {
+                    DealDealer();
+                    mDealer.Evaluate();
+                    if(mVerbose > 0) {
+                        Console.WriteLine("Dealer hits");
+                        Print();
+                    }
+                }
+                FinishRound();
+            }
         }
 
         void NextPlayer() {
-
+            if(mCurrentPlayer.Next != null){
+                mCurrentPlayer = mCurrentPlayer.Next;
+                AutoPlay();
+            } else {
+                DealerPlay();
+            }
+            
         }
 
         void CheckPlayerNatural() {
-
+            foreach(var player in mPlayers){
+                if(player.mValue == 21 && player.mHand.Count == 2 && player.mSplitFrom == null){
+                    player.mHasNatural = true;
+                }
+            }
         }
 
         bool CheckDealerNatural() {
-            return false;
+            if(mDealer.Evaluate() == 21) {
+                mDealer.mHand[1].mFaceDown = false;
+                UpdateCount(mDealer.mHand[1]);
+                if(mVerbose > 0) {
+                    Print();
+                    Console.WriteLine("Dealer has a natural 21");
+                }
+                return true;
+            } else {
+                return false;
+            }
+            
         }
 
-        void CheckEarnings() {
-
+        public void CheckEarnings() {
+            float check = 0;
+            foreach(var player in mPlayers){
+                check += player.mEarnings;
+            }
+            if(check * -1 != mCasinoEarnings) {
+                Console.WriteLine("Earnings don't match");
+                Environment.Exit(1);
+            }
         }
 
         void FinishRound() {
+            if (mVerbose > 0) {
+                Console.WriteLine("Scoring round");
+            }
+            foreach (var player in mPlayers) {
+                if (player.mHasNatural) {
+                    player.Win(1.5f);
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (1.5 * player.mBetMult * player.mInitialBet) + " with a natural 21");
+                    }
+                }
+                else if (player.mValue > 21) {
+                    player.Lose();
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Busts and Loses " + (player.mBetMult * player.mInitialBet));
+                    }
 
+                }
+                else if (mDealer.mValue > 21) {
+                    player.Win();
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
+                    }
+                }
+                else if (player.mValue > mDealer.mValue) {
+                    player.Win();
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
+                    }
+                }
+                else if (player.mValue == mDealer.mValue) {
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Draws");
+                    }
+                }
+                else {
+                    player.Lose();
+                    if (mVerbose > 0) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Loses " + (player.mBetMult * player.mInitialBet));
+                    }
+                }
+            }
+            if (mVerbose > 0) {
+                foreach (var player in mPlayers) {
+                    if (player.mSplitFrom == null) {
+                        Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
+                    }
+                }
+                Console.WriteLine();
+            }
         }
 
         void Print() {
             foreach (Player player in mPlayers) {
                 Console.WriteLine(player.Print());
             }
-            Console.WriteLine(mDealer.Print() + "\n");
+            Console.WriteLine(mDealer.Print()+"\n");
         }
     }
 }

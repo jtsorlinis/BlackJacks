@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace NETCoreBlackJack {
@@ -98,7 +99,27 @@ namespace NETCoreBlackJack {
         }
 
         public int Evaluate() {
-            return 0;
+            mAces = 0;
+            mValue = 0;
+            foreach(var card in mHand){
+                mValue += card.mValue;
+                // check for ace
+                if(card.mRank == "A") {
+                    mAces++;
+                    mIsSoft = true;
+                }
+            }
+
+            while(mValue > 21 && mAces > 0) {
+                mValue -= 10;
+                mAces--;
+            }
+
+            if(mAces == 0) {
+                mIsSoft = false;
+            }
+
+            return mValue;
         }
     }
 }
