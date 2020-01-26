@@ -102,10 +102,10 @@ namespace NETCoreBlackJack {
         public int Evaluate() {
             mAces = 0;
             mValue = 0;
-            foreach(var card in mHand){
-                mValue += card.mValue;
+            for(int i = 0; i < mHand.Count;i++){
+                mValue += mHand[i].mValue;
                 // check for ace
-                if(card.mIsAce) {
+                if(mHand[i].mIsAce) {
                     mAces++;
                     mIsSoft = true;
                 }
