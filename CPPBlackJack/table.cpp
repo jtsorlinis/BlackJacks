@@ -33,7 +33,7 @@ void Table::dealRound() {
 
 void Table::deal() {
 	Card& card = mCardPile.mCards.back();
-	mCurrentPlayer->mHand.push_back(card);
+	mCurrentPlayer->mHand.push_back(std::move(card));
 	updatecount(&card);
 	mCardPile.mCards.pop_back();
 }
@@ -54,7 +54,7 @@ void Table::dealDealer(bool faceDown) {
 	Card card = mCardPile.mCards.back();
 	mCardPile.mCards.pop_back();
 	card.mFaceDown = faceDown;
-	mDealer.mHand.push_back(card);
+	mDealer.mHand.push_back(std::move(card));
 	if (!faceDown) {
 		updatecount(&card);
 	}

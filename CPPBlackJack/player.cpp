@@ -26,7 +26,7 @@ Player::Player(Table* table, Player* split) {
 	if (mTable) {
 		mInitialBet = mTable->mBetSize;
 		if (split) {
-			mHand.push_back(split->mHand[1]);
+			mHand.push_back(std::move(split->mHand[1]));
 			mSplitCount++;
 			mPlayerNum = split->mPlayerNum + "S";
 			mInitialBet = split->mInitialBet;

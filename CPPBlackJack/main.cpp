@@ -10,7 +10,7 @@ int numOfDecks = 8;
 int baseBet = 10;
 int minCards = 40;
 
-int rounds = 100000;
+int rounds = 1000000;
 int verbose = 0;
 
 int main() {
@@ -42,7 +42,7 @@ int main() {
 	std::cout << "Casino earnings: " << table1.mCasinoEarnings << "\n";
 
 	duration = ((double)clock() - start)/(double)CLOCKS_PER_SEC;
-	std::cout << "\nPlayed " << x-1 << " rounds in " << duration << " seconds.\n\n";
+	std::cout << "\nPlayed " << x-1 << " rounds in " << std::setprecision(3) << duration << " seconds.\n\n";
 	/*system("pause");*/
 }
 
