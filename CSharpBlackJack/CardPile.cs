@@ -13,11 +13,11 @@ namespace NETCoreBlackJack {
                 Deck temp = new Deck();
                 mCards.AddRange(temp.mCards);
             }
-            mOriginalCards = mCards;
+            mOriginalCards = new List<Card>(mCards);
         }
 
         public void Refresh() {
-            mCards = mOriginalCards;
+            mCards = new List<Card>(mOriginalCards);
         }
 
         public string Print() {
