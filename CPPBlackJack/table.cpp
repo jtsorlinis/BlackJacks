@@ -34,7 +34,7 @@ void Table::dealRound() {
 void Table::deal() {
 	Card* card = mCardPile.mCards.back();
 	mCurrentPlayer->mHand.push_back(std::move(card));
-	updatecount(card);
+	mRunningcount += card->mCount;
 	mCardPile.mCards.pop_back();
 }
 
@@ -56,12 +56,13 @@ void Table::dealDealer(bool faceDown) {
 	card->mFaceDown = faceDown;
 	mDealer.mHand.push_back(std::move(card));
 	if (!faceDown) {
-		updatecount(card);
+		mRunningcount += card->mCount;
 	}
 }
 
 void Table::startRound() {
 	clear();
+	updatecount();
 	if (mVerbose > 0) {
 		std::cout << mCardPile.mCards.size() << " cards left\n";
 		std::cout << "Running count is: " << mRunningcount << "\tTrue count is: " << (int)mTrueCount << "\n";
@@ -106,8 +107,7 @@ void Table::clear() {
 	mDealer.resetHand();
 }
 
-void Table::updatecount(Card* card) {
-	mRunningcount += card->mCount;
+void Table::updatecount() {
 	mTrueCount = mRunningcount / (mCardPile.mCards.size() / (float)52);
 }
 
@@ -231,7 +231,7 @@ void Table::dealerPlay() {
 		}
 	}
 	mDealer.mHand[1]->mFaceDown = false;
-	updatecount(mDealer.mHand[1]);
+	mRunningcount += mDealer.mHand[1]->mCount;
 	mDealer.evaluate();
 	if (mVerbose > 0) {
 		std::cout << "Dealer's turn\n";
@@ -277,7 +277,7 @@ void Table::checkPlayerNatural() {
 bool Table::checkDealerNatural() {
 	if (mDealer.evaluate() == 21) {
 		mDealer.mHand[1]->mFaceDown = false;
-		updatecount(mDealer.mHand[1]);
+		mRunningcount += mDealer.mHand[1]->mCount;
 		if (mVerbose > 0) {
 			print();
 			std::cout << "Dealer has a natural 21\n\n";

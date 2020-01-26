@@ -30,7 +30,7 @@ public:
 	void startRound();
 	void getNewcards();
 	void clear();
-	void updatecount(Card* card);
+	void updatecount();
 	void hit();
 	void stand();
 	void split();
