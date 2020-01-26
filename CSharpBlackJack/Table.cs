@@ -5,12 +5,12 @@ namespace NETCoreBlackJack {
     class Table {
         int mVerbose;
         public int mBetSize;
-        public LinkedList<Player> mPlayers = new LinkedList<Player>();
+        public List<Player> mPlayers = new List<Player>();
         int mNumOfDecks;
         public CardPile mCardPile;
         int mMinCards;
         Dealer mDealer = new Dealer();
-        LinkedListNode<Player> mCurrentPlayer = null;
+        int mCurrentPlayer = 0;
         public float mCasinoEarnings = 0;
         int mRunningCount = 0;
         float mTrueCount = 0;
@@ -26,34 +26,29 @@ namespace NETCoreBlackJack {
             mMinCards = minCards;
 
             for(int i = 0; i < numPlayers; i++) {
-                mPlayers.AddLast(new Player(this));
+                mPlayers.Add(new Player(this));
             }
         }
 
         void DealRound() {
-            var player = mPlayers.First;
-            while( player != null) {
-                mCurrentPlayer = player;
+            for(int i = 0; i < mPlayers.Count; i++) { 
                 Deal();
-                mCurrentPlayer.Value.Evaluate();
-                player = player.Next;
+                mPlayers[i].Evaluate();
+                mCurrentPlayer++;
             }
-            mCurrentPlayer = mPlayers.First;
+            mCurrentPlayer = 0;
         }
 
         void Deal() {
             Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
-            mCurrentPlayer.Value.mHand.Add(card);
+            mPlayers[mCurrentPlayer].mHand.Add(card);
             UpdateCount(card);
             mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
         }
 
         void PreDeal() {
-            var player = mPlayers.First;
-            while(player != null)
-            {
-                SelectBet(player.Value);
-                player = player.Next;
+            for (int i = 0; i < mPlayers.Count; i++) {
+                SelectBet(mPlayers[i]);
             }
         }
 
@@ -85,7 +80,7 @@ namespace NETCoreBlackJack {
             DealDealer();
             DealRound();
             DealDealer(true);
-            mCurrentPlayer = mPlayers.First;
+            mCurrentPlayer = 0;
             if(CheckDealerNatural()) {
                 FinishRound();
             } 
@@ -111,16 +106,14 @@ namespace NETCoreBlackJack {
         }
 
         public void Clear() {
-            var player = mPlayers.First;
-            while(player != null) {
-                var nextplayer = player.Next;
-                if(player.Value.mSplitFrom != null) {
-                    mPlayers.Remove(player);
+            for(int i = mPlayers.Count -1; i >= 0; i--) {
+                mPlayers[i].ResetHand();
+                if (mPlayers[i].mSplitFrom != null) {
+                    mPlayers.RemoveAt(i);
                 }
-                player.Value.ResetHand();
-                player = nextplayer;
             }
             mDealer.ResetHand();
+            mCurrentPlayer = 0;
         }
 
         void UpdateCount(Card card) {
@@ -130,44 +123,44 @@ namespace NETCoreBlackJack {
 
         void Hit() {
             Deal();
-            mCurrentPlayer.Value.Evaluate();
+            mPlayers[mCurrentPlayer].Evaluate();
             if(mVerbose > 0) {
-                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " hits");
+                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " hits");
             }
         }
 
         void Stand() {
-            if(mVerbose > 0 && mCurrentPlayer.Value.mValue <= 21) {
-                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " stands");
+            if(mVerbose > 0 && mPlayers[mCurrentPlayer].mValue <= 21) {
+                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " stands");
                 Print();
             }
-            mCurrentPlayer.Value.mIsDone = true;
+            mPlayers[mCurrentPlayer].mIsDone = true;
         }
 
         void Split() {
-            Player splitPlayer = new Player(this, mCurrentPlayer.Value);
-            mCurrentPlayer.Value.mHand.RemoveAt(mCurrentPlayer.Value.mHand.Count-1);
-            mPlayers.AddAfter(mCurrentPlayer,splitPlayer);
-            mCurrentPlayer.Value.Evaluate();
-            mCurrentPlayer.Next.Value.Evaluate();
+            Player splitPlayer = new Player(this, mPlayers[mCurrentPlayer]);
+            mPlayers[mCurrentPlayer].mHand.RemoveAt(mPlayers[mCurrentPlayer].mHand.Count-1);
+            mPlayers.Insert(mCurrentPlayer+1, splitPlayer);
+            mPlayers[mCurrentPlayer].Evaluate();
+            mPlayers[mCurrentPlayer+1].Evaluate();
             if( mVerbose > 0) {
-                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " splits");
+                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " splits");
             }
         }
 
         void SplitAces() {
             if(mVerbose > 0) {
-                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " splits Aces");
+                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " splits Aces");
             }
-            Player splitPlayer = new Player(this, mCurrentPlayer.Value);
-            mCurrentPlayer.Value.mHand.RemoveAt(mCurrentPlayer.Value.mHand.Count-1);
-            mPlayers.AddAfter(mCurrentPlayer,splitPlayer);
+            Player splitPlayer = new Player(this, mPlayers[mCurrentPlayer]);
+            mPlayers[mCurrentPlayer].mHand.RemoveAt(mPlayers[mCurrentPlayer].mHand.Count-1);
+            mPlayers.Insert(mCurrentPlayer + 1, splitPlayer);
             Deal();
-            mCurrentPlayer.Value.Evaluate();
+            mPlayers[mCurrentPlayer].Evaluate();
             Stand();
-            mCurrentPlayer = mCurrentPlayer.Next;
+            mCurrentPlayer++;
             Deal();
-            mCurrentPlayer.Value.Evaluate();
+            mPlayers[mCurrentPlayer].Evaluate();
             Stand();
             if(mVerbose > 0) {
                 Print();
@@ -176,10 +169,10 @@ namespace NETCoreBlackJack {
         }
 
         void DoubleBet() {
-            if(mCurrentPlayer.Value.mBetMult == 1 && mCurrentPlayer.Value.mHand.Count == 2) {
-                mCurrentPlayer.Value.Doublebet();
+            if(mPlayers[mCurrentPlayer].mBetMult == 1 && mPlayers[mCurrentPlayer].mHand.Count == 2) {
+                mPlayers[mCurrentPlayer].Doublebet();
                 if(mVerbose > 0) {
-                    Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " doubles");
+                    Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " doubles");
                 }
                 Hit();
                 Stand();
@@ -191,29 +184,29 @@ namespace NETCoreBlackJack {
         }
 
         void AutoPlay() {
-            while (!mCurrentPlayer.Value.mIsDone) {
+            while (!mPlayers[mCurrentPlayer].mIsDone) {
                 // check if player just split
-                if (mCurrentPlayer.Value.mHand.Count == 1) {
+                if (mPlayers[mCurrentPlayer].mHand.Count == 1) {
                     if (mVerbose > 0) {
-                        Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " gets 2nd card after splitting");
+                        Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " gets 2nd card after splitting");
                     }
                     Deal();
-                    mCurrentPlayer.Value.Evaluate();
+                    mPlayers[mCurrentPlayer].Evaluate();
                 }
 
-                if (mCurrentPlayer.Value.mHand.Count < 5 && mCurrentPlayer.Value.mValue < 21) {
-                    string canSplit = mCurrentPlayer.Value.CanSplit();
+                if (mPlayers[mCurrentPlayer].mHand.Count < 5 && mPlayers[mCurrentPlayer].mValue < 21) {
+                    string canSplit = mPlayers[mCurrentPlayer].CanSplit();
                     if (canSplit == "A") {
                         SplitAces();
                     }
                     else if (canSplit != null && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K")) {
                         Action(Strategies.GetAction(int.Parse(canSplit), mDealer.UpCard(), mStratSplit));
                     }
-                    else if (mCurrentPlayer.Value.mIsSoft) {
-                        Action(Strategies.GetAction(mCurrentPlayer.Value.mValue, mDealer.UpCard(), mStratSoft));
+                    else if (mPlayers[mCurrentPlayer].mIsSoft) {
+                        Action(Strategies.GetAction(mPlayers[mCurrentPlayer].mValue, mDealer.UpCard(), mStratSoft));
                     }
                     else {
-                        Action(Strategies.GetAction(mCurrentPlayer.Value.mValue, mDealer.UpCard(), mStratHard));
+                        Action(Strategies.GetAction(mPlayers[mCurrentPlayer].mValue, mDealer.UpCard(), mStratHard));
                     }
                 }
                 else {
@@ -244,12 +237,10 @@ namespace NETCoreBlackJack {
 
         void DealerPlay() {
             bool allBusted = true;
-            var player = mPlayers.First;
-            while(player != null ) { 
-                if(player.Value.mValue < 22) {
+            for(int i = 0; i < mPlayers.Count; i++) {
+                if(mPlayers[i].mValue < 22) {
                     allBusted = false;
                 }
-                player = player.Next;
             }
             mDealer.mHand[1].mFaceDown = false;
             UpdateCount(mDealer.mHand[1]);
@@ -278,8 +269,7 @@ namespace NETCoreBlackJack {
         }
 
         void NextPlayer() {
-            if(mCurrentPlayer.Next != null){
-                mCurrentPlayer = mCurrentPlayer.Next;
+            if(++mCurrentPlayer < mPlayers.Count){
                 AutoPlay();
             } else {
                 DealerPlay();
@@ -288,12 +278,10 @@ namespace NETCoreBlackJack {
         }
 
         void CheckPlayerNatural() {
-            var player = mPlayers.First;
-            while(player !=null ) {
-                if(player.Value.mValue == 21 && player.Value.mHand.Count == 2 && player.Value.mSplitFrom == null){
-                    player.Value.mHasNatural = true;
+            for (int i = 0; i < mPlayers.Count; i++) {
+                if(mPlayers[i].mValue == 21 && mPlayers[i].mHand.Count == 2 && mPlayers[i].mSplitFrom == null){
+                    mPlayers[i].mHasNatural = true;
                 }
-                player = player.Next;
             }
         }
 
@@ -314,10 +302,8 @@ namespace NETCoreBlackJack {
 
         public void CheckEarnings() {
             float check = 0;
-            var player = mPlayers.First;
-            while(player != null) {
-                check += player.Value.mEarnings;
-                player = player.Next;
+            for(int i = 0; i < mPlayers.Count; i++) {
+                check += mPlayers[i].mEarnings;
             }
             if(check * -1 != mCasinoEarnings) {
                 Console.WriteLine("Earnings don't match");
