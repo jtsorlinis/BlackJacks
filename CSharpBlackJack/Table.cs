@@ -31,12 +31,12 @@ namespace NETCoreBlackJack {
         }
 
         void DealRound() {
-            var node = mPlayers.First;
-            while( node != null) {
-                mCurrentPlayer = node;
+            var player = mPlayers.First;
+            while( player != null) {
+                mCurrentPlayer = player;
                 Deal();
                 mCurrentPlayer.Value.Evaluate();
-                node = node.Next;
+                player = player.Next;
             }
             mCurrentPlayer = mPlayers.First;
         }
@@ -49,8 +49,11 @@ namespace NETCoreBlackJack {
         }
 
         void PreDeal() {
-            foreach(var player in mPlayers){
-                SelectBet(player);
+            var player = mPlayers.First;
+            while(player != null)
+            {
+                SelectBet(player.Value);
+                player = player.Next;
             }
         }
 
@@ -108,14 +111,14 @@ namespace NETCoreBlackJack {
         }
 
         public void Clear() {
-            var node = mPlayers.First;
-            while(node != null) {
-                var nextNode = node.Next;
-                if(node.Value.mSplitFrom != null) {
-                    mPlayers.Remove(node);
+            var player = mPlayers.First;
+            while(player != null) {
+                var nextplayer = player.Next;
+                if(player.Value.mSplitFrom != null) {
+                    mPlayers.Remove(player);
                 }
-                node.Value.ResetHand();
-                node = nextNode;
+                player.Value.ResetHand();
+                player = nextplayer;
             }
             mDealer.ResetHand();
         }
@@ -241,10 +244,12 @@ namespace NETCoreBlackJack {
 
         void DealerPlay() {
             bool allBusted = true;
-            foreach( var player in mPlayers) {
-                if(player.mValue < 22) {
+            var player = mPlayers.First;
+            while(player != null ) { 
+                if(player.Value.mValue < 22) {
                     allBusted = false;
                 }
+                player = player.Next;
             }
             mDealer.mHand[1].mFaceDown = false;
             UpdateCount(mDealer.mHand[1]);
@@ -283,10 +288,12 @@ namespace NETCoreBlackJack {
         }
 
         void CheckPlayerNatural() {
-            foreach(var player in mPlayers){
-                if(player.mValue == 21 && player.mHand.Count == 2 && player.mSplitFrom == null){
-                    player.mHasNatural = true;
+            var player = mPlayers.First;
+            while(player !=null ) {
+                if(player.Value.mValue == 21 && player.Value.mHand.Count == 2 && player.Value.mSplitFrom == null){
+                    player.Value.mHasNatural = true;
                 }
+                player = player.Next;
             }
         }
 
@@ -307,8 +314,10 @@ namespace NETCoreBlackJack {
 
         public void CheckEarnings() {
             float check = 0;
-            foreach(var player in mPlayers){
-                check += player.mEarnings;
+            var player = mPlayers.First;
+            while(player != null) {
+                check += player.Value.mEarnings;
+                player = player.Next;
             }
             if(check * -1 != mCasinoEarnings) {
                 Console.WriteLine("Earnings don't match");
