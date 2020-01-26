@@ -5,12 +5,17 @@ namespace NETCoreBlackJack {
         public bool mFaceDown = false;
         public int mValue;
         public int mCount;
+        public bool mIsAce = false;
 
         public Card(string rank, string suit) {
             mRank = rank;
             mSuit = suit;
             mValue = Evaluate();
             mCount = Count();
+            if(mRank == "A")
+            {
+                mIsAce = true;
+            }
 
         }
 

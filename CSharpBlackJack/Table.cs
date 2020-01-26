@@ -45,7 +45,7 @@ namespace NETCoreBlackJack {
             Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
             mCurrentPlayer.Value.mHand.Add(card);
             UpdateCount(card);
-            mCardPile.mCards.Remove(card);
+            mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
         }
 
         void PreDeal() {
@@ -62,7 +62,7 @@ namespace NETCoreBlackJack {
 
         void DealDealer(bool faceDown = false) {
             Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
-            mCardPile.mCards.Remove(card);
+            mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
             card.mFaceDown = faceDown;
             mDealer.mHand.Add(card);
             if(!faceDown) {

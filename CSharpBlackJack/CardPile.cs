@@ -7,6 +7,7 @@ namespace NETCoreBlackJack {
 
         public List<Card> mCards = new List<Card>();
         public List<Card> mOriginalCards = new List<Card>();
+        Random rnd = new Random();
 
         public CardPile(int numOfDecks) {
             for(int x = 0; x < numOfDecks; x++) {
@@ -29,8 +30,18 @@ namespace NETCoreBlackJack {
         }
 
         public void Shuffle() {
-            Random rnd = new Random();
-            mCards = mCards.OrderBy(item => rnd.Next()).ToList();
+            
+            //mCards = mCards.OrderBy(item => rnd.Next()).ToList();
+
+            // Fisher Yates
+            for (int i = mCards.Count - 1; i > 0; i--)
+            {
+                int j = rnd.Next() % (i + 1);
+                Card temp = mCards[i];
+                mCards[i] = mCards[j];
+                mCards[j] = temp;
+            }
+
         }
     }
 }

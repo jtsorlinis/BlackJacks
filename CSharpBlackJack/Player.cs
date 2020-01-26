@@ -105,7 +105,7 @@ namespace NETCoreBlackJack {
             foreach(var card in mHand){
                 mValue += card.mValue;
                 // check for ace
-                if(card.mRank == "A") {
+                if(card.mIsAce) {
                     mAces++;
                     mIsSoft = true;
                 }
