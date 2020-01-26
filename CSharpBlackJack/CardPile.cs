@@ -7,7 +7,8 @@ namespace NETCoreBlackJack {
 
         public List<Card> mCards = new List<Card>();
         public List<Card> mOriginalCards = new List<Card>();
-        Random rnd = new Random();
+        //Random rnd = new Random();
+        QuickRand rnd = new QuickRand();
 
         public CardPile(int numOfDecks) {
             for(int x = 0; x < numOfDecks; x++) {
