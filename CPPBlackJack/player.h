@@ -11,7 +11,7 @@ public:
 	int maxSplits = 10;
 
 	std::string mPlayerNum;
-	std::vector<Card> mHand;
+	std::vector<Card*> mHand;
 	int mValue;
 	float mEarnings;
 	int mAces;

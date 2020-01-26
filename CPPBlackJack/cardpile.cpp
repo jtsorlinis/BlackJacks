@@ -15,8 +15,8 @@ void CardPile::refresh() {
 
 std::string CardPile::print() {
 	std::string output;
-	for (auto &i : mCards) {
-		output += i.print() + "\n";
+	for (auto& i : mCards) {
+		output += i->print() + "\n";
 	}
 	return output;
 }

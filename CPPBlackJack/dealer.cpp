@@ -15,5 +15,5 @@ void Dealer::resetHand() {
 }
 
 int& Dealer::upCard() {
-	return mHand[0].mValue;
+	return mHand[0]->mValue;
 }

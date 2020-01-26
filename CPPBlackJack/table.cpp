@@ -32,9 +32,9 @@ void Table::dealRound() {
 }
 
 void Table::deal() {
-	Card& card = mCardPile.mCards.back();
+	Card* card = mCardPile.mCards.back();
 	mCurrentPlayer->mHand.push_back(std::move(card));
-	updatecount(&card);
+	updatecount(card);
 	mCardPile.mCards.pop_back();
 }
 
@@ -51,12 +51,12 @@ void Table::selectBet(Player* player) {
 }
 
 void Table::dealDealer(bool faceDown) {
-	Card card = mCardPile.mCards.back();
+	Card* card = mCardPile.mCards.back();
 	mCardPile.mCards.pop_back();
-	card.mFaceDown = faceDown;
+	card->mFaceDown = faceDown;
 	mDealer.mHand.push_back(std::move(card));
 	if (!faceDown) {
-		updatecount(&card);
+		updatecount(card);
 	}
 }
 
@@ -230,8 +230,8 @@ void Table::dealerPlay() {
 			allBusted = false;
 		}
 	}
-	mDealer.mHand[1].mFaceDown = false;
-	updatecount(&mDealer.mHand[1]);
+	mDealer.mHand[1]->mFaceDown = false;
+	updatecount(mDealer.mHand[1]);
 	mDealer.evaluate();
 	if (mVerbose > 0) {
 		std::cout << "Dealer's turn\n";
@@ -276,8 +276,8 @@ void Table::checkPlayerNatural() {
 
 bool Table::checkDealerNatural() {
 	if (mDealer.evaluate() == 21) {
-		mDealer.mHand[1].mFaceDown = false;
-		updatecount(&mDealer.mHand[1]);
+		mDealer.mHand[1]->mFaceDown = false;
+		updatecount(mDealer.mHand[1]);
 		if (mVerbose > 0) {
 			print();
 			std::cout << "Dealer has a natural 21\n\n";

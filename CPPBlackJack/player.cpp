@@ -55,8 +55,8 @@ void Player::resetHand() {
 }
 
 std::string Player::canSplit() {
-	if (mHand.size() == 2 && mHand[0].mRank == mHand[1].mRank && mSplitCount < maxSplits) {
-		return mHand[0].mRank;
+	if (mHand.size() == 2 && mHand[0]->mRank == mHand[1]->mRank && mSplitCount < maxSplits) {
+		return mHand[0]->mRank;
 	} else {
 		return "";
 	}
@@ -83,7 +83,7 @@ void Player::lose() {
 std::string Player::print() {
 	std::string output = "Player " + mPlayerNum + ": ";
 	for (auto &i : mHand) {
-		output += i.print() + " ";
+		output += i->print() + " ";
 	}
 	for (int i = mHand.size(); i < 5; i++) {
 		output += "  ";
@@ -104,9 +104,9 @@ int Player::evaluate() {
 	mAces = 0;
 	mValue = 0;
 	for (auto &card : mHand) {
-		mValue += card.mValue;
+		mValue += card->mValue;
 		// Check for ace
-		if (card.mRank == "A") {
+		if (card->mRank == "A") {
 			mAces++;
 			mIsSoft = true;
 		}

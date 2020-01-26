@@ -10,7 +10,8 @@ Deck::Deck() {
 	mSuits = { "Clubs", "Hearts", "Spades", "Diamonds" };
 	for (auto &suit : mSuits) {
 		for (auto &rank :mRanks) {
-			mCards.push_back(Card(rank, suit));
+			Card* temp = new Card(rank, suit);
+			mCards.push_back(temp);
 		}
 	}
 }
@@ -18,7 +19,7 @@ Deck::Deck() {
 std::string Deck::print() {
 	std::string output;
 	for (int x = 0; x < mCards.size(); x++) {
-		output += mCards[x].print() + "\n";
+		output += mCards[x]->print() + "\n";
 	}
 	return output;
 }
