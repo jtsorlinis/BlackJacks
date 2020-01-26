@@ -1,5 +1,8 @@
 #include "cardpile.h"
 #include <random>
+#include <time.h>
+#include "QuickRand.h"
+
 
 CardPile::CardPile(int numOfdecks) {
 	for (int x = 0; x < numOfdecks; x++) {
@@ -7,6 +10,7 @@ CardPile::CardPile(int numOfdecks) {
 		mCards.insert(mCards.end(), tempDeck.mCards.begin(), tempDeck.mCards.end());
 	}
 	mOriginalCards = mCards;
+	fast_srand(time(NULL));
 }
 
 void CardPile::refresh() {
@@ -27,7 +31,7 @@ void CardPile::shuffle() {
 
 	// Fisher yates
 	for (int i = mCards.size() - 1; i > 0; i--) {
-		int j = rand() % (i + 1);
+		int j = fast_rand() % (i + 1);
 		std::swap(mCards[i], mCards[j]);
 	}
 }
