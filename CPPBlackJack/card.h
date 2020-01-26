@@ -12,5 +12,6 @@ public:
 	bool mFaceDown;
 	int mValue;
 	int mCount;
+	int mIsAce = false;
 };
 

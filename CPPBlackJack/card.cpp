@@ -7,6 +7,9 @@ Card::Card(std::string rank, std::string suit) {
 	mFaceDown = false;
 	mValue = evaluate();
 	mCount = count();
+	if (mRank == "A") {
+		mIsAce = true;
+	}
 }
 
 std::string Card::print() {

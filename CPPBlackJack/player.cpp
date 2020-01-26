@@ -106,7 +106,7 @@ int Player::evaluate() {
 	for (auto &card : mHand) {
 		mValue += card->mValue;
 		// Check for ace
-		if (card->mRank == "A") {
+		if (card->mIsAce) {
 			mAces++;
 			mIsSoft = true;
 		}
