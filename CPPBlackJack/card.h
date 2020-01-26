@@ -2,7 +2,6 @@
 
 class Card {
 public:
-	std::string pictures = "JQK";
 	Card(std::string rank, std::string suit);
 	std::string print();
 	int evaluate();
