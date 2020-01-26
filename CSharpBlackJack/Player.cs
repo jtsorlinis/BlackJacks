@@ -49,6 +49,7 @@ namespace NETCoreBlackJack {
             mIsDone = false;
             mBetMult = 1;
             mHasNatural = false;
+            mInitialBet = mTable.mBetSize;
         }
 
         public string CanSplit() {

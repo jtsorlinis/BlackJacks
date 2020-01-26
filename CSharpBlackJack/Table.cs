@@ -5,7 +5,7 @@ namespace NETCoreBlackJack {
     class Table {
         int mVerbose;
         public int mBetSize;
-        LinkedList<Player> mPlayers = new LinkedList<Player>();
+        public LinkedList<Player> mPlayers = new LinkedList<Player>();
         int mNumOfDecks;
         public CardPile mCardPile;
         int mMinCards;
@@ -74,7 +74,7 @@ namespace NETCoreBlackJack {
             Clear();
             if(mVerbose > 0) {
                 Console.WriteLine(mCardPile.mCards.Count + " cards left");
-                Console.WriteLine("Running count is: " + mRunningCount);
+                Console.WriteLine("Running count is: " + mRunningCount + "\tTrue count is: " + (int)mTrueCount);
             }
             GetNewCards();
             PreDeal();
@@ -135,7 +135,7 @@ namespace NETCoreBlackJack {
 
         void Stand() {
             if(mVerbose > 0 && mCurrentPlayer.Value.mValue <= 21) {
-                Console.WriteLine("Player" + mCurrentPlayer.Value.mPlayerNum + " stands");
+                Console.WriteLine("Player " + mCurrentPlayer.Value.mPlayerNum + " stands");
                 Print();
             }
             mCurrentPlayer.Value.mIsDone = true;
