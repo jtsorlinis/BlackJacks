@@ -44,7 +44,7 @@ namespace NETCoreBlackJack {
         void Deal() {
             Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
             mCurrentPlayer.Value.mHand.Add(card);
-            UpdateCount(card);
+            mRunningCount += card.mCount;
             mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
         }
 
@@ -69,12 +69,13 @@ namespace NETCoreBlackJack {
             card.mFaceDown = faceDown;
             mDealer.mHand.Add(card);
             if(!faceDown) {
-                UpdateCount(card);
+                mRunningCount += card.mCount;
             }
         }
 
         public void StartRound() {
             Clear();
+            UpdateCount();
             if(mVerbose > 0) {
                 Console.WriteLine(mCardPile.mCards.Count + " cards left");
                 Console.WriteLine("Running count is: " + mRunningCount + "\tTrue count is: " + (int)mTrueCount);
@@ -123,9 +124,8 @@ namespace NETCoreBlackJack {
             mDealer.ResetHand();
         }
 
-        void UpdateCount(Card card) {
-            mRunningCount += card.mCount;
-            mTrueCount = mRunningCount / (mCardPile.mCards.Count/(float)52);
+        void UpdateCount() {
+            mTrueCount = mRunningCount / (mCardPile.mCards.Count/52f);
         }
 
         void Hit() {
@@ -252,7 +252,7 @@ namespace NETCoreBlackJack {
                 player = player.Next;
             }
             mDealer.mHand[1].mFaceDown = false;
-            UpdateCount(mDealer.mHand[1]);
+            mRunningCount += mDealer.mHand[1].mCount;
             mDealer.Evaluate();
             if(mVerbose > 0) {
                 Console.WriteLine("Dealer's turn");
@@ -300,7 +300,7 @@ namespace NETCoreBlackJack {
         bool CheckDealerNatural() {
             if(mDealer.Evaluate() == 21) {
                 mDealer.mHand[1].mFaceDown = false;
-                UpdateCount(mDealer.mHand[1]);
+                mRunningCount += mDealer.mHand[1].mCount;
                 if(mVerbose > 0) {
                     Print();
                     Console.WriteLine("Dealer has a natural 21");
