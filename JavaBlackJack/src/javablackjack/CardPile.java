@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 class CardPile {
-    public List<Card> mCards = new ArrayList<>();
-    public List<Card> mOriginalCards = new ArrayList<>();
+     List<Card> mCards = new ArrayList<>();
+     List<Card> mOriginalCards = new ArrayList<>();
 
-    public CardPile(int numOfDecks) {
+     CardPile(int numOfDecks) {
         for (int i = 0; i < numOfDecks; i++) {
             Deck temp = new Deck();
             mCards.addAll(temp.mCards);
@@ -16,11 +16,11 @@ class CardPile {
         mOriginalCards = new ArrayList<>(mCards);
     }
 
-    public void refresh() {
+     void refresh() {
         mCards = new ArrayList<>(mOriginalCards);
     }
 
-    public String print() {
+     String print() {
         String output = "";
             for(Card card : mCards) {
                 output += card.print() + "\n";
@@ -28,7 +28,7 @@ class CardPile {
             return output;
     }
 
-    public void shuffle() {
+     void shuffle() {
         // TODO: Speed this up
         Collections.shuffle(mCards);
     }
