@@ -13,7 +13,12 @@ int minCards = 40;
 int rounds = 100000;
 int verbose = 0;
 
-int main() {
+int main(int argc, char *argv[]) {
+	
+	if(argc == 2) {
+		rounds = atoi(argv[1]);
+	}
+
 	Table table1(numOfPlayers,numOfDecks,baseBet,minCards,verbose);
 	table1.mCardPile.shuffle();
 	std::cout << std::fixed << std::setprecision(2);
