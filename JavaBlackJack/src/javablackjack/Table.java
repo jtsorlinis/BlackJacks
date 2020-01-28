@@ -33,9 +33,9 @@ class Table {
     }
 
     void dealRound() {
-        for(int i = 0; i < mPlayers.size(); i++) { 
+        for(Player player : mPlayers){
             deal();
-            mPlayers.get(i).evaluate();
+            player.evaluate();
             mCurrentPlayer++;
         }
         mCurrentPlayer = 0;
@@ -113,9 +113,19 @@ class Table {
     }
 
     public void clear() {
+        // ListIterator<Player> iter = mPlayers.listIterator();
+        // while(iter.hasNext()){
+        //     Player pl = iter.next();
+        //     pl.resetHand();
+        //     if(pl.mSplitFrom != null){
+        //         iter.remove();
+        //     }
+        // }
+
         for(int i = mPlayers.size() -1; i >= 0; i--) {
-            mPlayers.get(i).resetHand();
-            if (mPlayers.get(i).mSplitFrom != null) {
+            if (mPlayers.get(i).mSplitFrom == null) {
+                mPlayers.get(i).resetHand();
+            } else {
                 mPlayers.remove(i);
             }
         }
@@ -243,8 +253,8 @@ class Table {
 
     void dealerPlay() {
         boolean allBusted = true;
-        for(int i = 0; i < mPlayers.size(); i++) {
-            if(mPlayers.get(i).mValue < 22) {
+        for(Player player : mPlayers){
+            if(player.mValue < 22) {
                 allBusted = false;
             }
         }
@@ -308,8 +318,8 @@ class Table {
 
     public void checkEarnings() {
         float check = 0;
-        for(int i = 0; i < mPlayers.size(); i++) {
-            check += mPlayers.get(i).mEarnings;
+        for(Player player : mPlayers) {
+            check += player.mEarnings;
         }
         if(check * -1 != mCasinoEarnings) {
             System.out.println("Earnings don't match");
