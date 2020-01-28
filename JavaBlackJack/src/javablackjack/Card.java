@@ -13,6 +13,9 @@ class Card {
         mSuit = suit;
         mValue = evaluate();
         mCount = count();
+        if(mRank == "A") {
+            mIsAce = true;
+        }
     }
 
     public String print() {
