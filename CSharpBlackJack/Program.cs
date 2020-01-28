@@ -15,6 +15,10 @@ namespace NETCoreBlackJack
             int rounds = 100000;
             int verbosity = 0;
 
+            if(args.Length == 1) {
+                rounds = int.Parse(args[0]);
+            }
+
             Table table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards, verbosity);
             table1.mCardPile.Shuffle();
             
