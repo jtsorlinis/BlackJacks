@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 			std::cout << "Round " << x << "\n";
 		}
 		if (verbose == 0 && rounds > 1000 && x % (rounds / 100) == 0) {
-			std::cout << "\tProgress: " << (int)(((float)x/rounds)*100) << "%\r";
+			std::cerr << "\tProgress: " << (int)(((float)x/rounds)*100) << "%\r";
 		}
 		
 		table1.startRound();
