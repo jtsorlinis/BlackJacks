@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"goblackjack/cardpile"
 	"time"
 )
@@ -13,5 +14,5 @@ func main() {
 		cp.Shuffle()
 	}
 	println(cp.Print())
-	println(time.Since(start).Milliseconds())
+	fmt.Printf("%.3f seconds\n", time.Since(start).Seconds())
 }

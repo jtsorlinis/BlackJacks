@@ -3,11 +3,11 @@ package player
 import (
 	"GoBlackJack/card"
 	"GoBlackJack/table"
-	"strconv"
+	"fmt"
 )
 
-var playerNumCount = 0
-var maxSplits = 10
+var playerNumCount int32 = 0
+var maxSplits int32 = 10
 
 // Player class
 type Player struct {
@@ -38,7 +38,7 @@ func New(table *table.Table, split *Player) *Player {
 		p.MSplitFrom = split
 	} else {
 		playerNumCount++
-		p.MPlayerNum = strconv.Itoa(playerNumCount)
+		p.MPlayerNum = fmt.Sprint(playerNumCount)
 	}
 	return &p
 }
@@ -59,4 +59,51 @@ func (p *Player) ResetHand() {
 	p.MBetMult = 1
 	p.MHasNatural = false
 	p.MInitialBet = p.MTable.MBetSize
+}
+
+// CanSplit checks if the player can split
+func (p *Player) CanSplit() string {
+	if len(p.MHand) == 2 && p.MHand[0].MRank == p.MHand[1].MRank && p.MSplitCount < maxSplits {
+		return p.MHand[0].MRank
+	}
+	return ""
+}
+
+// Win increases player earnings
+func (p *Player) Win(mult float32) {
+	if p.MSplitFrom != nil {
+		p.MSplitFrom.Win(mult)
+	} else {
+		p.MEarnings += (float32(p.MInitialBet) * p.MBetMult * mult)
+		p.MTable.MCasinoEarnings -= (float32(p.MInitialBet) * p.MBetMult * mult)
+	}
+
+}
+
+// Lose decreases player earnings
+func (p *Player) Lose() {
+	if p.MSplitFrom != nil {
+		p.MSplitFrom.Lose()
+	} else {
+		p.MEarnings -= (float32(p.MInitialBet) * p.MBetMult)
+		p.MTable.MCasinoEarnings += (float32(p.MInitialBet) * p.MBetMult)
+	}
+}
+
+// Print prints the players number and hand
+func (p *Player) Print() string {
+	output := "Player " + fmt.Sprint(p.MPlayerNum) + ": "
+	for _, card := range p.MHand {
+		output += card.Print() + " "
+	}
+	for i := len(p.MHand); i < 5; i++ {
+		output += "  "
+	}
+	output += "\tScore: " + fmt.Sprint(p.MValue)
+	if p.MValue > 21 {
+		output += " (Bust) "
+	} else {
+		output += "        "
+	}
+	return output
 }
