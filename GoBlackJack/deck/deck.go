@@ -27,7 +27,7 @@ func New() Deck {
 }
 
 // Print the cards
-func (d Deck) Print() string {
+func (d *Deck) Print() string {
 	output := ""
 	for _, card := range d.MCards {
 		output += card.Print()
@@ -36,7 +36,7 @@ func (d Deck) Print() string {
 }
 
 // Shuffle the cards
-func (d Deck) Shuffle() {
+func (d *Deck) Shuffle() {
 	rand.Shuffle(len(d.MCards), func(i, j int) {
 		d.MCards[i], d.MCards[j] = d.MCards[j], d.MCards[i]
 	})
