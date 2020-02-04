@@ -6,11 +6,13 @@ import (
 	"math/rand"
 )
 
+// CardPile class
 type CardPile struct {
 	MCards         []*card.Card
 	mOriginalCards []*card.Card
 }
 
+// New cardpile constructor
 func New(numofdecks int32) CardPile {
 	cp := CardPile{}
 	for x := int32(0); x < numofdecks; x++ {
@@ -38,6 +40,7 @@ func (c *CardPile) Shuffle() {
 	})
 }
 
+// Refresh the cardpile
 func (c *CardPile) Refresh() {
 	c.MCards = append([]*card.Card(nil), c.mOriginalCards...)
 }
