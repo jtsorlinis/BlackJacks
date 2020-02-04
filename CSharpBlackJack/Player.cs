@@ -99,7 +99,7 @@ namespace NETCoreBlackJack {
             return output;
         }
 
-        public int Evaluate() {
+        public void Evaluate() {
             mAces = 0;
             mValue = 0;
             for(int i = 0; i < mHand.Count;i++){
@@ -119,8 +119,6 @@ namespace NETCoreBlackJack {
             if(mAces == 0) {
                 mIsSoft = false;
             }
-
-            return mValue;
         }
     }
 }

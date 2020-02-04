@@ -286,7 +286,8 @@ namespace NETCoreBlackJack {
         }
 
         bool CheckDealerNatural() {
-            if(mDealer.Evaluate() == 21) {
+            mDealer.Evaluate();
+            if (mDealer.mValue == 21) {
                 mDealer.mHand[1].mFaceDown = false;
                 mRunningCount += mDealer.mHand[1].mCount;
                 if(mVerbose > 0) {
