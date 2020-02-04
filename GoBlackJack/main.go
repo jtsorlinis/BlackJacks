@@ -1,11 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"goblackjack/deck"
+	"goblackjack/cardpile"
+	"time"
 )
 
 func main() {
-	d := deck.New()
-	fmt.Println(d.Print())
+	start := time.Now()
+	cp := cardpile.New(8)
+	println(cp.Print())
+	for i := 0; i < 1000000; i++ {
+		cp.Shuffle()
+	}
+	println(time.Since(start).Milliseconds())
 }
