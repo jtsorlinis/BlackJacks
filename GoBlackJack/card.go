@@ -1,23 +1,25 @@
-package card
+package main
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Card class
 type Card struct {
 	MRank     string
 	mSuit     string
 	mFaceDown bool
-	mValue    int32
+	MValue    int32
 	mCount    int32
-	mIsAce    bool
+	MIsAce    bool
 }
 
-//New card constructor
-func New(rank string, suit string) *Card {
+//NewCard constructor
+func NewCard(rank string, suit string) *Card {
 	c := Card{rank, suit, false, 0, 0, false}
-	c.mValue = c.evaluate()
+	c.MValue = c.evaluate()
 	c.mCount = c.count()
-	c.mIsAce = c.isAce()
+	c.MIsAce = c.MRank == "A"
 	return &c
 }
 
@@ -48,11 +50,4 @@ func (c *Card) count() int32 {
 	} else {
 		return 1
 	}
-}
-
-func (c *Card) isAce() bool {
-	if c.MRank == "A" {
-		return true
-	}
-	return false
 }

@@ -1,8 +1,6 @@
-package player
+package main
 
 import (
-	"GoBlackJack/card"
-	"GoBlackJack/table"
 	"fmt"
 )
 
@@ -12,7 +10,7 @@ var maxSplits int32 = 10
 // Player class
 type Player struct {
 	MPlayerNum  string
-	MHand       []*card.Card
+	MHand       []*Card
 	MValue      int32
 	MEarnings   float32
 	MAces       int32
@@ -22,12 +20,12 @@ type Player struct {
 	MSplitFrom  *Player
 	MBetMult    float32
 	MHasNatural bool
-	MTable      *table.Table
+	MTable      *Table
 	MInitialBet int32
 }
 
-// New Player constructor
-func New(table *table.Table, split *Player) *Player {
+// NewPlayer constructor
+func NewPlayer(table *Table, split *Player) *Player {
 	p := Player{"", nil, 0, 0, 0, false, 0, false, nil, 1, false, nil, 0}
 	p.MTable = table
 	p.MInitialBet = p.MTable.MBetSize
@@ -103,7 +101,31 @@ func (p *Player) Print() string {
 	if p.MValue > 21 {
 		output += " (Bust) "
 	} else {
-		output += "        "
+		output += "        \tBet: "
+		output += fmt.Sprint(float32(p.MInitialBet) * p.MBetMult)
 	}
 	return output
+}
+
+// Evaluate evaluates the player's hand
+func (p *Player) Evaluate() {
+	p.MAces = 0
+	p.MValue = 0
+	for _, card := range p.MHand {
+		p.MValue += card.MValue
+		// check for ace
+		if card.MIsAce {
+			p.MAces++
+			p.MIsSoft = true
+		}
+	}
+
+	for p.MValue > 21 && p.MAces > 0 {
+		p.MValue -= 10
+		p.MAces--
+	}
+
+	if p.MAces == 0 {
+		p.MIsSoft = false
+	}
 }

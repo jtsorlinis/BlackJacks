@@ -1,24 +1,22 @@
-package cardpile
+package main
 
 import (
-	"goblackjack/card"
-	"goblackjack/deck"
 	"math/rand"
 	"time"
 )
 
 // CardPile class
 type CardPile struct {
-	MCards         []*card.Card
-	mOriginalCards []*card.Card
+	MCards         []*Card
+	mOriginalCards []*Card
 }
 
-// New cardpile constructor
-func New(numofdecks int32) *CardPile {
+// NewCardPile constructor
+func NewCardPile(numofdecks int32) *CardPile {
 	rand.Seed(time.Now().Unix())
 	cp := CardPile{}
 	for x := int32(0); x < numofdecks; x++ {
-		temp := deck.New()
+		temp := NewDeck()
 		cp.MCards = append(cp.MCards, temp.MCards...)
 	}
 
@@ -44,5 +42,5 @@ func (c *CardPile) Shuffle() {
 
 // Refresh the cardpile
 func (c *CardPile) Refresh() {
-	c.MCards = append([]*card.Card(nil), c.mOriginalCards...)
+	c.MCards = append([]*Card(nil), c.mOriginalCards...)
 }

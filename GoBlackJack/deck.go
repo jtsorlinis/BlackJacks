@@ -1,7 +1,6 @@
-package deck
+package main
 
 import (
-	"goblackjack/card"
 	"math/rand"
 )
 
@@ -10,15 +9,15 @@ var ranks = []string{"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q"
 
 // Deck class
 type Deck struct {
-	MCards []*card.Card
+	MCards []*Card
 }
 
-// New deck constructor
-func New() *Deck {
+// NewDeck constructor
+func NewDeck() *Deck {
 	d := Deck{}
 	for _, suit := range suits {
 		for _, rank := range ranks {
-			c := card.New(rank, suit)
+			c := NewCard(rank, suit)
 			d.MCards = append(d.MCards, c)
 		}
 	}

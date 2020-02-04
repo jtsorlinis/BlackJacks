@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"goblackjack/cardpile"
 	"time"
 )
 
 func main() {
 	start := time.Now()
-	cp := cardpile.New(1)
+	cp := NewCardPile(5)
 	println(cp.Print())
 	for i := 0; i < 1000000; i++ {
 		cp.Shuffle()
