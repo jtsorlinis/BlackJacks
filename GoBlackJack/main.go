@@ -12,5 +12,6 @@ func main() {
 	for i := 0; i < 1000000; i++ {
 		cp.Shuffle()
 	}
+	println(cp.Print())
 	println(time.Since(start).Milliseconds())
 }

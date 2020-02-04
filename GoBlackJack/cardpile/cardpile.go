@@ -4,6 +4,7 @@ import (
 	"goblackjack/card"
 	"goblackjack/deck"
 	"math/rand"
+	"time"
 )
 
 // CardPile class
@@ -13,7 +14,8 @@ type CardPile struct {
 }
 
 // New cardpile constructor
-func New(numofdecks int32) CardPile {
+func New(numofdecks int32) *CardPile {
+	rand.Seed(time.Now().Unix())
 	cp := CardPile{}
 	for x := int32(0); x < numofdecks; x++ {
 		temp := deck.New()
@@ -21,7 +23,7 @@ func New(numofdecks int32) CardPile {
 	}
 
 	cp.mOriginalCards = append(cp.mOriginalCards, cp.MCards...)
-	return cp
+	return &cp
 }
 
 // Print the cards

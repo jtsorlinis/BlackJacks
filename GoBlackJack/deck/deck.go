@@ -7,7 +7,6 @@ import (
 
 var suits = []string{"Clubs", "Hearts", "Spades", "Diamonds"}
 var ranks = []string{"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"}
-var rnd = rand.Seed
 
 // Deck class
 type Deck struct {
@@ -15,15 +14,15 @@ type Deck struct {
 }
 
 // New deck constructor
-func New() Deck {
+func New() *Deck {
 	d := Deck{}
 	for _, suit := range suits {
 		for _, rank := range ranks {
 			c := card.New(rank, suit)
-			d.MCards = append(d.MCards, &c)
+			d.MCards = append(d.MCards, c)
 		}
 	}
-	return d
+	return &d
 }
 
 // Print the cards

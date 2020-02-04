@@ -13,12 +13,12 @@ type Card struct {
 }
 
 //New card constructor
-func New(rank string, suit string) Card {
+func New(rank string, suit string) *Card {
 	c := Card{rank, suit, false, 0, 0, false}
 	c.mValue = c.evaluate()
 	c.mCount = c.count()
 	c.mIsAce = c.isAce()
-	return c
+	return &c
 }
 
 // Print the current value of the card
