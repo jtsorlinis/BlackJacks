@@ -5,17 +5,20 @@ import (
 	"time"
 )
 
-const NumPlayers int32 = 5
-const NumDecks int32 = 8
-const BetSize int32 = 10
-const MinCards int32 = 40
+const numPlayers int32 = 5
+const numDecks int32 = 8
+const betSize int32 = 10
+const minCards int32 = 40
 
-const Rounds int32 = 1000
-const Verbose bool = true
+const rounds int32 = 1000
+const verbose bool = true
 
 func main() {
+
+	t := NewTable(numPlayers, numDecks, betSize, minCards, verbose)
+
 	start := time.Now()
-	t := NewTable(NumPlayers, NumDecks, BetSize, MinCards, Verbose)
-	t.Print()
+	t.StartRound()
+
 	fmt.Printf("%.3f seconds\n", time.Since(start).Seconds())
 }
