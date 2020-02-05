@@ -1,9 +1,8 @@
 package main
 
-import (
-	"math/rand"
-	"time"
-)
+import "time"
+
+var rnd = NewSource(time.Now().Unix())
 
 // CardPile class
 type CardPile struct {
@@ -13,7 +12,6 @@ type CardPile struct {
 
 // NewCardPile constructor
 func NewCardPile(numofdecks int32) *CardPile {
-	rand.Seed(time.Now().Unix())
 	cp := CardPile{}
 	for x := int32(0); x < numofdecks; x++ {
 		temp := NewDeck()
@@ -35,9 +33,11 @@ func (c *CardPile) Print() string {
 
 // Shuffle the cards
 func (c *CardPile) Shuffle() {
-	rand.Shuffle(len(c.MCards), func(i, j int) {
+	var i uint32 = uint32(len(c.MCards) - 1)
+	for ; i > 0; i-- {
+		j := uint32(rnd.Uint64()) % (i + 1)
 		c.MCards[i], c.MCards[j] = c.MCards[j], c.MCards[i]
-	})
+	}
 }
 
 // Refresh the cardpile
