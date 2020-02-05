@@ -12,7 +12,7 @@ const numDecks int32 = 8
 const betSize int32 = 10
 const minCards int32 = 40
 
-var rounds int = 1000000
+var rounds int = 100000
 
 const verbose bool = false
 
