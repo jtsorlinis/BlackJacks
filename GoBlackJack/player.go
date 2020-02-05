@@ -48,7 +48,7 @@ func (p *Player) DoubleBet() {
 
 // ResetHand resets the player's hand
 func (p *Player) ResetHand() {
-	p.MHand = nil
+	p.MHand = p.MHand[:0]
 	p.MValue = 0
 	p.MAces = 0
 	p.MIsSoft = false
@@ -60,11 +60,11 @@ func (p *Player) ResetHand() {
 }
 
 // CanSplit checks if the player can split
-func (p *Player) CanSplit() string {
+func (p *Player) CanSplit() int32 {
 	if len(p.MHand) == 2 && p.MHand[0].MRank == p.MHand[1].MRank && p.MSplitCount < maxSplits {
-		return p.MHand[0].MRank
+		return p.MHand[0].MValue
 	}
-	return ""
+	return 0
 }
 
 // Win increases player earnings

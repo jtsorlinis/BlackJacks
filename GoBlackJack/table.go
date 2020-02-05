@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"strconv"
 )
 
 //Table class
@@ -218,12 +217,11 @@ func (t *Table) autoPlay() {
 		}
 
 		if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
-			canSplit := t.MPlayers[t.mCurrentPlayer].CanSplit()
-			canSpliti32, _ := strconv.Atoi(canSplit)
-			if canSplit == "A" {
+			splitCardVal := t.MPlayers[t.mCurrentPlayer].CanSplit()
+			if splitCardVal == 11 {
 				t.splitAces()
-			} else if canSplit != "" && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K") {
-				t.action(getAction(int32(canSpliti32), t.MDealer.UpCard(), t.MStratSplit))
+			} else if splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10) {
+				t.action(getAction(splitCardVal, t.MDealer.UpCard(), t.MStratSplit))
 			} else if t.MPlayers[t.mCurrentPlayer].MIsSoft {
 				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), t.MStratSoft))
 			} else {

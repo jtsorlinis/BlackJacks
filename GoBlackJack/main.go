@@ -17,7 +17,9 @@ var rounds int = 100000
 const verbose bool = false
 
 func main() {
-	//defer profile.Start().Stop()
+	// f, _ := os.Create("test.prof")
+	// pprof.StartCPUProfile(f)
+	// defer pprof.StopCPUProfile()
 
 	if len(os.Args) == 2 {
 		rounds, _ = strconv.Atoi(os.Args[1])

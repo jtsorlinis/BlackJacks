@@ -19,7 +19,7 @@ func NewDealer() *Dealer {
 
 // ResetHand resets dealer's hand
 func (d *Dealer) ResetHand() {
-	d.MHand = nil
+	d.MHand = d.MHand[:0]
 	d.MValue = 0
 }
 
