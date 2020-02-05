@@ -12,7 +12,7 @@ namespace NETCoreBlackJack
             int betSize = 10;
             int minCards = 40;
 
-            int rounds = 100000;
+            int rounds = 1000000;
             int verbosity = 0;
 
             if(args.Length == 1) {
