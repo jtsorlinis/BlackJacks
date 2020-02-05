@@ -183,18 +183,18 @@ void Table::autoPlay() {
 		}
 
 		if (mCurrentPlayer->mHand.size() < 5 && mCurrentPlayer->mValue < 21) {
-			std::string canSplit = mCurrentPlayer->canSplit();
-			if (canSplit == "A") {
+			int splitCardVal = mCurrentPlayer->canSplit();
+			if (splitCardVal == 11) {
 				splitAces();
 			}
-			else if (!canSplit.empty() && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K")) {
-				action(getAction(std::stoi(canSplit), mDealer.upCard(), mStratSplit));
+			else if (splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10)) {
+				action(getAction(splitCardVal, mDealer.upCard(), &mStratSplit));
 			}
 			else if (mCurrentPlayer->mIsSoft) {
-				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), mStratSoft));
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), &mStratSoft));
 			}
 			else {
-				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), mStratHard));
+				action(getAction(mCurrentPlayer->mValue, mDealer.upCard(), &mStratHard));
 			}
 		}
 		else {

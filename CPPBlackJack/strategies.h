@@ -51,9 +51,9 @@ std::vector<std::vector<std::string>> stratSplit = {
 	{"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
 };
 
-std::string getAction(int const &playerVal, int &dealerVal, std::unordered_map<int, std::string> &strategy) {
+std::string getAction(int const &playerVal, int &dealerVal, std::unordered_map<int, std::string> *strategy) {
 	int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1))/ 2 + dealerVal;
-	return strategy[key];
+	return strategy->at(key);
 };
 
 std::unordered_map<int, std::string> vecToMap(std::vector<std::vector<std::string>> vec) {

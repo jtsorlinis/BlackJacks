@@ -54,11 +54,11 @@ void Player::resetHand() {
 	mInitialBet = mTable->mBetSize;
 }
 
-std::string Player::canSplit() {
+int Player::canSplit() {
 	if (mHand.size() == 2 && mHand[0]->mRank == mHand[1]->mRank && mSplitCount < maxSplits) {
-		return mHand[0]->mRank;
+		return mHand[0]->mValue;
 	} else {
-		return "";
+		return 0;
 	}
 }
 

@@ -28,7 +28,7 @@ public:
 	Player(Table* table = NULL, Player* split = NULL);
 	void doubleBet();
 	virtual void resetHand();
-	std::string canSplit();
+	int canSplit();
 	void win(float mult = 1);
 	void lose();
 	std::string print();
