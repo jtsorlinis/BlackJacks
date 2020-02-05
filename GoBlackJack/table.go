@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 )
 
 //Table class
@@ -19,9 +20,9 @@ type Table struct {
 	MCasinoEarnings float32
 	MRunningCount   int32
 	MTrueCount      float32
-	MStratHard      map[string]int32
-	MStratSoft      map[string]int32
-	MStratSplit     map[string]int32
+	MStratHard      map[int32]string
+	MStratSoft      map[int32]string
+	MStratSplit     map[int32]string
 }
 
 // NewTable constructor
@@ -37,9 +38,9 @@ func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, v
 		MCasinoEarnings: 0,
 		MRunningCount:   0,
 		MTrueCount:      0,
-		MStratHard:      nil,
-		MStratSoft:      nil,
-		MStratSplit:     nil,
+		MStratHard:      array2dToMap(stratHard),
+		MStratSoft:      array2dToMap(stratSoft),
+		MStratSplit:     array2dToMap(stratSplit),
 	}
 	for i := int32(0); i < numplayers; i++ {
 		t.MPlayers = append(t.MPlayers, NewPlayer(&t, nil))
@@ -135,6 +136,7 @@ func (t *Table) clear() {
 	}
 	t.MDealer.ResetHand()
 	t.MPlayers = clearedList
+	t.mCurrentPlayer = 0
 }
 
 func (t *Table) updateCount() {
@@ -146,7 +148,6 @@ func (t *Table) hit() {
 	t.MPlayers[t.mCurrentPlayer].Evaluate()
 	if t.MVerbose {
 		println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " hits")
-		t.print()
 	}
 }
 
@@ -159,11 +160,37 @@ func (t *Table) stand() {
 }
 
 func (t *Table) split() {
-	//TODO
+	splitPlayer := NewPlayer(t, t.MPlayers[t.mCurrentPlayer])
+	_, t.MPlayers[t.mCurrentPlayer].MHand = t.MPlayers[t.mCurrentPlayer].MHand[len(t.MPlayers[t.mCurrentPlayer].MHand)-1], t.MPlayers[t.mCurrentPlayer].MHand[:len(t.MPlayers[t.mCurrentPlayer].MHand)-1]
+	t.MPlayers = append(t.MPlayers, nil)
+	copy(t.MPlayers[t.mCurrentPlayer+2:], t.MPlayers[t.mCurrentPlayer+1:])
+	t.MPlayers[t.mCurrentPlayer+1] = splitPlayer
+	t.MPlayers[t.mCurrentPlayer].Evaluate()
+	t.MPlayers[t.mCurrentPlayer+1].Evaluate()
+	if t.MVerbose {
+		println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " splits")
+	}
 }
 
 func (t *Table) splitAces() {
-	//TODO
+	if t.MVerbose {
+		println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " splits Aces")
+	}
+	splitPlayer := NewPlayer(t, t.MPlayers[t.mCurrentPlayer])
+	_, t.MPlayers[t.mCurrentPlayer].MHand = t.MPlayers[t.mCurrentPlayer].MHand[len(t.MPlayers[t.mCurrentPlayer].MHand)-1], t.MPlayers[t.mCurrentPlayer].MHand[:len(t.MPlayers[t.mCurrentPlayer].MHand)-1]
+	t.MPlayers = append(t.MPlayers, nil)
+	copy(t.MPlayers[t.mCurrentPlayer+2:], t.MPlayers[t.mCurrentPlayer+1:])
+	t.MPlayers[t.mCurrentPlayer+1] = splitPlayer
+	t.deal()
+	t.MPlayers[t.mCurrentPlayer].Evaluate()
+	t.stand()
+	t.mCurrentPlayer++
+	t.deal()
+	t.MPlayers[t.mCurrentPlayer].Evaluate()
+	t.stand()
+	if t.MVerbose {
+		t.print()
+	}
 }
 
 func (t *Table) doubleBet() {
@@ -180,9 +207,31 @@ func (t *Table) doubleBet() {
 }
 
 func (t *Table) autoPlay() {
-	// TODO implement proper strategy
-	for t.MPlayers[t.mCurrentPlayer].MValue < 17 {
-		t.hit()
+	for !t.MPlayers[t.mCurrentPlayer].MIsDone {
+		// check if player just split
+		if len(t.MPlayers[t.mCurrentPlayer].MHand) == 1 {
+			if t.MVerbose {
+				println("Player " + t.MPlayers[t.mCurrentPlayer].MPlayerNum + " gets 2nd card after splitting")
+			}
+			t.deal()
+			t.MPlayers[t.mCurrentPlayer].Evaluate()
+		}
+
+		if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
+			canSplit := t.MPlayers[t.mCurrentPlayer].CanSplit()
+			canSpliti32, _ := strconv.Atoi(canSplit)
+			if canSplit == "A" {
+				t.splitAces()
+			} else if canSplit != "" && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K") {
+				t.action(getAction(int32(canSpliti32), t.MDealer.UpCard(), t.MStratSplit))
+			} else if t.MPlayers[t.mCurrentPlayer].MIsSoft {
+				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), t.MStratSoft))
+			} else {
+				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), t.MStratHard))
+			}
+		} else {
+			t.stand()
+		}
 	}
 	t.nextPlayer()
 }
