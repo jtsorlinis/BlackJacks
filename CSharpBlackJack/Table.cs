@@ -195,12 +195,12 @@ namespace NETCoreBlackJack {
                 }
 
                 if (mPlayers[mCurrentPlayer].mHand.Count < 5 && mPlayers[mCurrentPlayer].mValue < 21) {
-                    string canSplit = mPlayers[mCurrentPlayer].CanSplit();
-                    if (canSplit == "A") {
+                    int splitCardVal = mPlayers[mCurrentPlayer].CanSplit();
+                    if (splitCardVal == 11) {
                         SplitAces();
                     }
-                    else if (canSplit != null && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K")) {
-                        Action(Strategies.GetAction(int.Parse(canSplit), mDealer.UpCard(), mStratSplit));
+                    else if (splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10)) {
+                        Action(Strategies.GetAction(splitCardVal, mDealer.UpCard(), mStratSplit));
                     }
                     else if (mPlayers[mCurrentPlayer].mIsSoft) {
                         Action(Strategies.GetAction(mPlayers[mCurrentPlayer].mValue, mDealer.UpCard(), mStratSoft));

@@ -52,11 +52,11 @@ namespace NETCoreBlackJack {
             mInitialBet = mTable.mBetSize;
         }
 
-        public string CanSplit() {
+        public int CanSplit() {
             if(mHand.Count == 2 && mHand[0].mRank == mHand[1].mRank && mSplitCount < maxsplits) {
-                return mHand[0].mRank;
+                return mHand[0].mValue;
             } else {
-                return null;
+                return 0;
             }
             
         }
