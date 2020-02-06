@@ -72,7 +72,6 @@ func (t *Table) preDeal() {
 
 func (t *Table) selectBet(player *Player) {
 	if t.MTrueCount >= 2 {
-		//TODO type conversions can be optimized
 		player.MInitialBet = int32(float64(t.MBetSize) * math.Floor(float64(t.MTrueCount)) * 1.25)
 	}
 }
