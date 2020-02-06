@@ -58,10 +58,9 @@ func (t *Table) dealRound() {
 }
 
 func (t *Table) deal() {
-	var card *Card
-	card, t.MCardPile.MCards = t.MCardPile.MCards[len(t.MCardPile.MCards)-1], t.MCardPile.MCards[:len(t.MCardPile.MCards)-1]
-	t.MPlayers[t.mCurrentPlayer].MHand = append(t.MPlayers[t.mCurrentPlayer].MHand, card)
-	t.MRunningCount += card.mCount
+	t.MPlayers[t.mCurrentPlayer].MHand = append(t.MPlayers[t.mCurrentPlayer].MHand, t.MCardPile.MCards[len(t.MCardPile.MCards)-1])
+	t.MRunningCount += t.MCardPile.MCards[len(t.MCardPile.MCards)-1].mCount
+	t.MCardPile.MCards = t.MCardPile.MCards[:len(t.MCardPile.MCards)-1]
 }
 
 func (t *Table) preDeal() {
@@ -77,13 +76,12 @@ func (t *Table) selectBet(player *Player) {
 }
 
 func (t *Table) dealDealer(facedown bool) {
-	var card *Card
-	card, t.MCardPile.MCards = t.MCardPile.MCards[len(t.MCardPile.MCards)-1], t.MCardPile.MCards[:len(t.MCardPile.MCards)-1]
-	card.mFaceDown = facedown
-	t.MDealer.MHand = append(t.MDealer.MHand, card)
+	t.MCardPile.MCards[len(t.MCardPile.MCards)-1].mFaceDown = facedown
+	t.MDealer.MHand = append(t.MDealer.MHand, t.MCardPile.MCards[len(t.MCardPile.MCards)-1])
 	if !facedown {
-		t.MRunningCount += card.mCount
+		t.MRunningCount += t.MCardPile.MCards[len(t.MCardPile.MCards)-1].mCount
 	}
+	t.MCardPile.MCards = t.MCardPile.MCards[:len(t.MCardPile.MCards)-1]
 }
 
 // StartRound plays a round
