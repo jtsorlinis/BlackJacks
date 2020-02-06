@@ -61,11 +61,11 @@ class Player {
         mInitialBet = mTable.mBetSize;
     }
 
-    String canSplit() {
+    int canSplit() {
         if(mHand.size() == 2 && mHand.get(0).mRank == mHand.get(1).mRank && mSplitCount < maxsplits) {
-            return mHand.get(0).mRank;
+            return mHand.get(0).mValue;
         } else {
-            return null;
+            return 0;
         }
     }
 

@@ -211,12 +211,12 @@ class Table {
             }
 
             if (mPlayers.get(mCurrentPlayer).mHand.size() < 5 && mPlayers.get(mCurrentPlayer).mValue < 21) {
-                String canSplit = mPlayers.get(mCurrentPlayer).canSplit();
-                if (canSplit == "A") {
+                int splitPlayerVal = mPlayers.get(mCurrentPlayer).canSplit();
+                if (splitPlayerVal == 11) {
                     splitAces();
                 }
-                else if (canSplit != null && (canSplit != "5" && canSplit != "10" && canSplit != "J" && canSplit != "Q" && canSplit != "K")) {
-                    action(Strategies.getAction(Integer.parseInt(canSplit), mDealer.upCard(), mStratSplit));
+                else if (splitPlayerVal != 0 && (splitPlayerVal != 5 && splitPlayerVal != 10)) {
+                    action(Strategies.getAction(splitPlayerVal, mDealer.upCard(), mStratSplit));
                 }
                 else if (mPlayers.get(mCurrentPlayer).mIsSoft) {
                     action(Strategies.getAction(mPlayers.get(mCurrentPlayer).mValue, mDealer.upCard(), mStratSoft));
