@@ -1,4 +1,6 @@
-const CardPile = require('./cardpile');
+const Player = require("./player");
+const Table = require("./table");
 
-var cp = new CardPile(8);
-console.log(cp.mCards.length);
+const t = new Table();
+const p = new Player(t);
+console.log(p.print());

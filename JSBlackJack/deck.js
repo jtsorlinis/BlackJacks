@@ -1,4 +1,4 @@
-const Card = require('./card');
+const Card = require("./card");
 
 var mRanks = ["A", "2", "3", "4", "5", "6", "7", "8","9","10","J","Q","K"];
 var mSuits = ["Clubs", "Hearts", "Spades", "Diamonds" ];
@@ -17,7 +17,7 @@ module.exports = class Deck {
         var output = "";
         this.mCards.forEach(function(card) {
             output += card.print();
-        })
+        });
         return output;
     }
 
@@ -28,5 +28,5 @@ module.exports = class Deck {
         }
     }
 
-}
+};
 
