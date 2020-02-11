@@ -1,4 +1,5 @@
 let PlayerNumCount = 0;
+let MaxSplits = 10;
 
 module.exports = class Player {
     constructor(table=null,split=null) {
@@ -46,7 +47,7 @@ module.exports = class Player {
     }
 
     canSplit() {
-        if(this.mHand.length == 2 && this.mHand[0].mRank == this.mHand[1].mRank && this.mSplitCount < this.maxsplits) {
+        if(this.mHand.length == 2 && this.mHand[0].mRank == this.mHand[1].mRank && this.mSplitCount < MaxSplits) {
             return this.mHand[0].mValue;
         } else {
             return 0;

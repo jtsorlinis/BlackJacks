@@ -1,6 +1,8 @@
 const CardPile = require("./cardpile");
 const Dealer = require("./dealer");
 const Player = require("./player");
+const Strategies = require("./strategies");
+const process = require("process");
 
 module.exports = class Table {
     constructor(numplayers,numdecks,betsize,mincards,verbose) {
@@ -16,9 +18,9 @@ module.exports = class Table {
         this.mRunningCount = 0;
         this.mTrueCount = 0;
 
-        // this.mStratHard = 
-        // this.mStratSoft = 
-        // this.mStratSplit = 
+        this.mStratHard = Strategies.array2dToMap(Strategies.stratHard);
+        this.mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
+        this.mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
 
         for(let i = 0; i < numplayers; i++) {
             this.mPlayers.push(new Player(this));
@@ -48,7 +50,7 @@ module.exports = class Table {
 
     selectBet(player) {
         if(this.mTrueCount >= 2) {
-            player.mInitialBet = this.mBetSize * (this.mTrueCount-1) * 1.25
+            player.mInitialBet = parseInt(this.mBetSize * (this.mTrueCount-1) * 1.25);
         }
     }
 
@@ -87,70 +89,245 @@ module.exports = class Table {
     }
 
     getNewCards() {
-        //TODO
+        if(this.mCardPile.mCards.length < this.mMinCards) {
+            this.mCardPile.refresh();
+            this.mCardPile.shuffle();
+            this.mTrueCount = 0;
+            this.mRunningCount = 0;
+            if(this.mVerbose) {
+                console.log("Got " + this.mNumOfDecks + " new decks as number of cards left is below " + this.mMinCards);
+            }
+        }
     }
 
     clear() {
-        //TODO
+        for(let i = this.mPlayers.length-1; i >= 0; i--) {
+            this.mPlayers[i].resetHand();
+            if(this.mPlayers[i].mSplitFrom != null) {
+                this.mPlayers.splice(i,1);
+            }
+        }
+        this.mDealer.resetHand();
+        this.mCurrentPlayer = 0;
     }
 
     updateCount() {
-        //TODO
+        if(this.mCardPile.mCards.length > 51) {
+            this.mTrueCount = this.mRunningCount / (this.mCardPile.mCards.length/52);
+        }
     }
 
     hit() {
-        //TODO
+        this.deal();
+        this.mPlayers[this.mCurrentPlayer].evaluate();
+        if(this.mVerbose) {
+            console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " hits");
+        }
     }
 
     stand() {
-        //TODO
+        if(this.mVerbose && this.mPlayers[this.mCurrentPlayer].mValue <= 21) {
+            console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " stands");
+            this.print();
+        }
+        this.mPlayers[this.mCurrentPlayer].mIsDone = true;
     }
 
     split() {
-        //TODO
+        let splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
+        this.mPlayers[this.mCurrentPlayer].mHand.pop();
+        this.mPlayers.splice(this.mCurrentPlayer+1,0,splitPlayer);
+        this.mPlayers[this.mCurrentPlayer].evaluate();
+        this.mPlayers[this.mCurrentPlayer+1].evaluate();
+        if(this.mVerbose) {
+            console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " splits");
+        }
     }
 
     splitAces() {
-        //TODO
+        if(this.mVerbose) {
+            console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " splits Aces");
+        }
+        let splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
+        this.mPlayers[this.mCurrentPlayer].mHand.pop();
+        this.mPlayers.splice(this.mCurrentPlayer+1,0,splitPlayer);
+        this.deal();
+        this.mPlayers[this.mCurrentPlayer].evaluate();
+        this.stand();
+        this.mCurrentPlayer++;
+        this.deal();
+        this.mPlayers[this.mCurrentPlayer].evaluate();
+        this.stand();
+        if(this.mVerbose) {
+            this.print();
+        }
     }
 
     doubleBet() {
-        //TODO
+        if(this.mPlayers[this.mCurrentPlayer].mBetMult == 1 && this.mPlayers[this.mCurrentPlayer].mHand.length == 2) {
+            this.mPlayers[this.mCurrentPlayer].doubleBet();
+            if(this.mVerbose){
+                console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " doubles");
+            }
+            this.hit();
+            this.stand();
+        } else {
+            this.hit();
+        }
     }
 
     autoPlay() {
-        //TODO
+        while(!this.mPlayers[this.mCurrentPlayer].mIsDone) {
+            if(this.mPlayers[this.mCurrentPlayer].mHand.length == 1) {
+                if(this.mVerbose){
+                    console.log("Player " + this.mPlayers[this.mCurrentPlayer].mPlayerNum + " gets 2nd card after splitting");
+                }
+                this.deal();
+                this.mPlayers[this.mCurrentPlayer].evaluate();
+            }
+            if(this.mPlayers[this.mCurrentPlayer].mHand.length < 5 && this.mPlayers[this.mCurrentPlayer].mValue < 21) {
+                let splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
+                if (splitCardVal == 11) {
+                    this.splitAces();
+                }
+                else if (splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10)) {
+                    this.action(Strategies.getAction(splitCardVal, this.mDealer.upCard(), this.mStratSplit));
+                }
+                else if (this.mPlayers[this.mCurrentPlayer].mIsSoft) {
+                    this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue, this.mDealer.upCard(), this.mStratSoft));
+                }
+                else {
+                    this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue, this.mDealer.upCard(), this.mStratHard));
+                }
+            }
+            else {
+                this.stand();
+            }
+        }
+        this.nextPlayer();
     }
 
     action(action) {
-        //TODO
+        if (action == "H") {
+            this.hit();
+        }
+        else if (action == "S") {
+            this.stand();
+        }
+        else if (action == "D") {
+            this.doubleBet();
+        }
+        else if (action == "P") {
+            this.split();
+        }
+        else {
+            console.log("No action found. Action was: " + action);
+            process.exit(1);
+        }
     }
 
     dealerPlay() {
-        //TODO
+        let allBusted = true;
+        for (var i = 0; i < this.mPlayers.length; i++) {
+            if(this.mPlayers[i].mValue < 22) {
+                allBusted = false;
+                break;
+            }
+        }
+        this.mDealer.mHand[1].mFaceDown = false;
+        this.mRunningCount += this.mDealer.mHand[1].mCount;
+        this.mDealer.evaluate();
+        if(this.mVerbose) {
+            console.log("Dealer's turn");
+            this.print();
+        }
+        if(allBusted) {
+            if(this.mVerbose) {
+                console.log("Dealer automatically wins cause all players busted");
+            }
+            this.finishRound();
+        } else {
+            while(this.mDealer.mValue < 17 && this.mDealer.mHand.length < 5) {
+                this.dealDealer();
+                this.mDealer.evaluate();
+                if(this.mVerbose) {
+                    console.log("Dealer hits");
+                    this.print();
+                }
+            }
+            this.finishRound();
+        }
     }
 
     nextPlayer() {
-        //TODO
+        if(++this.mCurrentPlayer < this.mPlayers.length) {
+            this.autoPlay();
+        } else {
+            this.dealerPlay();
+        }
     }
 
     checkPlayerNatural() {
-        //TODO
+        for(let i = 0; i < this.mPlayers.length; i++) {
+            if(this.mPlayers[i].mValue == 21 && this.mPlayers[i].mHand.length == 2 && this.mPlayers[i].mSplitFrom == null) {
+                this.mPlayers[i].mHasNatural = true;
+            }
+        }
     }
 
     checkDealerNatural() {
-        //TODO
+        this.mDealer.evaluate();
+        if(this.mDealer.mValue == 21) {
+            this.mDealer.mHand[1].mFaceDown = false;
+            this.mRunningCount += this.mDealer.mHand[1].mCount;
+            if(this.mVerbose) {
+                this.print();
+                console.log("Dealer has natural 21");
+            }
+            return true;
+        }
+        return false;
     }
 
     checkEarnings() {
-        //TODO
+        let check = 0;
+        for(let i = 0; i < this.mPlayers.length; i++) {
+            check += this.mPlayers[i].mEarnings;
+        }
+        if(check * -1 != this.mCasinoEarnings) {
+            console.log("Earning's dont match");
+            process.exit(1);
+        }
     }
 
     finishRound() {
-        //TODO
+        if(this.mVerbose) {
+            console.log("Scoring round");
+        }
+        for(let i = 0; i < this.mPlayers.length; i++) {
+            if (this.mPlayers[i].mHasNatural) {
+                this.mPlayers[i].win(1.5);
+            } else if(this.mPlayers[i].mValue > 21){
+                this.mPlayers[i].lose();
+            } else if (this.mDealer.mValue > 21) {
+                this.mPlayers[i].win();
+            } else if(this.mPlayers[i].mValue > this.mDealer.mValue) {
+                this.mPlayers[i].win();
+            } else if (this.mPlayers[i].mValue == this.mDealer.mValue) {
+
+            } else {
+                this.mPlayers[i].lose();
+            }
+        }
+        if(this.mVerbose) {
+            for(let i = 0; i < this.mPlayers.length; i++) {
+                if(this.mPlayers[i].mSplitFrom == null) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Earnings: " + this.mPlayers[i].mEarnings);
+                }
+            }
+            console.log();
+        }
     }
-
-
 
     print() {
         for(let i = 0; i < this.mPlayers.length; i++) {
