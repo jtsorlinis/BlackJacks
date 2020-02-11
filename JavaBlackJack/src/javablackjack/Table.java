@@ -113,15 +113,6 @@ class Table {
     }
 
     public void clear() {
-        // ListIterator<Player> iter = mPlayers.listIterator();
-        // while(iter.hasNext()){
-        //     Player pl = iter.next();
-        //     pl.resetHand();
-        //     if(pl.mSplitFrom != null){
-        //         iter.remove();
-        //     }
-        // }
-
         for(int i = mPlayers.size() -1; i >= 0; i--) {
             if (mPlayers.get(i).mSplitFrom == null) {
                 mPlayers.get(i).resetHand();
@@ -258,6 +249,7 @@ class Table {
         for(Player player : mPlayers){
             if(player.mValue < 22) {
                 allBusted = false;
+                break;
             }
         }
         mDealer.mHand.get(1).mFaceDown = false;
@@ -312,10 +304,8 @@ class Table {
                 System.out.println("Dealer has a natural 21");
             }
             return true;
-        } else {
-            return false;
         }
-        
+        return false;
     }
 
     public void checkEarnings() {
