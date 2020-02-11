@@ -17,11 +17,11 @@ module.exports = class CardPile {
             const temp = new Deck();
             this.mCards = [...this.mCards, ...temp.mCards];
         }
-        this.mOriginalCards = this.mCards.slice();
+        this.mOriginalCards = [...this.mCards];
     }
 
     refresh() {
-        this.mCards = this.mOriginalCards.slice();
+        this.mCards = [...this.mOriginalCards];
     }
 
     print() {
@@ -35,8 +35,11 @@ module.exports = class CardPile {
     shuffle() {
         for(var i = this.mCards.length-1; i > 0; i--) {
             xorShift();
-            const j = seed  % (i+1);
-            [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
+            const j = seed % (i+1);
+            // [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
+            var temp = this.mCards[i];
+            this.mCards[i] = this.mCards[j];
+            this.mCards[j] = temp; 
         }
     }
 };
