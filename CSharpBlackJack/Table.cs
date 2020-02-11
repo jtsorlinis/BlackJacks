@@ -13,7 +13,7 @@ namespace NETCoreBlackJack {
         int mCurrentPlayer = 0;
         public float mCasinoEarnings = 0;
         int mRunningCount = 0;
-        float mTrueCount = 0;
+        int mTrueCount = 0;
         Dictionary<int, string> mStratHard = Strategies.Array2dToMap(Strategies.stratHard);
         Dictionary<int, string> mStratSoft = Strategies.Array2dToMap(Strategies.stratSoft);
         Dictionary<int, string> mStratSplit = Strategies.Array2dToMap(Strategies.stratSplit);
@@ -54,7 +54,7 @@ namespace NETCoreBlackJack {
 
         void SelectBet(Player player) {
             if(mTrueCount >=2) {
-                player.mInitialBet = (int)(mBetSize * (int)(mTrueCount - 1) * 1.25);
+                player.mInitialBet = (int)(mBetSize * (mTrueCount - 1) * 1.25);
             }
         }
 
@@ -73,7 +73,7 @@ namespace NETCoreBlackJack {
             UpdateCount();
             if(mVerbose > 0) {
                 Console.WriteLine(mCardPile.mCards.Count + " cards left");
-                Console.WriteLine("Running count is: " + mRunningCount + "\tTrue count is: " + (int)mTrueCount);
+                Console.WriteLine("Running count is: " + mRunningCount + "\tTrue count is: " + mTrueCount);
             }
             GetNewCards();
             PreDeal();
@@ -118,7 +118,9 @@ namespace NETCoreBlackJack {
         }
 
         void UpdateCount() {
-            mTrueCount = mRunningCount / (mCardPile.mCards.Count/52f);
+            if(mCardPile.mCards.Count > 51) {
+                mTrueCount = mRunningCount / (mCardPile.mCards.Count/52);
+            }
         }
 
         void Hit() {
