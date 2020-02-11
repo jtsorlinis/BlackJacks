@@ -7,11 +7,13 @@ const NumOfDecks = 8;
 const BetSize = 10;
 const MinCards = 40;
 
-const Rounds = 100000;
+const Rounds = 1000000;
 const Verbose = false;
 
 const t = new Table(NumOfPlayers,NumOfDecks,BetSize,MinCards,Verbose);
 t.mCardPile.shuffle();
+
+let start = Date.now();
 
 let x = 0;
 while(x++ < Rounds) {
@@ -31,3 +33,5 @@ t.clear();
 for(let i = 0; i < t.mPlayers.length; i++) {
     console.log("Player " + t.mPlayers[i].mPlayerNum + " earnings: " + t.mPlayers[i].mEarnings + "\t\tWin Percentage: " + (50 + (t.mPlayers[i].mEarnings/(Rounds*BetSize)*50)) + "%");
 }
+console.log("Casino earnings: " + t.mCasinoEarnings);
+console.log("Played " + Rounds + " rounds in " + (Date.now() - start)/1000 + " seconds");

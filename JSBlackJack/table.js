@@ -68,7 +68,7 @@ module.exports = class Table {
         this.updateCount();
         if(this.mVerbose) {
             console.log(this.mCardPile.mCards.length + " cards left");
-            console.log("Running count is: " + this.mRunningCount + "\tTrue count is: " + parseInt(this.mTrueCount));
+            console.log("Running count is: " + this.mRunningCount + "\tTrue count is: " + this.mTrueCount);
         }
         this.getNewCards();
         this.preDeal();
@@ -113,7 +113,7 @@ module.exports = class Table {
 
     updateCount() {
         if(this.mCardPile.mCards.length > 51) {
-            this.mTrueCount = this.mRunningCount / (this.mCardPile.mCards.length/52);
+            this.mTrueCount = Math.floor(this.mRunningCount / (this.mCardPile.mCards.length/52));
         }
     }
 
