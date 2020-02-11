@@ -3,7 +3,7 @@ module.exports = class Card {
         this.mRank = rank;
         this.mSuit = suit;
         this.mFaceDown = false;
-        this.mValue = this.evaluate();
+        this.mValue = parseInt(this.evaluate());
         this.mCount = this.count();
         this.mIsAce = false;
         if (this.mRank == "A") {
