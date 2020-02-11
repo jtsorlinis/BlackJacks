@@ -228,6 +228,7 @@ void Table::dealerPlay() {
 	for (auto& player : mPlayers) {
 		if (player.mValue < 22) {
 			allBusted = false;
+			break;
 		}
 	}
 	mDealer.mHand[1]->mFaceDown = false;
