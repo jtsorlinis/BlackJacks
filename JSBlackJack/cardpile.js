@@ -31,7 +31,7 @@ module.exports = class CardPile {
         });
         return output;
     }
-    //TODO: Optimize this
+    
     shuffle() {
         for(var i = this.mCards.length-1; i > 0; i--) {
             xorShift();

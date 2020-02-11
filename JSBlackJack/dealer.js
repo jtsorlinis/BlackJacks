@@ -8,12 +8,11 @@ module.exports = class Dealer extends Player {
     }
 
     resetHand() {
-        //TODO: Ensure this is best way to clear array
-        this.mHand.length = 0;
+        this.mHand = [];
         this.mValue = 0;
     }
 
     upCard() {
         return this.mHand[0].mValue;
     }
-}
+};

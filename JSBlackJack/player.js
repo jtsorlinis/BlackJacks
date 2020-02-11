@@ -34,8 +34,7 @@ module.exports = class Player {
     }
 
     resetHand() {
-        //TODO: Ensure this is best way to clear array
-        this.mHand.length = 0;
+        this.mHand = [];
         this.mValue = 0;
         this.mAces = 0;
         this.mIsSoft = false;
