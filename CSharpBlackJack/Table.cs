@@ -298,10 +298,8 @@ namespace NETCoreBlackJack {
                     Console.WriteLine("Dealer has a natural 21");
                 }
                 return true;
-            } else {
-                return false;
-            }
-            
+            } 
+            return false;
         }
 
         public void CheckEarnings() {
