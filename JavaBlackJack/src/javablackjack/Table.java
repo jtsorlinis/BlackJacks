@@ -15,7 +15,7 @@ class Table {
     int mCurrentPlayer = 0;
     float mCasinoEarnings = 0;
     int mRunningCount = 0;
-    float mTrueCount = 0;
+    int mTrueCount = 0;
     HashMap<Integer,String> mStratHard = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratHard);
     HashMap<Integer,String> mStratSoft = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratSoft);
     HashMap<Integer,String> mStratSplit = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratSplit);
@@ -56,7 +56,7 @@ class Table {
 
     void selectBet(Player player) {
         if(mTrueCount >=2) {
-            player.mInitialBet = (int)(mBetSize * (int)(mTrueCount - 1) * 1.25);
+            player.mInitialBet = (int)(mBetSize * (mTrueCount - 1) * 1.25);
         }
     }
 
@@ -79,7 +79,7 @@ class Table {
         updateCount();
         if(mVerbose > 0) {
             System.out.println(mCardPile.mCards.size() + " cards left");
-            System.out.println("Running count is: " + mRunningCount + "\tTrue count is: " + (int)mTrueCount);
+            System.out.println("Running count is: " + mRunningCount + "\tTrue count is: " + mTrueCount);
         }
         getNewCards();
         predeal();
@@ -134,7 +134,9 @@ class Table {
     }
 
     void updateCount() {
-        mTrueCount = mRunningCount / (mCardPile.mCards.size()/52f);
+        if(mCardPile.mCards.size() > 51) {
+            mTrueCount = mRunningCount / (mCardPile.mCards.size()/52);
+        }
     }
 
     void hit() {
