@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 )
 
@@ -18,7 +17,7 @@ type Table struct {
 	mCurrentPlayer  int32
 	MCasinoEarnings float32
 	MRunningCount   int32
-	MTrueCount      float32
+	MTrueCount      int32
 	MStratHard      map[int32]string
 	MStratSoft      map[int32]string
 	MStratSplit     map[int32]string
@@ -71,7 +70,7 @@ func (t *Table) preDeal() {
 
 func (t *Table) selectBet(player *Player) {
 	if t.MTrueCount >= 2 {
-		player.MInitialBet = int32(float64(t.MBetSize) * math.Floor(float64(t.MTrueCount)) * 1.25)
+		player.MInitialBet = int32(float32(t.MBetSize*t.MTrueCount) * 1.25)
 	}
 }
 
@@ -90,7 +89,7 @@ func (t *Table) StartRound() {
 	t.updateCount()
 	if t.MVerbose {
 		println(fmt.Sprint(len(t.MCardPile.MCards)) + " cards left")
-		println("Running count is: " + fmt.Sprint(t.MRunningCount) + "\tTrue count is: " + fmt.Sprint(int32(t.MTrueCount)))
+		println("Running count is: " + fmt.Sprint(t.MRunningCount) + "\tTrue count is: " + fmt.Sprint(t.MTrueCount))
 	}
 	t.getNewCards()
 	t.preDeal()
@@ -136,7 +135,9 @@ func (t *Table) clear() {
 }
 
 func (t *Table) updateCount() {
-	t.MTrueCount = float32(t.MRunningCount) / (float32(len(t.MCardPile.MCards)) / 52)
+	if len(t.MCardPile.MCards) > 51 {
+		t.MTrueCount = t.MRunningCount / (int32(len(t.MCardPile.MCards)) / 52)
+	}
 }
 
 func (t *Table) hit() {
