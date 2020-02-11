@@ -252,6 +252,7 @@ func (t *Table) dealerPlay() {
 	for _, player := range t.MPlayers {
 		if player.MValue < 22 {
 			allBusted = false
+			break
 		}
 	}
 	t.MDealer.MHand[1].mFaceDown = false
