@@ -285,9 +285,7 @@ bool Table::checkDealerNatural() {
 		}
 		return true;
 	}
-	else {
-		return false;
-	}
+	return false;
 	
 }
 
