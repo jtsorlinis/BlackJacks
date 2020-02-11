@@ -242,6 +242,7 @@ namespace NETCoreBlackJack {
             for(int i = 0; i < mPlayers.Count; i++) {
                 if(mPlayers[i].mValue < 22) {
                     allBusted = false;
+                    break;
                 }
             }
             mDealer.mHand[1].mFaceDown = false;
