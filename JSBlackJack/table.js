@@ -307,16 +307,33 @@ module.exports = class Table {
         for(let i = 0; i < this.mPlayers.length; i++) {
             if (this.mPlayers[i].mHasNatural) {
                 this.mPlayers[i].win(1.5);
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Wins with a natural 21");
+                }
             } else if(this.mPlayers[i].mValue > 21){
                 this.mPlayers[i].lose();
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Busts and Loses");
+                }
             } else if (this.mDealer.mValue > 21) {
                 this.mPlayers[i].win();
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Wins");
+                }
             } else if(this.mPlayers[i].mValue > this.mDealer.mValue) {
                 this.mPlayers[i].win();
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Wins");
+                }
             } else if (this.mPlayers[i].mValue == this.mDealer.mValue) {
-
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Draws");
+                }
             } else {
                 this.mPlayers[i].lose();
+                if(this.mVerbose) {
+                    console.log("Player " + this.mPlayers[i].mPlayerNum + " Loses");
+                }
             }
         }
         if(this.mVerbose) {
