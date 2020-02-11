@@ -3,9 +3,9 @@ const Deck = require("./deck");
 var seed = Date.now();
 
 function xorShift(){
-    seed ^= seed << 13;
-    seed ^= seed >> 17;
-    seed ^= seed << 5;
+    seed ^= seed >> 12;
+    seed ^= seed << 25;
+    seed ^= seed >> 27;
     return seed;
 }
 
@@ -35,8 +35,7 @@ module.exports = class CardPile {
     shuffle() {
         for(var i = this.mCards.length-1; i > 0; i--) {
             xorShift();
-            const j = Math.abs(seed)  % (i+1);
-            // console.log(j);
+            const j = seed  % (i+1);
             [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
         }
     }
