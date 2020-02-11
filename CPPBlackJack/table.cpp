@@ -45,7 +45,7 @@ void Table::preDeal() {
 
 void Table::selectBet(Player* player) {
 	if (mTrueCount >= 2) {
-		player->mInitialBet = mBetSize * (int)(mTrueCount - 1) * 1.25;
+		player->mInitialBet = (int)(mBetSize * (mTrueCount - 1) * 1.25);
 	}
 }
 
@@ -63,7 +63,7 @@ void Table::startRound() {
 	updatecount();
 	if (mVerbose > 0) {
 		std::cout << mCardPile.mCards.size() << " cards left\n";
-		std::cout << "Running count is: " << mRunningcount << "\tTrue count is: " << (int)mTrueCount << "\n";
+		std::cout << "Running count is: " << mRunningcount << "\tTrue count is: " << mTrueCount << "\n";
 	}
 	getNewcards();
 	preDeal();
@@ -106,7 +106,9 @@ void Table::clear() {
 }
 
 void Table::updatecount() {
-	mTrueCount = mRunningcount / (mCardPile.mCards.size() / (float)52);
+	if(mCardPile.mCards.size() > 51) {
+		mTrueCount = mRunningcount / (int)(mCardPile.mCards.size() / 52);
+	}
 }
 
 void Table::hit() {

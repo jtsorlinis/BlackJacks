@@ -16,7 +16,7 @@ public:
 	std::list<Player>::iterator mCurrentPlayer;
 	float mCasinoEarnings;
 	int mRunningcount;
-	float mTrueCount;
+	int mTrueCount;
 	std::unordered_map<int, std::string> mStratHard;
 	std::unordered_map<int, std::string> mStratSoft;
 	std::unordered_map<int, std::string> mStratSplit;
