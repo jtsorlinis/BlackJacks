@@ -5,8 +5,12 @@ const NumOfDecks = 8;
 const BetSize = 10;
 const MinCards = 40;
 
-const Rounds = 1000000;
+let Rounds = 1000000;
 const Verbose = false;
+
+if(process.argv.length == 3) {
+    Rounds = parseInt(process.argv[2]);
+}
 
 const t = new Table(NumOfPlayers,NumOfDecks,BetSize,MinCards,Verbose);
 t.mCardPile.shuffle();
