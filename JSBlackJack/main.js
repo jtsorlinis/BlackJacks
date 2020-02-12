@@ -1,6 +1,4 @@
-const Player = require("./player");
 const Table = require("./table");
-const Strategies = require("./strategies");
 
 const NumOfPlayers = 5;
 const NumOfDecks = 8;
