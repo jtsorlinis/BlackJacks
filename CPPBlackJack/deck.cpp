@@ -11,8 +11,7 @@ Deck::Deck() {
   mSuits = {"Clubs", "Hearts", "Spades", "Diamonds"};
   for (auto& suit : mSuits) {
     for (auto& rank : mRanks) {
-      Card* temp = new Card(rank, suit);
-      mCards.push_back(temp);
+      mCards.push_back(new Card(rank, suit));
     }
   }
 }
