@@ -3,39 +3,39 @@
 #include <iostream>
 
 Card::Card(std::string rank, std::string suit) {
-  mRank = std::move(rank);
-  mSuit = std::move(suit);
-  mFaceDown = false;
-  mValue = evaluate();
-  mCount = count();
-  if (mRank == "A") {
-    mIsAce = true;
+  m_rank_ = std::move(rank);
+  m_suit_ = std::move(suit);
+  m_face_down_ = false;
+  m_value_ = evaluate();
+  m_count_ = count();
+  if (m_rank_ == "A") {
+    m_is_ace_ = true;
   }
 }
 
-std::string Card::print() {
-  if (mFaceDown) {
+std::string Card::print() const {
+  if (m_face_down_) {
     return "X";
   }
-  return mRank;
+  return m_rank_;
 }
 
-int Card::evaluate() {
-  if (mRank == "J" || mRank == "Q" || mRank == "K") {
+int Card::evaluate() const {
+  if (m_rank_ == "J" || m_rank_ == "Q" || m_rank_ == "K") {
     return 10;
   }
-  if (mRank == "A") {
+  if (m_rank_ == "A") {
     return 11;
   }
-  return std::stoi(mRank);
+  return std::stoi(m_rank_);
 }
 
-int Card::count() {
-  if (mRank == "10" || mRank == "J" || mRank == "Q" || mRank == "K" ||
-      mRank == "A") {
+int Card::count() const {
+  if (m_rank_ == "10" || m_rank_ == "J" || m_rank_ == "Q" || m_rank_ == "K" ||
+      m_rank_ == "A") {
     return -1;
   }
-  if (mRank == "7" || mRank == "8" || mRank == "9") {
+  if (m_rank_ == "7" || m_rank_ == "8" || m_rank_ == "9") {
     return 0;
   }
   return 1;

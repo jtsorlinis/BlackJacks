@@ -6,27 +6,25 @@
 #include "player.h"
 #include "table.h"
 
-int numOfPlayers = 5;
-int numOfDecks = 8;
-int baseBet = 10;
-int minCards = 40;
+int num_of_players = 5;
+int num_of_decks = 8;
+int base_bet = 10;
+int min_cards = 40;
 
 int rounds = 1000000;
 int verbose = 0;
 
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
   if (argc == 2) {
-    rounds = atoi(argv[1]);
+    rounds = strtol(argv[1], nullptr, 10);
   }
 
-  Table table1(numOfPlayers, numOfDecks, baseBet, minCards, verbose);
-  table1.mCardPile.shuffle();
+  Table table1(num_of_players, num_of_decks, base_bet, min_cards, verbose);
+  table1.m_card_pile_.shuffle();
   std::cout << std::fixed << std::setprecision(2);
-  clock_t start;
-  double duration;
-  start = clock();
+  const auto start = clock();
 
-  int x = 0;
+  auto x = 0;
   while (x++ < rounds) {
     if (verbose > 0) {
       std::cout << "Round " << x << "\n";
@@ -35,23 +33,23 @@ int main(int argc, char* argv[]) {
       std::cerr << "\tProgress: " << 100 * x / rounds << "%\r";
     }
 
-    table1.startRound();
-    table1.checkEarnings();
+    table1.start_round();
+    table1.check_earnings();
   }
   table1.clear();
 
-  for (auto& player : table1.mPlayers) {
-    std::cout << "Player " << player.mPlayerNum
-              << " earnings: " << player.mEarnings << "\t\tWin Percentage: "
-              << (50 + (player.mEarnings /
-                        static_cast<float>(rounds * baseBet) * 50))
-              << "%\n";
+  for (auto& player : table1.m_players_) {
+    std::cout << "Player " << player.m_player_num_
+        << " earnings: " << player.m_earnings_ << "\t\tWin Percentage: "
+        << 50 + player.m_earnings_ /
+        static_cast<float>(rounds * base_bet) * 50
+        << "%\n";
   }
-  std::cout << "Casino earnings: " << table1.mCasinoEarnings << "\n";
+  std::cout << "Casino earnings: " << table1.m_casino_earnings_ << "\n";
 
-  duration = (static_cast<double>(clock()) - start) /
-             static_cast<double>(CLOCKS_PER_SEC);
+  const auto duration = (static_cast<double>(clock()) - start) /
+                        static_cast<double>(CLOCKS_PER_SEC);
   std::cout << "\nPlayed " << x - 1 << " rounds in " << std::setprecision(3)
-            << duration << " seconds.\n\n";
+      << duration << " seconds.\n\n";
   /*system("pause");*/
 }

@@ -2,10 +2,10 @@
 #include "player.h"
 
 class Dealer : public Player {
- public:
-  bool mHideSecond;
+public:
+  bool m_hide_second_;
 
   Dealer();
-  void resetHand();
-  int& upCard();
+  void reset_hand() override;
+  int& up_card();
 };

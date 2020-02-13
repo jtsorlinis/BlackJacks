@@ -1,120 +1,119 @@
 #include "player.h"
-
-#include <iostream>
-
 #include "table.h"
 
-int Player::playerNumCount = 0;
+int Player::player_num_count_ = 0;
 
 Player::Player(Table* table, Player* split) {
-  mValue = 0;
-  mEarnings = 0;
-  mAces = 0;
-  mIsSoft = false;
-  mSplitCount = 0;
-  mIsDone = false;
-  mSplitFrom = nullptr;
-  mBetMult = 1;
-  mHasNatural = false;
-  mTable = table;
-  mInitialBet = 0;
-  if (mTable != nullptr) {
-    mInitialBet = mTable->mBetSize;
+  m_value_ = 0;
+  m_earnings_ = 0;
+  m_aces_ = 0;
+  m_is_soft_ = false;
+  m_split_count_ = 0;
+  m_is_done_ = false;
+  m_split_from_ = nullptr;
+  m_bet_mult_ = 1;
+  m_has_natural_ = false;
+  m_table_ = table;
+  m_initial_bet_ = 0;
+  if (m_table_ != nullptr) {
+    m_initial_bet_ = m_table_->m_bet_size_;
     if (split != nullptr) {
-      mHand.push_back(split->mHand[1]);
-      mSplitCount++;
-      mPlayerNum = split->mPlayerNum + "S";
-      mInitialBet = split->mInitialBet;
-      mSplitFrom = split;
+      m_hand_.push_back(split->m_hand_[1]);
+      m_split_count_++;
+      m_player_num_ = split->m_player_num_ + "S";
+      m_initial_bet_ = split->m_initial_bet_;
+      m_split_from_ = split;
     } else {
-      playerNumCount++;
-      mPlayerNum = std::to_string(playerNumCount);
+      player_num_count_++;
+      m_player_num_ = std::to_string(player_num_count_);
     }
   }
 }
 
-void Player::doubleBet() { mBetMult = 2; }
+void Player::double_bet() { m_bet_mult_ = 2; }
 
-void Player::resetHand() {
-  mHand.clear();
-  mValue = 0;
-  mAces = 0;
-  mIsSoft = false;
-  mSplitCount = 0;
-  mIsDone = false;
-  mBetMult = 1;
-  mHasNatural = false;
-  mInitialBet = mTable->mBetSize;
+void Player::reset_hand() {
+  m_hand_.clear();
+  m_value_ = 0;
+  m_aces_ = 0;
+  m_is_soft_ = false;
+  m_split_count_ = 0;
+  m_is_done_ = false;
+  m_bet_mult_ = 1;
+  m_has_natural_ = false;
+  m_initial_bet_ = m_table_->m_bet_size_;
 }
 
-int Player::canSplit() {
-  if (mHand.size() == 2 && mHand[0]->mRank == mHand[1]->mRank &&
-      mSplitCount < maxSplits) {
-    return mHand[0]->mValue;
+int Player::can_split() {
+  if (m_hand_.size() == 2 && m_hand_[0]->m_rank_ == m_hand_[1]->m_rank_ &&
+      m_split_count_ < max_splits_) {
+    return m_hand_[0]->m_value_;
   }
   return 0;
 }
 
-void Player::win(float mult) {
-  if (mSplitFrom != nullptr) {
-    mSplitFrom->win(mult);
+void Player::win(const float mult) {
+  if (m_split_from_ != nullptr) {
+    m_split_from_->win(mult);
   } else {
-    mEarnings += (static_cast<float>(mInitialBet) * mBetMult * mult);
-    mTable->mCasinoEarnings -=
-        (static_cast<float>(mInitialBet) * mBetMult * mult);
+    m_earnings_ += static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
+    m_table_->m_casino_earnings_ -=
+        static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
   }
 }
 
 void Player::lose() {
-  if (mSplitFrom != nullptr) {
-    mSplitFrom->lose();
+  if (m_split_from_ != nullptr) {
+    m_split_from_->lose();
   } else {
-    mEarnings -= (static_cast<float>(mInitialBet) * mBetMult);
-    mTable->mCasinoEarnings += (static_cast<float>(mInitialBet) * mBetMult);
+    m_earnings_ -= static_cast<float>(m_initial_bet_) * m_bet_mult_;
+    m_table_->m_casino_earnings_ += static_cast<float>(m_initial_bet_) *
+        m_bet_mult_;
   }
 }
 
 std::string Player::print() {
-  std::string output = "Player " + mPlayerNum + ": ";
-  for (auto& i : mHand) {
+  auto output = "Player " + m_player_num_ + ": ";
+  for (auto& i : m_hand_) {
     output += i->print() + " ";
   }
-  for (int i = static_cast<int>(mHand.size()); i < 5; i++) {
+  for (auto i = static_cast<int>(m_hand_.size()); i < 5; i++) {
     output += "  ";
   }
-  output += "\tScore: " + std::to_string(mValue);
-  if (mValue > 21) {
+  output += "\tScore: " + std::to_string(m_value_);
+  if (m_value_ > 21) {
     output += " (Bust) ";
   } else {
     output += "        ";
   }
-  if (mPlayerNum != "D") {
+  if (m_player_num_ != "D") {
     output +=
-        "\tBet: " + std::to_string(static_cast<float>(mInitialBet) * mBetMult);
+        "\tBet: " + std::to_string(
+            static_cast<float>(m_initial_bet_) * m_bet_mult_);
   }
   return output;
 }
 
 int Player::evaluate() {
-  mAces = 0;
-  mValue = 0;
-  for (auto& card : mHand) {
-    mValue += card->mValue;
+  m_aces_ = 0;
+  m_value_ = 0;
+  for (auto& card : m_hand_) {
+    m_value_ += card->m_value_;
     // Check for ace
-    if (card->mIsAce) {
-      mAces++;
-      mIsSoft = true;
+    if (card->m_is_ace_) {
+      m_aces_++;
+      m_is_soft_ = true;
     }
   }
 
-  while (mValue > 21 && mAces > 0) {
-    mValue -= 10;
-    mAces--;
+  while (m_value_ > 21 && m_aces_ > 0) {
+    m_value_ -= 10;
+    m_aces_--;
   }
 
-  if (mAces == 0) {
-    mIsSoft = false;
+  if (m_aces_ == 0) {
+    m_is_soft_ = false;
   }
 
-  return mValue;
+  return m_value_;
 }

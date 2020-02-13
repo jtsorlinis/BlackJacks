@@ -5,11 +5,11 @@
 #include "card.h"
 
 class Deck {
- public:
+public:
   Deck();
-  std::vector<Card*> mCards;
-  std::vector<std::string> mRanks;
-  std::vector<std::string> mSuits;
+  std::vector<Card*> m_cards_;
+  std::vector<std::string> m_ranks_;
+  std::vector<std::string> m_suits_;
   std::string print();
   void shuffle();
 };

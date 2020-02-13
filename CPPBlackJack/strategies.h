@@ -1,8 +1,9 @@
+#pragma once
 #include <map>
 #include <string>
 #include <vector>
 
-std::vector<std::vector<std::string>> stratHard = {
+std::vector<std::vector<std::string>> strat_hard = {
     {"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"},
     {"2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"},
     {"3", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"},
@@ -25,7 +26,7 @@ std::vector<std::vector<std::string>> stratHard = {
     {"20", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"},
     {"21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"}};
 
-std::vector<std::vector<std::string>> stratSoft = {
+std::vector<std::vector<std::string>> strat_soft = {
     {"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"},
     {"13", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"},
     {"14", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"},
@@ -37,7 +38,7 @@ std::vector<std::vector<std::string>> stratSoft = {
     {"20", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"},
     {"21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"}};
 
-std::vector<std::vector<std::string>> stratSplit = {
+std::vector<std::vector<std::string>> strat_split = {
     {"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"},
     {"2", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"},
     {"3", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"},
@@ -48,22 +49,23 @@ std::vector<std::vector<std::string>> stratSplit = {
     {"9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S"},
     {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}};
 
-std::string getAction(int const &playerVal, int &dealerVal,
-                      std::unordered_map<int, std::string> *strategy) {
-  int key =
-      ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
+inline std::string get_action(int const& player_val, int& dealer_val,
+                              std::unordered_map<int, std::string>* strategy) {
+  const auto key =
+      (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
+      dealer_val;
   return strategy->at(key);
-};
+}
 
-std::unordered_map<int, std::string> vecToMap(
+inline std::unordered_map<int, std::string> vec_to_map(
     std::vector<std::vector<std::string>> vec) {
   std::unordered_map<int, std::string> temp;
-  for (int row = 0; row < vec.size(); row++) {
-    for (int col = 0; col < vec[0].size(); col++) {
-      int playerVal = std::stoi(vec[row][0]);
-      int dealerVal = std::stoi(vec[0][col]);
-      int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 +
-                dealerVal;
+  for (auto row = 0; row < static_cast<int>(vec.size()); row++) {
+    for (auto col = 0; col < static_cast<int>(vec[0].size()); col++) {
+      const auto player_val = std::stoi(vec[row][0]);
+      const auto dealer_val = std::stoi(vec[0][col]);
+      auto key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
+                 dealer_val;
       temp.insert({key, vec[row][col]});
     }
   }

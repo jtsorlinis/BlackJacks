@@ -5,15 +5,15 @@
 #include "card.h"
 
 Dealer::Dealer() {
-  mPlayerNum = "D";
-  mValue = 0;
-  mHideSecond = true;
+  m_player_num_ = "D";
+  m_value_ = 0;
+  m_hide_second_ = true;
 }
 
-void Dealer::resetHand() {
-  mHand.clear();
-  mValue = 0;
-  mHideSecond = true;
+void Dealer::reset_hand() {
+  m_hand_.clear();
+  m_value_ = 0;
+  m_hide_second_ = true;
 }
 
-int& Dealer::upCard() { return mHand[0]->mValue; }
+int& Dealer::up_card() { return m_hand_[0]->m_value_; }
