@@ -1,9 +1,5 @@
-﻿using System;
-
-namespace NETCoreBlackJack {
-    class Dealer : Player {
-        public bool mHideSecond = true;
-
+﻿namespace CSharpBlackJack {
+    internal class Dealer : Player {
         public Dealer() {
             mPlayerNum = "D";
             mValue = 0;
@@ -12,7 +8,6 @@ namespace NETCoreBlackJack {
         public override void ResetHand() {
             mHand.Clear();
             mValue = 0;
-            mHideSecond = true;
         }
 
         public int UpCard() {

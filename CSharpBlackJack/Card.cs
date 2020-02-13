@@ -1,52 +1,46 @@
-namespace NETCoreBlackJack {
-    class Card {
-        public string mRank;
-        string mSuit;
+namespace CSharpBlackJack {
+    internal class Card {
+        public readonly int mCount;
+        public readonly bool mIsAce;
+        public readonly string mRank;
+        public readonly int mValue;
+        private string _suit;
         public bool mFaceDown = false;
-        public int mValue;
-        public int mCount;
-        public bool mIsAce = false;
 
         public Card(string rank, string suit) {
             mRank = rank;
-            mSuit = suit;
+            _suit = suit;
             mValue = Evaluate();
             mCount = Count();
-            if(mRank == "A")
-            {
-                mIsAce = true;
-            }
-
+            if (mRank == "A") mIsAce = true;
         }
 
         public string Print() {
-            if(mFaceDown) {
-                return "X";
-            } else {
-                return mRank;
-            }
+            return mFaceDown ? "X" : mRank;
         }
 
-        public int Evaluate() {
-            if(mRank == "J" || mRank == "Q" || mRank == "K") {
-                return 10;
-            } else if (mRank == "A") {
-                return 11;
-            } else {
-                return int.Parse(mRank);
-            }
+        private int Evaluate() {
+            return mRank switch {
+                "J" => 10,
+                "Q" => 10,
+                "K" => 10,
+                "A" => 11,
+                _ => int.Parse(mRank)
+            };
         }
 
-        public int Count() {
-            if (mRank == "10" || mRank == "J" || mRank == "Q" || mRank == "K" || mRank == "A") {
-                return -1;
-            }
-            else if (mRank == "7" || mRank == "8" || mRank == "9") {
-                return 0;
-            }
-            else {
-                return 1;
-            }
+        private int Count() {
+            return mRank switch {
+                "10" => -1,
+                "J" => -1,
+                "Q" => -1,
+                "K" => -1,
+                "A" => -1,
+                "7" => 0,
+                "8" => 0,
+                "9" => 0,
+                _ => 1
+            };
         }
     }
 }

@@ -1,375 +1,333 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace NETCoreBlackJack {
-    class Table {
-        int mVerbose;
-        public int mBetSize;
-        public List<Player> mPlayers = new List<Player>();
-        int mNumOfDecks;
-        public CardPile mCardPile;
-        int mMinCards;
-        Dealer mDealer = new Dealer();
-        int mCurrentPlayer = 0;
+namespace CSharpBlackJack {
+    internal class Table {
+        private readonly Dealer _dealer = new Dealer();
+        private readonly int _minCards;
+        private readonly int _numOfDecks;
+        private readonly Dictionary<int, string> _stratHard = Strategies.Array2dToMap(Strategies.StratHard);
+        private readonly Dictionary<int, string> _stratSoft = Strategies.Array2dToMap(Strategies.StratSoft);
+        private readonly Dictionary<int, string> _stratSplit = Strategies.Array2dToMap(Strategies.StratSplit);
+        private readonly int _verbose;
+        public readonly int mBetSize;
+        public readonly CardPile mCardPile;
+        public readonly List<Player> mPlayers = new List<Player>();
+        private int _currentPlayer;
+        private int _runningCount;
+        private int _trueCount;
         public float mCasinoEarnings = 0;
-        int mRunningCount = 0;
-        int mTrueCount = 0;
-        Dictionary<int, string> mStratHard = Strategies.Array2dToMap(Strategies.stratHard);
-        Dictionary<int, string> mStratSoft = Strategies.Array2dToMap(Strategies.stratSoft);
-        Dictionary<int, string> mStratSplit = Strategies.Array2dToMap(Strategies.stratSplit);
 
-        public Table(int numPlayers, int numDecks, int betsize, int minCards, int verbose = 0) {
+        public Table(int numPlayers, int numDecks, int betSize, int minCards, int verbose = 0) {
             mCardPile = new CardPile(numDecks);
-            mVerbose = verbose;
-            mBetSize = betsize;
-            mNumOfDecks = numDecks;
-            mMinCards = minCards;
+            _verbose = verbose;
+            mBetSize = betSize;
+            _numOfDecks = numDecks;
+            _minCards = minCards;
 
-            for(int i = 0; i < numPlayers; i++) {
-                mPlayers.Add(new Player(this));
-            }
+            for (var i = 0; i < numPlayers; i++) mPlayers.Add(new Player(this));
         }
 
-        void DealRound() {
-            for(int i = 0; i < mPlayers.Count; i++) { 
+        private void DealRound() {
+            for (var i = 0; i < mPlayers.Count; i++) {
                 Deal();
                 mPlayers[i].Evaluate();
-                mCurrentPlayer++;
+                _currentPlayer++;
             }
-            mCurrentPlayer = 0;
+
+            _currentPlayer = 0;
         }
 
-        void Deal() {
-            Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
-            mPlayers[mCurrentPlayer].mHand.Add(card);
-            mRunningCount += card.mCount;
+        private void Deal() {
+            var card = mCardPile.mCards[^1];
+            mPlayers[_currentPlayer].mHand.Add(card);
+            _runningCount += card.mCount;
             mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
         }
 
-        void PreDeal() {
-            for (int i = 0; i < mPlayers.Count; i++) {
-                SelectBet(mPlayers[i]);
-            }
+        private void PreDeal() {
+            for (var i = 0; i < mPlayers.Count; i++) SelectBet(mPlayers[i]);
         }
 
-        void SelectBet(Player player) {
-            if(mTrueCount >=2) {
-                player.mInitialBet = (int)(mBetSize * (mTrueCount - 1) * 1.25);
-            }
+        private void SelectBet(Player player) {
+            if (_trueCount >= 2) player.mInitialBet = (int) (mBetSize * (_trueCount - 1) * 1.25);
         }
 
-        void DealDealer(bool faceDown = false) {
-            Card card = mCardPile.mCards[mCardPile.mCards.Count - 1];
+        private void DealDealer(bool faceDown = false) {
+            var card = mCardPile.mCards[^1];
             mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
             card.mFaceDown = faceDown;
-            mDealer.mHand.Add(card);
-            if(!faceDown) {
-                mRunningCount += card.mCount;
-            }
+            _dealer.mHand.Add(card);
+            if (!faceDown) _runningCount += card.mCount;
         }
 
         public void StartRound() {
             Clear();
             UpdateCount();
-            if(mVerbose > 0) {
+            if (_verbose > 0) {
                 Console.WriteLine(mCardPile.mCards.Count + " cards left");
-                Console.WriteLine("Running count is: " + mRunningCount + "\tTrue count is: " + mTrueCount);
+                Console.WriteLine("Running count is: " + _runningCount + "\tTrue count is: " + _trueCount);
             }
+
             GetNewCards();
             PreDeal();
             DealRound();
             DealDealer();
             DealRound();
             DealDealer(true);
-            mCurrentPlayer = 0;
-            if(CheckDealerNatural()) {
+            _currentPlayer = 0;
+            if (CheckDealerNatural()) {
                 FinishRound();
-            } 
+            }
             else {
                 CheckPlayerNatural();
-                if(mVerbose > 0) {
-                    Print();
-                }
+                if (_verbose > 0) Print();
                 AutoPlay();
             }
         }
 
-        void GetNewCards() {
-            if(mCardPile.mCards.Count < mMinCards) {
-                mCardPile.Refresh();
-                mCardPile.Shuffle();
-                mTrueCount = 0;
-                mRunningCount = 0;
-                if(mVerbose > 0) {
-                    Console.WriteLine("Got " + mNumOfDecks + " new decks as number of cards left is below " + mMinCards);
-                }
-            }
+        private void GetNewCards() {
+            if (mCardPile.mCards.Count >= _minCards) return;
+            mCardPile.Refresh();
+            mCardPile.Shuffle();
+            _trueCount = 0;
+            _runningCount = 0;
+            if (_verbose > 0)
+                Console.WriteLine("Got " + _numOfDecks + " new decks as number of cards left is below " +
+                                  _minCards);
         }
 
         public void Clear() {
-            for(int i = mPlayers.Count -1; i >= 0; i--) {
+            for (var i = mPlayers.Count - 1; i >= 0; i--) {
                 mPlayers[i].ResetHand();
-                if (mPlayers[i].mSplitFrom != null) {
-                    mPlayers.RemoveAt(i);
-                }
+                if (mPlayers[i].mSplitFrom != null) mPlayers.RemoveAt(i);
             }
-            mDealer.ResetHand();
-            mCurrentPlayer = 0;
+
+            _dealer.ResetHand();
+            _currentPlayer = 0;
         }
 
-        void UpdateCount() {
-            if(mCardPile.mCards.Count > 51) {
-                mTrueCount = mRunningCount / (mCardPile.mCards.Count/52);
-            }
+        private void UpdateCount() {
+            if (mCardPile.mCards.Count > 51) _trueCount = _runningCount / (mCardPile.mCards.Count / 52);
         }
 
-        void Hit() {
+        private void Hit() {
             Deal();
-            mPlayers[mCurrentPlayer].Evaluate();
-            if(mVerbose > 0) {
-                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " hits");
-            }
+            mPlayers[_currentPlayer].Evaluate();
+            if (_verbose > 0) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " hits");
         }
 
-        void Stand() {
-            if(mVerbose > 0 && mPlayers[mCurrentPlayer].mValue <= 21) {
-                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " stands");
-                Print();
-            }
-            mPlayers[mCurrentPlayer].mIsDone = true;
-        }
-
-        void Split() {
-            Player splitPlayer = new Player(this, mPlayers[mCurrentPlayer]);
-            mPlayers[mCurrentPlayer].mHand.RemoveAt(mPlayers[mCurrentPlayer].mHand.Count-1);
-            mPlayers.Insert(mCurrentPlayer+1, splitPlayer);
-            mPlayers[mCurrentPlayer].Evaluate();
-            mPlayers[mCurrentPlayer+1].Evaluate();
-            if( mVerbose > 0) {
-                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " splits");
-            }
-        }
-
-        void SplitAces() {
-            if(mVerbose > 0) {
-                Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " splits Aces");
-            }
-            Player splitPlayer = new Player(this, mPlayers[mCurrentPlayer]);
-            mPlayers[mCurrentPlayer].mHand.RemoveAt(mPlayers[mCurrentPlayer].mHand.Count-1);
-            mPlayers.Insert(mCurrentPlayer + 1, splitPlayer);
-            Deal();
-            mPlayers[mCurrentPlayer].Evaluate();
-            Stand();
-            mCurrentPlayer++;
-            Deal();
-            mPlayers[mCurrentPlayer].Evaluate();
-            Stand();
-            if(mVerbose > 0) {
+        private void Stand() {
+            if (_verbose > 0 && mPlayers[_currentPlayer].mValue <= 21) {
+                Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " stands");
                 Print();
             }
 
+            mPlayers[_currentPlayer].mIsDone = true;
         }
 
-        void DoubleBet() {
-            if(mPlayers[mCurrentPlayer].mBetMult == 1 && mPlayers[mCurrentPlayer].mHand.Count == 2) {
-                mPlayers[mCurrentPlayer].Doublebet();
-                if(mVerbose > 0) {
-                    Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " doubles");
-                }
+        private void Split() {
+            var splitPlayer = new Player(this, mPlayers[_currentPlayer]);
+            mPlayers[_currentPlayer].mHand.RemoveAt(mPlayers[_currentPlayer].mHand.Count - 1);
+            mPlayers.Insert(_currentPlayer + 1, splitPlayer);
+            mPlayers[_currentPlayer].Evaluate();
+            mPlayers[_currentPlayer + 1].Evaluate();
+            if (_verbose > 0) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits");
+        }
+
+        private void SplitAces() {
+            if (_verbose > 0) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits Aces");
+            var splitPlayer = new Player(this, mPlayers[_currentPlayer]);
+            mPlayers[_currentPlayer].mHand.RemoveAt(mPlayers[_currentPlayer].mHand.Count - 1);
+            mPlayers.Insert(_currentPlayer + 1, splitPlayer);
+            Deal();
+            mPlayers[_currentPlayer].Evaluate();
+            Stand();
+            _currentPlayer++;
+            Deal();
+            mPlayers[_currentPlayer].Evaluate();
+            Stand();
+            if (_verbose > 0) Print();
+        }
+
+        private void DoubleBet() {
+            if ((int) mPlayers[_currentPlayer].mBetMult == 1 && mPlayers[_currentPlayer].mHand.Count == 2) {
+                mPlayers[_currentPlayer].DoubleBet();
+                if (_verbose > 0) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " doubles");
                 Hit();
                 Stand();
             }
             else {
                 Hit();
             }
-
         }
 
-        void AutoPlay() {
-            while (!mPlayers[mCurrentPlayer].mIsDone) {
+        private void AutoPlay() {
+            while (!mPlayers[_currentPlayer].mIsDone) {
                 // check if player just split
-                if (mPlayers[mCurrentPlayer].mHand.Count == 1) {
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + mPlayers[mCurrentPlayer].mPlayerNum + " gets 2nd card after splitting");
-                    }
+                if (mPlayers[_currentPlayer].mHand.Count == 1) {
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum +
+                                          " gets 2nd card after splitting");
                     Deal();
-                    mPlayers[mCurrentPlayer].Evaluate();
+                    mPlayers[_currentPlayer].Evaluate();
                 }
 
-                if (mPlayers[mCurrentPlayer].mHand.Count < 5 && mPlayers[mCurrentPlayer].mValue < 21) {
-                    int splitCardVal = mPlayers[mCurrentPlayer].CanSplit();
-                    if (splitCardVal == 11) {
+                if (mPlayers[_currentPlayer].mHand.Count < 5 && mPlayers[_currentPlayer].mValue < 21) {
+                    var splitCardVal = mPlayers[_currentPlayer].CanSplit();
+                    if (splitCardVal == 11)
                         SplitAces();
-                    }
-                    else if (splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10)) {
-                        Action(Strategies.GetAction(splitCardVal, mDealer.UpCard(), mStratSplit));
-                    }
-                    else if (mPlayers[mCurrentPlayer].mIsSoft) {
-                        Action(Strategies.GetAction(mPlayers[mCurrentPlayer].mValue, mDealer.UpCard(), mStratSoft));
-                    }
-                    else {
-                        Action(Strategies.GetAction(mPlayers[mCurrentPlayer].mValue, mDealer.UpCard(), mStratHard));
-                    }
+                    else if (splitCardVal != 0 && splitCardVal != 5 && splitCardVal != 10)
+                        Action(Strategies.GetAction(splitCardVal, _dealer.UpCard(), _stratSplit));
+                    else if (mPlayers[_currentPlayer].mIsSoft)
+                        Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, _dealer.UpCard(), _stratSoft));
+                    else
+                        Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, _dealer.UpCard(), _stratHard));
                 }
                 else {
                     Stand();
                 }
             }
+
             NextPlayer();
         }
 
-        void Action(string action) {
-            if (action == "H") {
-                Hit();
-            }
-            else if (action == "S") {
-                Stand();
-            }
-            else if (action == "D") {
-                DoubleBet();
-            }
-            else if (action == "P") {
-                Split();
-            }
-            else {
-                Console.WriteLine("No action found");
-                Environment.Exit(1);
+        private void Action(string action) {
+            switch (action) {
+                case "H":
+                    Hit();
+                    break;
+                case "S":
+                    Stand();
+                    break;
+                case "D":
+                    DoubleBet();
+                    break;
+                case "P":
+                    Split();
+                    break;
+                default:
+                    Console.WriteLine("No action found");
+                    Environment.Exit(1);
+                    break;
             }
         }
 
-        void DealerPlay() {
-            bool allBusted = true;
-            for(int i = 0; i < mPlayers.Count; i++) {
-                if(mPlayers[i].mValue < 22) {
+        private void DealerPlay() {
+            var allBusted = true;
+            for (var i = 0; i < mPlayers.Count; i++)
+                if (mPlayers[i].mValue < 22) {
                     allBusted = false;
                     break;
                 }
-            }
-            mDealer.mHand[1].mFaceDown = false;
-            mRunningCount += mDealer.mHand[1].mCount;
-            mDealer.Evaluate();
-            if(mVerbose > 0) {
+
+            _dealer.mHand[1].mFaceDown = false;
+            _runningCount += _dealer.mHand[1].mCount;
+            _dealer.Evaluate();
+            if (_verbose > 0) {
                 Console.WriteLine("Dealer's turn");
                 Print();
             }
-            if(allBusted) {
-                if(mVerbose > 0) {
-                    Console.WriteLine("Dealer automatically wins cause all players busted");
-                }
+
+            if (allBusted) {
+                if (_verbose > 0) Console.WriteLine("Dealer automatically wins cause all players busted");
                 FinishRound();
-            } 
+            }
             else {
-                while(mDealer.mValue < 17 && mDealer.mHand.Count < 5) {
+                while (_dealer.mValue < 17 && _dealer.mHand.Count < 5) {
                     DealDealer();
-                    mDealer.Evaluate();
-                    if(mVerbose > 0) {
-                        Console.WriteLine("Dealer hits");
-                        Print();
-                    }
+                    _dealer.Evaluate();
+                    if (_verbose <= 0) continue;
+                    Console.WriteLine("Dealer hits");
+                    Print();
                 }
+
                 FinishRound();
             }
         }
 
-        void NextPlayer() {
-            if(++mCurrentPlayer < mPlayers.Count){
+        private void NextPlayer() {
+            if (++_currentPlayer < mPlayers.Count)
                 AutoPlay();
-            } else {
+            else
                 DealerPlay();
-            }
-            
         }
 
-        void CheckPlayerNatural() {
-            for (int i = 0; i < mPlayers.Count; i++) {
-                if(mPlayers[i].mValue == 21 && mPlayers[i].mHand.Count == 2 && mPlayers[i].mSplitFrom == null){
+        private void CheckPlayerNatural() {
+            for (var i = 0; i < mPlayers.Count; i++)
+                if (mPlayers[i].mValue == 21 && mPlayers[i].mHand.Count == 2 && mPlayers[i].mSplitFrom == null)
                     mPlayers[i].mHasNatural = true;
-                }
-            }
         }
 
-        bool CheckDealerNatural() {
-            mDealer.Evaluate();
-            if (mDealer.mValue == 21) {
-                mDealer.mHand[1].mFaceDown = false;
-                mRunningCount += mDealer.mHand[1].mCount;
-                if(mVerbose > 0) {
-                    Print();
-                    Console.WriteLine("Dealer has a natural 21");
-                }
-                return true;
-            } 
-            return false;
+        private bool CheckDealerNatural() {
+            _dealer.Evaluate();
+            if (_dealer.mValue != 21) return false;
+            _dealer.mHand[1].mFaceDown = false;
+            _runningCount += _dealer.mHand[1].mCount;
+            if (_verbose <= 0) return true;
+            Print();
+            Console.WriteLine("Dealer has a natural 21");
+
+            return true;
         }
 
         public void CheckEarnings() {
             float check = 0;
-            for(int i = 0; i < mPlayers.Count; i++) {
-                check += mPlayers[i].mEarnings;
-            }
-            if(check * -1 != mCasinoEarnings) {
-                Console.WriteLine("Earnings don't match");
-                Environment.Exit(1);
-            }
+            for (var i = 0; i < mPlayers.Count; i++) check += mPlayers[i].mEarnings;
+            if (Math.Abs(check * -1 - mCasinoEarnings) < 1) return;
+            Console.WriteLine("Earnings don't match");
+            Environment.Exit(1);
         }
 
-        void FinishRound() {
-            if (mVerbose > 0) {
-                Console.WriteLine("Scoring round");
-            }
-            foreach (var player in mPlayers) {
+        private void FinishRound() {
+            if (_verbose > 0) Console.WriteLine("Scoring round");
+            foreach (var player in mPlayers)
                 if (player.mHasNatural) {
                     player.Win(1.5f);
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (1.5 * player.mBetMult * player.mInitialBet) + " with a natural 21");
-                    }
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
+                                          1.5 * player.mBetMult * player.mInitialBet + " with a natural 21");
                 }
                 else if (player.mValue > 21) {
                     player.Lose();
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Busts and Loses " + (player.mBetMult * player.mInitialBet));
-                    }
-
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + player.mPlayerNum + " Busts and Loses " +
+                                          player.mBetMult * player.mInitialBet);
                 }
-                else if (mDealer.mValue > 21) {
+                else if (_dealer.mValue > 21) {
                     player.Win();
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
-                    }
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
+                                          player.mBetMult * player.mInitialBet);
                 }
-                else if (player.mValue > mDealer.mValue) {
+                else if (player.mValue > _dealer.mValue) {
                     player.Win();
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
-                    }
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
+                                          player.mBetMult * player.mInitialBet);
                 }
-                else if (player.mValue == mDealer.mValue) {
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Draws");
-                    }
+                else if (player.mValue == _dealer.mValue) {
+                    if (_verbose > 0) Console.WriteLine("Player " + player.mPlayerNum + " Draws");
                 }
                 else {
                     player.Lose();
-                    if (mVerbose > 0) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Loses " + (player.mBetMult * player.mInitialBet));
-                    }
+                    if (_verbose > 0)
+                        Console.WriteLine("Player " + player.mPlayerNum + " Loses " +
+                                          player.mBetMult * player.mInitialBet);
                 }
-            }
-            if (mVerbose > 0) {
-                foreach (var player in mPlayers) {
-                    if (player.mSplitFrom == null) {
-                        Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
-                    }
-                }
+
+            if (_verbose <= 0) return;
+            {
+                foreach (var player in mPlayers.Where(player => player.mSplitFrom == null))
+                    Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
                 Console.WriteLine();
             }
         }
 
-        void Print() {
-            foreach (Player player in mPlayers) {
-                Console.WriteLine(player.Print());
-            }
-            Console.WriteLine(mDealer.Print()+"\n");
+        private void Print() {
+            foreach (var player in mPlayers) Console.WriteLine(player.Print());
+            Console.WriteLine(_dealer.Print() + "\n");
         }
     }
 }

@@ -1,41 +1,34 @@
 ﻿using System;
 
-
-namespace NETCoreBlackJack
-{
-    class QuickRand
-    {
-        #region Data Members
-
-        private ulong x_;
-        private ulong y_;
-
-        #endregion
-
+namespace CSharpBlackJack {
+    internal class QuickRand {
         #region Constructor
 
-        public QuickRand()
-        {
-            x_ = (ulong)Guid.NewGuid().GetHashCode();
-            y_ = (ulong)Guid.NewGuid().GetHashCode();
+        public QuickRand() {
+            _x = (ulong) Guid.NewGuid().GetHashCode();
+            _y = (ulong) Guid.NewGuid().GetHashCode();
         }
 
         #endregion
 
-        public ushort Next()
-        {
-            ushort _;
-            ulong temp_x, temp_y;
+        public ushort Next() {
+            var tempX = _y;
+            _x ^= _x << 23;
+            var tempY = _x ^ _y ^ (_x >> 17) ^ (_y >> 26);
 
-            temp_x = y_;
-            x_ ^= x_ << 23; temp_y = x_ ^ y_ ^ (x_ >> 17) ^ (y_ >> 26);
+            var _ = (ushort) (tempY + _y);
 
-            _ = (ushort)(temp_y + y_);
-
-            x_ = temp_x;
-            y_ = temp_y;
+            _x = tempX;
+            _y = tempY;
 
             return _;
         }
+
+        #region Data Members
+
+        private ulong _x;
+        private ulong _y;
+
+        #endregion
     }
 }
