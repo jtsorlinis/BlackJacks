@@ -10,7 +10,7 @@ namespace CSharpBlackJack {
             const int minCards = 40;
 
             var rounds = 1000000;
-            const int verbosity = 0;
+            int verbosity = 0;
 
             if (args.Length == 1) rounds = int.Parse(args[0]);
 
