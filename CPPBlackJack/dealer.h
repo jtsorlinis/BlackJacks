@@ -1,12 +1,11 @@
 #pragma once
 #include "player.h"
 
-class Dealer: public Player {
-public:
-	bool mHideSecond;
+class Dealer : public Player {
+ public:
+  bool mHideSecond;
 
-	Dealer();
-	void resetHand();
-	int& upCard();
+  Dealer();
+  void resetHand();
+  int& upCard();
 };
-
