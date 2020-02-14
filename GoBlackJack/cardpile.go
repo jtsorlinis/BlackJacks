@@ -33,7 +33,7 @@ func (c *CardPile) Print() string {
 
 // Shuffle the cards
 func (c *CardPile) Shuffle() {
-	var i uint32 = uint32(len(c.MCards) - 1)
+	var i = uint32(len(c.MCards) - 1)
 	for ; i > 0; i-- {
 		j := uint32(rnd.Uint64()) % (i + 1)
 		c.MCards[i], c.MCards[j] = c.MCards[j], c.MCards[i]

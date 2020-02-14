@@ -53,7 +53,7 @@ var stratSplit = [][]string{
 }
 
 func getAction(playerVal int32, dealerVal int32, strategy map[int32]string) string {
-	var key int32 = ((playerVal+dealerVal)*(playerVal+dealerVal+1))/2 + dealerVal
+	var key = ((playerVal+dealerVal)*(playerVal+dealerVal+1))/2 + dealerVal
 	return strategy[key]
 }
 

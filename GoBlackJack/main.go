@@ -12,7 +12,7 @@ const numDecks int32 = 8
 const betSize int32 = 10
 const minCards int32 = 40
 
-var rounds int = 1000000
+var rounds = 1000000
 
 const verbose bool = false
 
@@ -31,7 +31,7 @@ func main() {
 	start := time.Now()
 
 	rounds32 := int32(rounds)
-	var x int32 = 0
+	var x int32
 	for ; x < rounds32; x++ {
 		if verbose {
 			println("Round " + fmt.Sprint(x))

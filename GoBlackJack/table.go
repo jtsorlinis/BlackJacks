@@ -313,7 +313,7 @@ func (t *Table) checkDealerNatural() bool {
 
 // CheckEarnings check that players earnings match the casinos losses or vice versa
 func (t *Table) CheckEarnings() {
-	var check float32 = 0
+	var check float32
 	for _, player := range t.MPlayers {
 		check += player.MEarnings
 	}

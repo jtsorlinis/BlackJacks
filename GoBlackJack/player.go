@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-var playerNumCount int32 = 0
+var playerNumCount int32
 var maxSplits int32 = 10
 
 // Player class
