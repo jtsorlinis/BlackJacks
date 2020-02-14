@@ -57,7 +57,7 @@ func getAction(playerVal int32, dealerVal int32, strategy *map[int32]string) str
 	return (*strategy)[key]
 }
 
-func array2dToMap(array [][]string) *map[int32]string {
+func array2dToMap(array [][]string) map[int32]string {
 	temp := make(map[int32]string)
 	for row := 0; row < len(array); row++ {
 		for col := 0; col < len(array[0]); col++ {
@@ -67,5 +67,5 @@ func array2dToMap(array [][]string) *map[int32]string {
 			temp[int32(key)] = array[row][col]
 		}
 	}
-	return &temp
+	return temp
 }

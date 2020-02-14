@@ -18,9 +18,9 @@ type Table struct {
 	MCasinoEarnings float32
 	MRunningCount   int32
 	MTrueCount      int32
-	MStratHard      *map[int32]string
-	MStratSoft      *map[int32]string
-	MStratSplit     *map[int32]string
+	MStratHard      map[int32]string
+	MStratSoft      map[int32]string
+	MStratSplit     map[int32]string
 }
 
 // NewTable constructor
@@ -219,11 +219,11 @@ func (t *Table) autoPlay() {
 			if splitCardVal == 11 {
 				t.splitAces()
 			} else if splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10) {
-				t.action(getAction(splitCardVal, t.MDealer.UpCard(), t.MStratSplit))
+				t.action(getAction(splitCardVal, t.MDealer.UpCard(), &t.MStratSplit))
 			} else if t.MPlayers[t.mCurrentPlayer].MIsSoft {
-				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), t.MStratSoft))
+				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), &t.MStratSoft))
 			} else {
-				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), t.MStratHard))
+				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), &t.MStratHard))
 			}
 		} else {
 			t.stand()
