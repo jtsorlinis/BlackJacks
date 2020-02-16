@@ -1,10 +1,10 @@
-#include <algorithm>
-#include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <iostream>
-
 #include "player.h"
 #include "table.h"
+
+using namespace std::chrono;
 
 int num_of_players = 5;
 int num_of_decks = 8;
@@ -22,7 +22,7 @@ int main(const int argc, char* argv[]) {
   Table table1(num_of_players, num_of_decks, base_bet, min_cards, verbose);
   table1.m_card_pile_.shuffle();
   std::cout << std::fixed << std::setprecision(2);
-  const auto start = clock();
+  const auto start = high_resolution_clock::now();
 
   auto x = 0;
   while (x++ < rounds) {
@@ -47,9 +47,8 @@ int main(const int argc, char* argv[]) {
   }
   std::cout << "Casino earnings: " << table1.m_casino_earnings_ << "\n";
 
-  const auto duration = (static_cast<double>(clock()) - start) /
-                        static_cast<double>(CLOCKS_PER_SEC);
+  const auto duration = duration_cast<milliseconds>(high_resolution_clock::now()-start);
   std::cout << "\nPlayed " << x - 1 << " rounds in " << std::setprecision(3)
-      << duration << " seconds.\n\n";
-  /*system("pause");*/
+      << duration.count()/1000.0 << " seconds.\n\n";
+ 
 }
