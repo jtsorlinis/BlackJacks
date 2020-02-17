@@ -31,9 +31,14 @@ void Table::deal_round() {
   for (auto it = m_players_.begin(); it != m_players_.end(); ++it) {
     m_current_player_ = it;
     deal();
-    m_current_player_->evaluate();
   }
   m_current_player_ = m_players_.begin();
+}
+
+void Table::evaluate_all() {
+  for (auto& player : m_players_) {
+    player.evaluate();
+  }
 }
 
 void Table::deal() {
@@ -78,6 +83,7 @@ void Table::start_round() {
   deal_dealer();
   deal_round();
   deal_dealer(true);
+  evaluate_all();
   m_current_player_ = m_players_.begin();
   if (check_dealer_natural()) {
     finish_round();

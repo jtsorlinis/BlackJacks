@@ -24,6 +24,7 @@ public:
   Table(int num_players, int num_of_decks, int bet_size, int min_cards,
         int verbose = 0);
   void deal_round();
+  void evaluate_all();
   void deal();
   void pre_deal();
   void select_bet(Player* player) const;
