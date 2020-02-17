@@ -25,7 +25,7 @@ public class Main {
                 System.out.println("Round " + x);
             }
             if(verbosity == 0 && rounds > 1000 && x % (rounds/100) == 0) {
-                System.out.print("Progress: " + (int)(((float)x/rounds)*100) + "\r");
+                System.out.print("\tProgress: " + x*100/rounds + "%\r");
             }
 
             table1.startRound();
