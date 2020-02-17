@@ -23,7 +23,7 @@ while (x++ < Rounds) {
     console.log(`Round ${x}`);
   }
   if (!Verbose && Rounds > 1000 && x % (Rounds / 100) === 0) {
-    process.stdout.write(`\tProgress: ${parseInt((x / Rounds) * 100, 10)}%\r`);
+    process.stdout.write(`\tProgress: ${(x * 100) / Rounds}%\r`);
   }
 
   t.startRound();
