@@ -37,7 +37,7 @@ func main() {
 			println("Round " + fmt.Sprint(x))
 		}
 		if !verbose && rounds > 1000 && x%(rounds32/100) == 0 {
-			print("\tProgress: " + fmt.Sprint(int32((float32(x)/float32(rounds))*100)) + "%\r")
+			print("\tProgress: " + fmt.Sprint(x*100/rounds32) + "%\r")
 		}
 
 		table1.StartRound()
