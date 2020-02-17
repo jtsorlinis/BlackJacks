@@ -1,8 +1,8 @@
+const process = require('process');
 const CardPile = require('./cardpile');
 const Dealer = require('./dealer');
 const Player = require('./player');
 const Strategies = require('./strategies');
-const process = require('process');
 
 module.exports = class Table {
   constructor(numplayers, numdecks, betsize, mincards, verbose) {
@@ -50,7 +50,8 @@ module.exports = class Table {
 
   selectBet(player) {
     if (this.mTrueCount >= 2) {
-      player.mInitialBet = parseInt(this.mBetSize * (this.mTrueCount-1) * 1.25);
+      // eslint-disable-next-line no-param-reassign
+      player.mInitialBet = parseInt(this.mBetSize * (this.mTrueCount - 1) * 1.25, 10);
     }
   }
 
@@ -67,8 +68,8 @@ module.exports = class Table {
     this.clear();
     this.updateCount();
     if (this.mVerbose) {
-      console.log(this.mCardPile.mCards.length + ' cards left');
-      console.log('Running count is: ' + this.mRunningCount + '\tTrue count is: ' + this.mTrueCount);
+      console.log(`${this.mCardPile.mCards.length} cards left`);
+      console.log(`Running count is: ${this.mRunningCount}\tTrue count is: ${this.mTrueCount}`);
     }
     this.getNewCards();
     this.preDeal();
@@ -95,13 +96,13 @@ module.exports = class Table {
       this.mTrueCount = 0;
       this.mRunningCount = 0;
       if (this.mVerbose) {
-        console.log('Got ' + this.mNumOfDecks + ' new decks as number of cards left is below ' + this.mMinCards);
+        console.log(`Got ${this.mNumOfDecks} new decks as number of cards left is below ${this.mMinCards}`);
       }
     }
   }
 
   clear() {
-    for (let i = this.mPlayers.length-1; i >= 0; i--) {
+    for (let i = this.mPlayers.length - 1; i >= 0; i--) {
       this.mPlayers[i].resetHand();
       if (this.mPlayers[i].mSplitFrom != null) {
         this.mPlayers.splice(i, 1);
@@ -113,7 +114,7 @@ module.exports = class Table {
 
   updateCount() {
     if (this.mCardPile.mCards.length > 51) {
-      this.mTrueCount = Math.floor(this.mRunningCount / (this.mCardPile.mCards.length/52));
+      this.mTrueCount = Math.floor(this.mRunningCount / (this.mCardPile.mCards.length / 52));
     }
   }
 
@@ -121,13 +122,13 @@ module.exports = class Table {
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();
     if (this.mVerbose) {
-      console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' hits');
+      console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} hits`);
     }
   }
 
   stand() {
     if (this.mVerbose && this.mPlayers[this.mCurrentPlayer].mValue <= 21) {
-      console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' stands');
+      console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} stands`);
       this.print();
     }
     this.mPlayers[this.mCurrentPlayer].mIsDone = true;
@@ -136,21 +137,21 @@ module.exports = class Table {
   split() {
     const splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
     this.mPlayers[this.mCurrentPlayer].mHand.pop();
-    this.mPlayers.splice(this.mCurrentPlayer+1, 0, splitPlayer);
+    this.mPlayers.splice(this.mCurrentPlayer + 1, 0, splitPlayer);
     this.mPlayers[this.mCurrentPlayer].evaluate();
-    this.mPlayers[this.mCurrentPlayer+1].evaluate();
+    this.mPlayers[this.mCurrentPlayer + 1].evaluate();
     if (this.mVerbose) {
-      console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' splits');
+      console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits`);
     }
   }
 
   splitAces() {
     if (this.mVerbose) {
-      console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' splits Aces');
+      console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits Aces`);
     }
     const splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
     this.mPlayers[this.mCurrentPlayer].mHand.pop();
-    this.mPlayers.splice(this.mCurrentPlayer+1, 0, splitPlayer);
+    this.mPlayers.splice(this.mCurrentPlayer + 1, 0, splitPlayer);
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();
     this.stand();
@@ -164,10 +165,11 @@ module.exports = class Table {
   }
 
   doubleBet() {
-    if (this.mPlayers[this.mCurrentPlayer].mBetMult == 1 && this.mPlayers[this.mCurrentPlayer].mHand.length == 2) {
+    if (this.mPlayers[this.mCurrentPlayer].mBetMult === 1
+        && this.mPlayers[this.mCurrentPlayer].mHand.length === 2) {
       this.mPlayers[this.mCurrentPlayer].doubleBet();
       if (this.mVerbose) {
-        console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' doubles');
+        console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} doubles`);
       }
       this.hit();
       this.stand();
@@ -178,23 +180,26 @@ module.exports = class Table {
 
   autoPlay() {
     while (!this.mPlayers[this.mCurrentPlayer].mIsDone) {
-      if (this.mPlayers[this.mCurrentPlayer].mHand.length == 1) {
+      if (this.mPlayers[this.mCurrentPlayer].mHand.length === 1) {
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[this.mCurrentPlayer].mPlayerNum + ' gets 2nd card after splitting');
+          console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} gets 2nd card after splitting`);
         }
         this.deal();
         this.mPlayers[this.mCurrentPlayer].evaluate();
       }
-      if (this.mPlayers[this.mCurrentPlayer].mHand.length < 5 && this.mPlayers[this.mCurrentPlayer].mValue < 21) {
+      if (this.mPlayers[this.mCurrentPlayer].mHand.length < 5
+            && this.mPlayers[this.mCurrentPlayer].mValue < 21) {
         const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
-        if (splitCardVal == 11) {
+        if (splitCardVal === 11) {
           this.splitAces();
-        } else if (splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10)) {
+        } else if (splitCardVal !== 0 && (splitCardVal !== 5 && splitCardVal !== 10)) {
           this.action(Strategies.getAction(splitCardVal, this.mDealer.upCard(), this.mStratSplit));
         } else if (this.mPlayers[this.mCurrentPlayer].mIsSoft) {
-          this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue, this.mDealer.upCard(), this.mStratSoft));
+          this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue,
+            this.mDealer.upCard(), this.mStratSoft));
         } else {
-          this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue, this.mDealer.upCard(), this.mStratHard));
+          this.action(Strategies.getAction(this.mPlayers[this.mCurrentPlayer].mValue,
+            this.mDealer.upCard(), this.mStratHard));
         }
       } else {
         this.stand();
@@ -204,16 +209,16 @@ module.exports = class Table {
   }
 
   action(action) {
-    if (action == 'H') {
+    if (action === 'H') {
       this.hit();
-    } else if (action == 'S') {
+    } else if (action === 'S') {
       this.stand();
-    } else if (action == 'D') {
+    } else if (action === 'D') {
       this.doubleBet();
-    } else if (action == 'P') {
+    } else if (action === 'P') {
       this.split();
     } else {
-      console.log('No action found. Action was: ' + action);
+      console.log(`No action found. Action was: ${action}`);
       process.exit(1);
     }
   }
@@ -261,7 +266,8 @@ module.exports = class Table {
 
   checkPlayerNatural() {
     for (let i = 0; i < this.mPlayers.length; i++) {
-      if (this.mPlayers[i].mValue == 21 && this.mPlayers[i].mHand.length == 2 && this.mPlayers[i].mSplitFrom == null) {
+      if (this.mPlayers[i].mValue === 21 && this.mPlayers[i].mHand.length === 2
+            && this.mPlayers[i].mSplitFrom == null) {
         this.mPlayers[i].mHasNatural = true;
       }
     }
@@ -269,7 +275,7 @@ module.exports = class Table {
 
   checkDealerNatural() {
     this.mDealer.evaluate();
-    if (this.mDealer.mValue == 21) {
+    if (this.mDealer.mValue === 21) {
       this.mDealer.mHand[1].mFaceDown = false;
       this.mRunningCount += this.mDealer.mHand[1].mCount;
       if (this.mVerbose) {
@@ -286,7 +292,7 @@ module.exports = class Table {
     for (let i = 0; i < this.mPlayers.length; i++) {
       check += this.mPlayers[i].mEarnings;
     }
-    if (check * -1 != this.mCasinoEarnings) {
+    if (check * -1 !== this.mCasinoEarnings) {
       console.log('Earning\'s dont match');
       process.exit(1);
     }
@@ -300,38 +306,38 @@ module.exports = class Table {
       if (this.mPlayers[i].mHasNatural) {
         this.mPlayers[i].win(1.5);
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Wins with a natural 21');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Wins with a natural 21`);
         }
       } else if (this.mPlayers[i].mValue > 21) {
         this.mPlayers[i].lose();
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Busts and Loses');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Busts and Loses`);
         }
       } else if (this.mDealer.mValue > 21) {
         this.mPlayers[i].win();
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Wins');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Wins`);
         }
       } else if (this.mPlayers[i].mValue > this.mDealer.mValue) {
         this.mPlayers[i].win();
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Wins');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Wins`);
         }
-      } else if (this.mPlayers[i].mValue == this.mDealer.mValue) {
+      } else if (this.mPlayers[i].mValue === this.mDealer.mValue) {
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Draws');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Draws`);
         }
       } else {
         this.mPlayers[i].lose();
         if (this.mVerbose) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Loses');
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Loses`);
         }
       }
     }
     if (this.mVerbose) {
       for (let i = 0; i < this.mPlayers.length; i++) {
         if (this.mPlayers[i].mSplitFrom == null) {
-          console.log('Player ' + this.mPlayers[i].mPlayerNum + ' Earnings: ' + this.mPlayers[i].mEarnings);
+          console.log(`Player ${this.mPlayers[i].mPlayerNum} Earnings: ${this.mPlayers[i].mEarnings}`);
         }
       }
       console.log();
@@ -342,6 +348,6 @@ module.exports = class Table {
     for (let i = 0; i < this.mPlayers.length; i++) {
       console.log(this.mPlayers[i].print());
     }
-    console.log(this.mDealer.print() + '\n');
+    console.log(`${this.mDealer.print()}\n`);
   }
 };

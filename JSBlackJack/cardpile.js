@@ -26,7 +26,7 @@ module.exports = class CardPile {
 
   print() {
     let output = '';
-    this.mCards.forEach(function(card) {
+    this.mCards.forEach((card) => {
       output += card.print();
     });
     return output;

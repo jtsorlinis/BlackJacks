@@ -2,7 +2,7 @@ let PlayerNumCount = 0;
 const MaxSplits = 10;
 
 module.exports = class Player {
-  constructor(table=null, split=null) {
+  constructor(table = null, split = null) {
     this.mHand = [];
     this.mValue = 0;
     this.mEarnings = 0;
@@ -20,7 +20,7 @@ module.exports = class Player {
       if (split != null) {
         this.mHand.push(split.mHand[1]);
         this.mSplitCount++;
-        this.mPlayerNum = split.mPlayerNum + 'S';
+        this.mPlayerNum = `${split.mPlayerNum}S`;
         this.mSplitFrom = split;
       } else {
         PlayerNumCount++;
@@ -46,11 +46,11 @@ module.exports = class Player {
   }
 
   canSplit() {
-    if (this.mHand.length == 2 && this.mHand[0].mRank == this.mHand[1].mRank && this.mSplitCount < MaxSplits) {
+    if (this.mHand.length === 2 && this.mHand[0].mRank
+        === this.mHand[1].mRank && this.mSplitCount < MaxSplits) {
       return this.mHand[0].mValue;
-    } else {
-      return 0;
     }
+    return 0;
   }
 
   win(mult = 1) {
@@ -72,21 +72,21 @@ module.exports = class Player {
   }
 
   print() {
-    let output = 'Player ' + this.mPlayerNum + ': ';
-    this.mHand.forEach(function(card) {
-      output += card.print() + ' ';
+    let output = `Player ${this.mPlayerNum}: `;
+    this.mHand.forEach((card) => {
+      output += `${card.print()} `;
     });
     for (let i = this.mHand.length; i < 5; i++) {
       output += '  ';
     }
-    output += '\tScore: ' + this.mValue;
+    output += `\tScore: ${this.mValue}`;
     if (this.mValue > 21) {
       output += ' (Bust) ';
     } else {
       output += '        ';
     }
-    if (this.mPlayerNum != 'D') {
-      output += '\tBet: ' + (this.mInitialBet * this.mBetMult);
+    if (this.mPlayerNum !== 'D') {
+      output += `\tBet: ${this.mInitialBet * this.mBetMult}`;
     }
     return output;
   }
@@ -102,12 +102,12 @@ module.exports = class Player {
       }
     }
 
-    while (this.mValue > 21 && this.mAces >0) {
+    while (this.mValue > 21 && this.mAces > 0) {
       this.mValue -= 10;
       this.mAces--;
     }
 
-    if (this.mAces == 0) {
+    if (this.mAces === 0) {
       this.mIsSoft = false;
     }
   }

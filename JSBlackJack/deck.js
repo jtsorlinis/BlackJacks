@@ -7,7 +7,7 @@ module.exports = class Deck {
   constructor() {
     this.mCards = [];
     for (let i = 0; i < mSuits.length; i++) {
-      for (let j =0; j < mRanks.length; j++) {
+      for (let j = 0; j < mRanks.length; j++) {
         this.mCards.push(new Card(mRanks[j], mSuits[i]));
       }
     }
@@ -15,17 +15,16 @@ module.exports = class Deck {
 
   print() {
     let output = '';
-    this.mCards.forEach(function(card) {
+    this.mCards.forEach((card) => {
       output += card.print();
     });
     return output;
   }
 
   shuffle() {
-    for (let i = this.mCards.length-1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i+1));
+    for (let i = this.mCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
       [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
     }
   }
 };
-

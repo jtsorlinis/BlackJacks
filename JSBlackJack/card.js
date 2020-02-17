@@ -6,7 +6,7 @@ module.exports = class Card {
     this.mValue = this.evaluate();
     this.mCount = this.count();
     this.mIsAce = false;
-    if (this.mRank == 'A') {
+    if (this.mRank === 'A') {
       this.mIsAce = true;
     }
   }
@@ -14,29 +14,26 @@ module.exports = class Card {
   print() {
     if (this.mFaceDown) {
       return 'X';
-    } else {
-      return this.mRank;
     }
+    return this.mRank;
   }
 
   evaluate() {
-    if (this.mRank == 'J' || this.mRank == 'Q' || this.mRank == 'K') {
+    if (this.mRank === 'J' || this.mRank === 'Q' || this.mRank === 'K') {
       return 10;
-    } else if (this.mRank == 'A') {
+    } if (this.mRank === 'A') {
       return 11;
-    } else {
-      return parseInt(this.mRank);
     }
+    return parseInt(this.mRank, 10);
   }
 
   count() {
-    if (this.mRank == '10' || this.mRank == 'J' ||
-        this.mRank == 'Q' || this.mRank == 'K' || this.mRank == 'A') {
+    if (this.mRank === '10' || this.mRank === 'J'
+        || this.mRank === 'Q' || this.mRank === 'K' || this.mRank === 'A') {
       return -1;
-    } else if (this.mRank == '7' || this.mRank == '8' || this.mRank == '9') {
+    } if (this.mRank === '7' || this.mRank === '8' || this.mRank === '9') {
       return 0;
-    } else {
-      return 1;
     }
+    return 1;
   }
 };

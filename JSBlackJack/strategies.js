@@ -48,10 +48,10 @@ const stratSplit = [
 ];
 
 function getAction(playerval, dealerval, strategy) {
-  const playerVal = parseInt(playerval);
-  const dealerVal = parseInt(dealerval);
-  const key = ((playerVal + dealerVal) *
-    (playerVal + dealerVal + 1)) / 2 + dealerVal;
+  const playerVal = parseInt(playerval, 10);
+  const dealerVal = parseInt(dealerval, 10);
+  const key = ((playerVal + dealerVal)
+    * (playerVal + dealerVal + 1)) / 2 + dealerVal;
   return strategy.get(key);
 }
 
@@ -59,10 +59,10 @@ function array2dToMap(array) {
   const temp = new Map();
   for (let row = 0; row < array.length; row++) {
     for (let col = 0; col < array[0].length; col++) {
-      const playerVal = parseInt(array[row][0]);
-      const dealerVal = parseInt(array[0][col]);
-      const key = ((playerVal + dealerVal) *
-        (playerVal + dealerVal + 1)) / 2 + dealerVal;
+      const playerVal = parseInt(array[row][0], 10);
+      const dealerVal = parseInt(array[0][col], 10);
+      const key = ((playerVal + dealerVal)
+        * (playerVal + dealerVal + 1)) / 2 + dealerVal;
       temp.set(key, array[row][col]);
     }
   }
@@ -76,4 +76,3 @@ module.exports = {
   getAction,
   array2dToMap,
 };
-
