@@ -24,7 +24,7 @@ namespace CSharpBlackJack {
             while (x++ < rounds) {
                 if (verbosity > 0) Console.WriteLine("Round " + x);
                 if (verbosity == 0 && rounds > 1000 && x % (rounds / 100) == 0)
-                    Console.Write("\tProgress: " + (int) ((float) x / rounds * 100) + "\r");
+                    Console.Write("\tProgress: " + x*100/rounds + "%\r");
 
                 table1.StartRound();
                 table1.CheckEarnings();
