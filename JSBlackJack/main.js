@@ -1,4 +1,4 @@
-const Table = require("./table");
+const Table = require('./table');
 
 const NumOfPlayers = 5;
 const NumOfDecks = 8;
@@ -8,32 +8,36 @@ const MinCards = 40;
 let Rounds = 1000000;
 const Verbose = false;
 
-if(process.argv.length == 3) {
-    Rounds = parseInt(process.argv[2]);
+if (process.argv.length == 3) {
+  Rounds = parseInt(process.argv[2]);
 }
 
-const t = new Table(NumOfPlayers,NumOfDecks,BetSize,MinCards,Verbose);
+const t = new Table(NumOfPlayers, NumOfDecks, BetSize, MinCards, Verbose);
 t.mCardPile.shuffle();
 
-let start = Date.now();
+const start = Date.now();
 
 let x = 0;
-while(x++ < Rounds) {
-    if(Verbose) {
-        console.log("Round " + x);
-    }
-    if(!Verbose && Rounds > 1000 && x % (Rounds/100) == 0) {
-        process.stdout.write("\tProgress: " + parseInt((x/Rounds)*100) + "%\r");
-    }
+while (x++ < Rounds) {
+  if (Verbose) {
+    console.log('Round ' + x);
+  }
+  if (!Verbose && Rounds > 1000 && x % (Rounds / 100) == 0) {
+    process.stdout.write('\tProgress: ' + parseInt((x / Rounds) * 100) + '%\r');
+  }
 
-    t.startRound();
-    t.checkEarnings();
+  t.startRound();
+  t.checkEarnings();
 }
 
 t.clear();
 
-for(let i = 0; i < t.mPlayers.length; i++) {
-    console.log("Player " + t.mPlayers[i].mPlayerNum + " earnings: " + t.mPlayers[i].mEarnings + "\t\tWin Percentage: " + (50 + (t.mPlayers[i].mEarnings/(Rounds*BetSize)*50)) + "%");
+for (let i = 0; i < t.mPlayers.length; i++) {
+  console.log('Player ' + t.mPlayers[i].mPlayerNum +
+    ' earnings: ' + t.mPlayers[i].mEarnings +
+    '\t\tWin Percentage: ' +
+    (50 + (t.mPlayers[i].mEarnings / (Rounds * BetSize) * 50)) + '%');
 }
-console.log("Casino earnings: " + t.mCasinoEarnings);
-console.log("Played " + Rounds + " rounds in " + (Date.now() - start)/1000 + " seconds");
+console.log('Casino earnings: ' + t.mCasinoEarnings);
+console.log('Played ' + Rounds + ' rounds in ' +
+    (Date.now() - start) / 1000 + ' seconds');
