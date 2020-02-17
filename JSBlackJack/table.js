@@ -30,10 +30,15 @@ module.exports = class Table {
   dealRound() {
     for (let i = 0; i < this.mPlayers.length; i++) {
       this.deal();
-      this.mPlayers[i].evaluate();
       this.mCurrentPlayer++;
     }
     this.mCurrentPlayer = 0;
+  }
+
+  evaluateAll() {
+    for (let i = 0; i < this.mPlayers.length; i++) {
+      this.mPlayers[i].evaluate();
+    }
   }
 
   deal() {
@@ -77,6 +82,7 @@ module.exports = class Table {
     this.dealDealer();
     this.dealRound();
     this.dealDealer();
+    this.evaluateAll();
     this.mCurrentPlayer = 0;
     if (this.checkDealerNatural()) {
       this.finishRound();
