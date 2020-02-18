@@ -282,40 +282,35 @@ namespace CSharpBlackJack {
 
         private void FinishRound() {
             if (_verbose > 0) Console.WriteLine("Scoring round");
-            foreach (var player in mPlayers)
-                if (player.mHasNatural) {
-                    player.Win(1.5f);
+            for (var i = 0; i < mPlayers.Count; i++) {
+                if (mPlayers[i].mHasNatural) {
+                    mPlayers[i].Win(1.5f);
                     if (_verbose > 0)
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
-                                          1.5 * player.mBetMult * player.mInitialBet + " with a natural 21");
+                        Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
+                                          1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet + " with a natural 21");
                 }
-                else if (player.mValue > 21) {
-                    player.Lose();
+                else if (mPlayers[i].mValue > 21) {
+                    mPlayers[i].Lose();
                     if (_verbose > 0)
-                        Console.WriteLine("Player " + player.mPlayerNum + " Busts and Loses " +
-                                          player.mBetMult * player.mInitialBet);
+                        Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Busts and Loses " +
+                                          mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
                 }
-                else if (_dealer.mValue > 21) {
-                    player.Win();
+                else if (_dealer.mValue > 21 || mPlayers[i].mValue > _dealer.mValue) {
+                    mPlayers[i].Win();
                     if (_verbose > 0)
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
-                                          player.mBetMult * player.mInitialBet);
+                        Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
+                                          mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
                 }
-                else if (player.mValue > _dealer.mValue) {
-                    player.Win();
-                    if (_verbose > 0)
-                        Console.WriteLine("Player " + player.mPlayerNum + " Wins " +
-                                          player.mBetMult * player.mInitialBet);
-                }
-                else if (player.mValue == _dealer.mValue) {
-                    if (_verbose > 0) Console.WriteLine("Player " + player.mPlayerNum + " Draws");
+                else if (mPlayers[i].mValue == _dealer.mValue) {
+                    if (_verbose > 0) Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Draws");
                 }
                 else {
-                    player.Lose();
+                    mPlayers[i].Lose();
                     if (_verbose > 0)
-                        Console.WriteLine("Player " + player.mPlayerNum + " Loses " +
-                                          player.mBetMult * player.mInitialBet);
+                        Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Loses " +
+                                          mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
                 }
+            }
 
             if (_verbose <= 0) return;
             {
