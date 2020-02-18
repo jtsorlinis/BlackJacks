@@ -48,12 +48,17 @@ func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, v
 }
 
 func (t *Table) dealRound() {
-	for _, player := range t.MPlayers {
+	for _ = range t.MPlayers {
 		t.deal()
-		player.Evaluate()
 		t.mCurrentPlayer++
 	}
 	t.mCurrentPlayer = 0
+}
+
+func (t *Table) evaluateAll() {
+	for _, player := range t.MPlayers {
+		player.Evaluate()
+	}
 }
 
 func (t *Table) deal() {
@@ -97,6 +102,7 @@ func (t *Table) StartRound() {
 	t.dealDealer(false)
 	t.dealRound()
 	t.dealDealer(true)
+	t.evaluateAll()
 	t.mCurrentPlayer = 0
 	if t.checkDealerNatural() {
 		t.finishRound()
@@ -339,12 +345,7 @@ func (t *Table) finishRound() {
 				println("Player " + player.MPlayerNum + " Busts and Loses " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
 			}
 
-		} else if t.MDealer.MValue > 21 {
-			player.Win(1)
-			if t.MVerbose {
-				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
-			}
-		} else if player.MValue > t.MDealer.MValue {
+		} else if t.MDealer.MValue > 21 || player.MValue > t.MDealer.MValue {
 			player.Win(1)
 			if t.MVerbose {
 				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
