@@ -32,11 +32,15 @@ namespace CSharpBlackJack {
         private void DealRound() {
             for (var i = 0; i < mPlayers.Count; i++) {
                 Deal();
-                mPlayers[i].Evaluate();
                 _currentPlayer++;
             }
-
             _currentPlayer = 0;
+        }
+
+        private void EvaluateAll() {
+            for (var i = 0; i < mPlayers.Count; i++) {
+                mPlayers[i].Evaluate();
+            }
         }
 
         private void Deal() {
@@ -76,6 +80,7 @@ namespace CSharpBlackJack {
             DealDealer();
             DealRound();
             DealDealer(true);
+            EvaluateAll();
             _currentPlayer = 0;
             if (CheckDealerNatural()) {
                 FinishRound();
