@@ -54,8 +54,8 @@ class Table {
     }
 
     void predeal() {
-        for (int i = 0; i < mPlayers.size(); i++) {
-            selectBet(mPlayers.get(i));
+        for (Player player : mPlayers) {
+            selectBet(player);
         }
     }
 
@@ -294,9 +294,9 @@ class Table {
     }
 
     void checkPlayerNatural() {
-        for (int i = 0; i < mPlayers.size(); i++) {
-            if(mPlayers.get(i).mValue == 21 && mPlayers.get(i).mHand.size() == 2 && mPlayers.get(i).mSplitFrom == null){
-                mPlayers.get(i).mHasNatural = true;
+        for (Player player : mPlayers) {
+            if(player.mValue == 21 && player.mHand.size() == 2 && player.mSplitFrom == null){
+                player.mHasNatural = true;
             }
         }
     }
