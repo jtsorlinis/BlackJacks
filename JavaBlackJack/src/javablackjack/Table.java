@@ -35,10 +35,15 @@ class Table {
     void dealRound() {
         for(Player player : mPlayers){
             deal();
-            player.evaluate();
             mCurrentPlayer++;
         }
         mCurrentPlayer = 0;
+    }
+
+    void evaluateAll() {
+        for (Player player : mPlayers) {
+            player.evaluate();
+        }
     }
 
     void deal() {
@@ -87,6 +92,7 @@ class Table {
         dealDealer();
         dealRound();
         dealDealer(true);
+        evaluateAll();
         mCurrentPlayer = 0;
         if(checkDealerNatural()) {
             finishRound();
@@ -337,13 +343,7 @@ class Table {
                 }
 
             }
-            else if (mDealer.mValue > 21) {
-                player.win();
-                if (mVerbose > 0) {
-                    System.out.println("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
-                }
-            }
-            else if (player.mValue > mDealer.mValue) {
+            else if (mDealer.mValue > 21 || player.mValue > mDealer.mValue) {
                 player.win();
                 if (mVerbose > 0) {
                     System.out.println("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
