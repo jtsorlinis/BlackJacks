@@ -4,7 +4,7 @@
 #include "deck.h"
 
 class CardPile {
-public:
+ public:
   int m_num_of_decks_;
   std::vector<Card*> m_cards_;
   std::vector<Card*> m_original_cards_;

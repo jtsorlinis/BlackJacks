@@ -1,4 +1,5 @@
 #include "player.h"
+
 #include "table.h"
 
 int Player::player_num_count_ = 0;
@@ -67,8 +68,8 @@ void Player::lose() {
     m_split_from_->lose();
   } else {
     m_earnings_ -= static_cast<float>(m_initial_bet_) * m_bet_mult_;
-    m_table_->m_casino_earnings_ += static_cast<float>(m_initial_bet_) *
-        m_bet_mult_;
+    m_table_->m_casino_earnings_ +=
+        static_cast<float>(m_initial_bet_) * m_bet_mult_;
   }
 }
 
@@ -87,9 +88,8 @@ std::string Player::print() {
     output += "        ";
   }
   if (m_player_num_ != "D") {
-    output +=
-        "\tBet: " + std::to_string(
-            static_cast<float>(m_initial_bet_) * m_bet_mult_);
+    output += "\tBet: " +
+              std::to_string(static_cast<float>(m_initial_bet_) * m_bet_mult_);
   }
   return output;
 }

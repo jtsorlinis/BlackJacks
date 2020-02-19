@@ -6,7 +6,7 @@ class Table;
 class Card;
 
 class Player {
-public:
+ public:
   static int player_num_count_;
   const static int max_splits_ = 10;
 

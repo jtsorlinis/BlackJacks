@@ -5,7 +5,7 @@
 #include "card.h"
 
 class Deck {
-public:
+ public:
   Deck();
   std::vector<Card*> m_cards_;
   std::vector<std::string> m_ranks_;

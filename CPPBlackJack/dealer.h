@@ -2,7 +2,7 @@
 #include "player.h"
 
 class Dealer : public Player {
-public:
+ public:
   bool m_hide_second_;
 
   Dealer();

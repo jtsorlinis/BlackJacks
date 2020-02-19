@@ -2,7 +2,7 @@
 #include <string>
 
 class Card {
-public:
+ public:
   Card(std::string rank, std::string suit);
   std::string print() const;
   int evaluate() const;

@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+
 #include "player.h"
 #include "table.h"
 
@@ -40,15 +41,15 @@ int main(const int argc, char* argv[]) {
 
   for (auto& player : table1.m_players_) {
     std::cout << "Player " << player.m_player_num_
-        << " earnings: " << player.m_earnings_ << "\t\tWin Percentage: "
-        << 50 + player.m_earnings_ /
-        static_cast<float>(rounds * base_bet) * 50
-        << "%\n";
+              << " earnings: " << player.m_earnings_ << "\t\tWin Percentage: "
+              << 50 + player.m_earnings_ /
+                          static_cast<float>(rounds * base_bet) * 50
+              << "%\n";
   }
   std::cout << "Casino earnings: " << table1.m_casino_earnings_ << "\n";
 
-  const auto duration = duration_cast<milliseconds>(high_resolution_clock::now()-start);
+  const auto duration =
+      duration_cast<milliseconds>(high_resolution_clock::now() - start);
   std::cout << "\nPlayed " << x - 1 << " rounds in " << std::setprecision(3)
-      << duration.count()/1000.0 << " seconds.\n\n";
- 
+            << duration.count() / 1000.0 << " seconds.\n\n";
 }

@@ -1,11 +1,12 @@
 #pragma once
-#include "dealer.h"
-#include "cardpile.h"
 #include <list>
 #include <unordered_map>
 
+#include "cardpile.h"
+#include "dealer.h"
+
 class Table {
-public:
+ public:
   int m_verbose_;
   int m_bet_size_;
   std::list<Player> m_players_;
