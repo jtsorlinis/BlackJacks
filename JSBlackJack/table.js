@@ -56,7 +56,7 @@ module.exports = class Table {
   selectBet(player) {
     if (this.mTrueCount >= 2) {
       // eslint-disable-next-line no-param-reassign
-      player.mInitialBet = parseInt(this.mBetSize * (this.mTrueCount - 1) * 1.25, 10);
+      player.mInitialBet = Math.floor(this.mBetSize * (this.mTrueCount - 1));
     }
   }
 
@@ -120,7 +120,7 @@ module.exports = class Table {
 
   updateCount() {
     if (this.mCardPile.mCards.length > 51) {
-      this.mTrueCount = Math.floor(this.mRunningCount / (this.mCardPile.mCards.length / 52));
+      this.mTrueCount = this.mRunningCount / Math.floor((this.mCardPile.mCards.length / 52));
     }
   }
 
