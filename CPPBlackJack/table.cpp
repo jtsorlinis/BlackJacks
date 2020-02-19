@@ -143,9 +143,9 @@ void Table::stand() {
 }
 
 void Table::split() {
-  const Player split_player(this, &*m_current_player_);
+  Player split_player(this, &*m_current_player_);
   m_current_player_->m_hand_.pop_back();
-  m_players_.insert(next(m_current_player_), split_player);
+  m_players_.insert(next(m_current_player_), std::move(split_player));
   m_current_player_->evaluate();
   next(m_current_player_)->evaluate();
   if (m_verbose_ > 0) {
@@ -158,9 +158,9 @@ void Table::split_aces() {
     std::cout << "Player " << m_current_player_->m_player_num_
               << " splits aces\n";
   }
-  const Player split_player(this, &*m_current_player_);
+  Player split_player(this, &*m_current_player_);
   m_current_player_->m_hand_.pop_back();
-  m_players_.insert(next(m_current_player_), split_player);
+  m_players_.insert(next(m_current_player_), std::move(split_player));
   deal();
   m_current_player_->evaluate();
   stand();
