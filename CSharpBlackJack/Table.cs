@@ -55,7 +55,7 @@ namespace CSharpBlackJack {
         }
 
         private void SelectBet(Player player) {
-            if (_trueCount >= 2) player.mInitialBet = (int) (mBetSize * (_trueCount - 1) * 1.25);
+            if (_trueCount >= 2) player.mInitialBet = mBetSize * (_trueCount - 1);
         }
 
         private void DealDealer(bool faceDown = false) {
