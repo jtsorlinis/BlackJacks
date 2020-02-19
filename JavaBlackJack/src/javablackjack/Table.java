@@ -61,7 +61,7 @@ class Table {
 
     void selectBet(Player player) {
         if(mTrueCount >=2) {
-            player.mInitialBet = (int)(mBetSize * (mTrueCount - 1) * 1.25);
+            player.mInitialBet = mBetSize * (mTrueCount - 1);
         }
     }
 
