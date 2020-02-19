@@ -142,7 +142,6 @@ module.exports = class Table {
 
   split() {
     const splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
-    this.mPlayers[this.mCurrentPlayer].mHand.pop();
     this.mPlayers.splice(this.mCurrentPlayer + 1, 0, splitPlayer);
     this.mPlayers[this.mCurrentPlayer].evaluate();
     this.mPlayers[this.mCurrentPlayer + 1].evaluate();
@@ -156,7 +155,6 @@ module.exports = class Table {
       console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits Aces`);
     }
     const splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
-    this.mPlayers[this.mCurrentPlayer].mHand.pop();
     this.mPlayers.splice(this.mCurrentPlayer + 1, 0, splitPlayer);
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();

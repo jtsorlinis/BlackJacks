@@ -18,7 +18,7 @@ module.exports = class Player {
     if (table != null) {
       this.mInitialBet = this.mTable.mBetSize;
       if (split != null) {
-        this.mHand.push(split.mHand[1]);
+        this.mHand.push(split.mHand.pop());
         this.mSplitCount++;
         this.mPlayerNum = `${split.mPlayerNum}S`;
         this.mSplitFrom = split;
