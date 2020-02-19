@@ -75,7 +75,7 @@ func (t *Table) preDeal() {
 
 func (t *Table) selectBet(player *Player) {
 	if t.MTrueCount >= 2 {
-		player.MInitialBet = int32(float32(t.MBetSize*t.MTrueCount) * 1.25)
+		player.MInitialBet = t.MBetSize * (t.MTrueCount - 1)
 	}
 }
 
