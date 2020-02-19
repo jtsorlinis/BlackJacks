@@ -55,8 +55,7 @@ void Table::pre_deal() {
 
 void Table::select_bet(Player* player) const {
   if (m_true_count_ >= 2) {
-    player->m_initial_bet_ = static_cast<int>(
-      m_bet_size_ * (m_true_count_ - 1) * 1.25);
+    player->m_initial_bet_ = m_bet_size_ * (m_true_count_ - 1);
   }
 }
 
