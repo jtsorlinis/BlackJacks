@@ -15,7 +15,7 @@ module.exports = class CardPile {
     this.mOriginalCards = [];
     for (let x = 0; x < numofdecks; x++) {
       const temp = new Deck();
-      this.mCards = [...this.mCards, ...temp.mCards];
+      this.mCards.push(...temp.mCards);
     }
     this.mOriginalCards = [...this.mCards];
   }
