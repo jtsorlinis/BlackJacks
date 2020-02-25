@@ -17,6 +17,7 @@ module.exports = {
   rules: {
     "no-bitwise": 0,
     "no-plusplus": 0,
-    "no-console": 0
+    "no-console": 0,
+    "linebreak-style": 0
   },
 };
