@@ -128,15 +128,13 @@ func (t *Table) getNewCards() {
 }
 
 func (t *Table) clear() {
-	clearedList := t.MPlayers[:0]
-	for _, player := range t.MPlayers {
-		if player.MSplitFrom == nil {
-			player.ResetHand()
-			clearedList = append(clearedList, player)
+	for i := len(t.MPlayers) - 1; i >= 0; i-- {
+		t.MPlayers[i].ResetHand()
+		if t.MPlayers[i].MSplitFrom != nil {
+			t.MPlayers = append(t.MPlayers[:i], t.MPlayers[i+1:]...)
 		}
 	}
 	t.MDealer.ResetHand()
-	t.MPlayers = clearedList
 	t.mCurrentPlayer = 0
 }
 
