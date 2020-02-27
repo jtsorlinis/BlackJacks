@@ -18,9 +18,9 @@ type Table struct {
 	MCasinoEarnings float32
 	MRunningCount   int32
 	MTrueCount      int32
-	MStratHard      map[int32]string
-	MStratSoft      map[int32]string
-	MStratSplit     map[int32]string
+	MStratHard      []string
+	MStratSoft      []string
+	MStratSplit     []string
 }
 
 // NewTable constructor

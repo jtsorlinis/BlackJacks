@@ -52,13 +52,13 @@ var stratSplit = [][]string{
 	{"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"},
 }
 
-func getAction(playerVal int32, dealerVal int32, strategy *map[int32]string) string {
+func getAction(playerVal int32, dealerVal int32, strategy *[]string) string {
 	var key = ((playerVal+dealerVal)*(playerVal+dealerVal+1))/2 + dealerVal
 	return (*strategy)[key]
 }
 
-func array2dToMap(array [][]string) map[int32]string {
-	temp := make(map[int32]string)
+func array2dToMap(array [][]string) []string {
+	temp := make([]string, 1000)
 	for row := 0; row < len(array); row++ {
 		for col := 0; col < len(array[0]); col++ {
 			playerVal, _ := strconv.Atoi(array[row][0])
