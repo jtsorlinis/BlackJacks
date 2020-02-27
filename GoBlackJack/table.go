@@ -48,7 +48,7 @@ func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, v
 }
 
 func (t *Table) dealRound() {
-	for _ = range t.MPlayers {
+	for range t.MPlayers {
 		t.deal()
 		t.mCurrentPlayer++
 	}
