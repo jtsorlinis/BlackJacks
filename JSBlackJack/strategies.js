@@ -52,18 +52,18 @@ function getAction(playerval, dealerval, strategy) {
   const dealerVal = parseInt(dealerval, 10);
   const key = ((playerVal + dealerVal)
     * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-  return strategy.get(key);
+  return strategy[key];
 }
 
 function array2dToMap(array) {
-  const temp = new Map();
+  const temp = []
   for (let row = 0; row < array.length; row++) {
     for (let col = 0; col < array[0].length; col++) {
       const playerVal = parseInt(array[row][0], 10);
       const dealerVal = parseInt(array[0][col], 10);
       const key = ((playerVal + dealerVal)
         * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-      temp.set(key, array[row][col]);
+      temp[key] = array[row][col];
     }
   }
   return temp;
