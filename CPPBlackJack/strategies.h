@@ -50,23 +50,23 @@ std::vector<std::vector<std::string>> strat_split = {
     {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}};
 
 inline std::string get_action(int const& player_val, int& dealer_val,
-                              std::unordered_map<int, std::string>* strategy) {
+                              std::vector<std::string>* strategy) {
   const auto key =
       (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
       dealer_val;
-  return strategy->at(key);
+  return (*strategy)[key];
 }
 
-inline std::unordered_map<int, std::string> vec_to_map(
+inline std::vector<std::string> vec_to_map(
     std::vector<std::vector<std::string>> vec) {
-  std::unordered_map<int, std::string> temp;
+  std::vector<std::string> temp(1000);
   for (auto row = 0; row < static_cast<int>(vec.size()); row++) {
     for (auto col = 0; col < static_cast<int>(vec[0].size()); col++) {
       const auto player_val = std::stoi(vec[row][0]);
       const auto dealer_val = std::stoi(vec[0][col]);
       auto key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
                  dealer_val;
-      temp.insert({key, vec[row][col]});
+      temp[key] = vec[row][col];
     }
   }
   return temp;

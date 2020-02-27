@@ -18,9 +18,9 @@ class Table {
   float m_casino_earnings_;
   int m_running_count_;
   int m_true_count_;
-  std::unordered_map<int, std::string> m_strat_hard_;
-  std::unordered_map<int, std::string> m_strat_soft_;
-  std::unordered_map<int, std::string> m_strat_split_;
+  std::vector<std::string> m_strat_hard_;
+  std::vector<std::string> m_strat_soft_;
+  std::vector<std::string> m_strat_split_;
 
   Table(int num_players, int num_of_decks, int bet_size, int min_cards,
         int verbose = 0);
