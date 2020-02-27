@@ -1,7 +1,6 @@
 package javablackjack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 class Table {
@@ -16,9 +15,9 @@ class Table {
     float mCasinoEarnings = 0;
     int mRunningCount = 0;
     int mTrueCount = 0;
-    HashMap<Integer,String> mStratHard = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratHard);
-    HashMap<Integer,String> mStratSoft = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratSoft);
-    HashMap<Integer,String> mStratSplit = (HashMap<Integer, String>) Strategies.array2dToMap(Strategies.stratSplit);
+    List<String> mStratHard = Strategies.array2dToMap(Strategies.stratHard);
+    List<String> mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
+    List<String> mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
 
     public Table(int numPlayers, int numDecks, int betsize, int minCards, int verbose) {
         mCardPile = new CardPile(numDecks);

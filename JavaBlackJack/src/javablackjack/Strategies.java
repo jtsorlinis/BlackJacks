@@ -1,6 +1,8 @@
 package javablackjack;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 class Strategies {
@@ -53,19 +55,19 @@ class Strategies {
         {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
     };
 
-     static String getAction(int playerVal, int dealerVal, HashMap<Integer, String> strategy) {
+     static String getAction(int playerVal, int dealerVal, List<String> strategy) {
         int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
 		return strategy.get(key);
     }
 
-     static Map<Integer, String> array2dToMap(String[][] array) {
-        Map<Integer,String> temp = new HashMap<>();
+     static List<String> array2dToMap(String[][] array) {
+        List<String> temp = Arrays.asList(new String[1000]);
         for(int row = 0; row < array.length; row++) {
             for(int col = 0; col< array[0].length; col++ ) {
                 int playerVal = Integer.parseInt(array[row][0]);
                 int dealerVal = Integer.parseInt(array[0][col]);
                 int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-                temp.put(key, array[row][col]);
+                temp.set(key, array[row][col]);
             }
         }
         return temp;
