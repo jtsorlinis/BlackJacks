@@ -3,10 +3,10 @@ const Deck = require('./deck');
 let seed = Date.now();
 
 function xorShift() {
-  seed ^= seed >> 12;
-  seed ^= seed << 25;
-  seed ^= seed >> 27;
-  return seed;
+  seed ^= seed << 13;
+  seed ^= seed >> 17;
+  seed ^= seed << 5;
+  return Math.abs(seed);
 }
 
 module.exports = class CardPile {
