@@ -28,7 +28,8 @@ namespace CSharpBlackJack {
         }
 
         public void Refresh() {
-            mCards = new List<Card>(_originalCards);
+            mCards.Clear();
+            mCards.AddRange(_originalCards);
         }
 
         public string Print() {
