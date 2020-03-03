@@ -7,13 +7,13 @@ namespace CSharpBlackJack {
 
         //Random rnd = new Random();
         // private readonly QuickRand _rnd = new QuickRand();
-        int seed = (int)DateTime.Now.Ticks;
+        private uint _seed = (uint)DateTime.Now.Ticks;
 
-        private int xorShift() {
-            seed ^= seed << 13;
-            seed ^= seed >> 17;
-            seed ^= seed << 5;
-            return Math.Abs(seed);
+        private uint XorShift() {
+            _seed ^= _seed << 13;
+            _seed ^= _seed >> 17;
+            _seed ^= _seed << 5;
+            return _seed;
 }
 
         public List<Card> mCards = new List<Card>();
@@ -41,11 +41,11 @@ namespace CSharpBlackJack {
             //mCards = mCards.OrderBy(item => rnd.Next()).ToList();
 
             // Fisher Yates
-            for (var i = mCards.Count - 1; i > 0; i--) {
-                int j = xorShift() % (i + 1);
-                var temp = mCards[i];
-                mCards[i] = mCards[j];
-                mCards[j] = temp;
+            for (var i = (uint)mCards.Count - 1; i > 0; i--) {
+                var j = XorShift() % (i + 1);
+                var temp = mCards[(int)i];
+                mCards[(int)i] = mCards[(int)j];
+                mCards[(int)j] = temp;
             }
         }
     }
