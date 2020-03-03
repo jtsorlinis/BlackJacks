@@ -42,11 +42,9 @@ namespace CSharpBlackJack {
             //mCards = mCards.OrderBy(item => rnd.Next()).ToList();
 
             // Fisher Yates
-            for (var i = (uint)mCards.Count - 1; i > 0; i--) {
-                var j = XorShift() % (i + 1);
-                var temp = mCards[(int)i];
-                mCards[(int)i] = mCards[(int)j];
-                mCards[(int)j] = temp;
+            for (var i = mCards.Count - 1; i > 0; i--) {
+                var j = (int)(XorShift() % ((uint)i + 1));
+                (mCards[i], mCards[j]) = (mCards[j], mCards[i]);
             }
         }
     }
