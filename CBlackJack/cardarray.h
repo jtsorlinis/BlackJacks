@@ -38,10 +38,22 @@ void CardArray__push(CardArray* self, Card* element) {
 
 Card* CardArray__pop(CardArray* self) { return self->array[self->size--]; }
 
+CardArray* CardArray__copy(CardArray* self) {
+    CardArray* new = malloc(sizeof(CardArray*));
+    new->array = malloc(self->capacity * sizeof(Card*));
+    new->size = self->size;
+    new->capacity = self->capacity;
+    for (int i = 0; i < self->size; i++) {
+        new->array[i] = self->array[i];
+    }
+    return new;
+}
+
 void CardArray__print(CardArray* self) {
   for (int i = 0; i < self->size; i++) {
     printf("%s", self->array[i]->mRank);
   }
+  printf("\n");
 }
 
 void CardArray__shuffle(CardArray* self) {
