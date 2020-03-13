@@ -34,14 +34,14 @@ CardPile* CardPile__new(int numdecks) {
 }
 
 void CardPile__refresh(CardPile* self) {
-    free(self->m_cards->array);
+    free(self->m_cards->items);
     free(self->m_cards);
     self->m_cards = Vector__copy(self->m_original_cards);
 }
 
 void CardPile__print(CardPile* self) {
   for (int i = 0; i < self->m_cards->size; i++) {
-    printf("%s", ((Card*) self->m_cards->array[i])->mRank);
+    printf("%s", ((Card*) self->m_cards->items[i])->mRank);
   }
   printf("\n");
 }
@@ -49,8 +49,8 @@ void CardPile__print(CardPile* self) {
 void CardPile__shuffle(CardPile* self) {
   for (int i = self->m_cards->size - 1; i > 0; i--) {
     int j = xorshift() % (i + 1);
-    Card* temp = self->m_cards->array[i];
-    self->m_cards->array[i] = self->m_cards->array[j];
-    self->m_cards->array[j] = temp;
+    Card* temp = self->m_cards->items[i];
+    self->m_cards->items[i] = self->m_cards->items[j];
+    self->m_cards->items[j] = temp;
   }
 }
