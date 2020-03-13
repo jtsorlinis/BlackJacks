@@ -1,7 +1,9 @@
 #include "cardpile.h"
 #include "vector.h"
-
 #include "card.h"
+
+#include <time.h>
+#include <stdio.h>
 
 char ranks[13][3] = {"A", "2", "3",  "4", "5", "6", "7",
                      "8", "9", "10", "J", "Q", "K"};
