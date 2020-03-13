@@ -7,7 +7,7 @@ char suits[4][10] = {"Clubs", "Hearts", "Spades", "Diamonds"};
 
 CardPile* CardPile__new(int numdecks) {
   CardPile* cp = malloc(sizeof(CardPile));
-  cp->m_cards = CardArray__new(8);
+  cp->m_cards = CardArray__new(52*numdecks);
   for (int i = 0; i < numdecks; i++) {
     for (int suit = 0; suit < 4; suit++) {
       for (int rank = 0; rank < 13; rank++) {
