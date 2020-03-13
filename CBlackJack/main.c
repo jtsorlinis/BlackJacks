@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include "card.h"
 
-int main(int argc, char const *argv[])
-{
-    Card *c = Card__new("J", "hearts");
-    printf("%s", Card__print(c));
-    return 0;
+#include "cardpile.h"
+
+int main(int argc, char const* argv[]) {
+  CardPile* cp = CardPile__new(1);
+  CardPile__print(cp);
+
+  return 0;
 }
