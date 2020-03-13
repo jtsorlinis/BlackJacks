@@ -31,3 +31,12 @@ Vector* Vector__copy(Vector* self) {
     }
     return new;
 }
+
+void Vector__delete(Vector* self, int index) {
+    self->array[index] = NULL;
+    for (int i = index; i < self->size-1; i++) {
+        self->array[i] = self->array[i+1];
+        self->array[i+1] = NULL;
+    }
+    self->size--;
+}
