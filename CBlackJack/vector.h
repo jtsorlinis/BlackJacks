@@ -11,8 +11,10 @@ typedef struct Vector {
 
 Vector* Vector__new(size_t initial_capacity);
 void Vector__push(Vector* self, void* element);
-void* Vector__pop(Vector* self);
+void Vector__pop(Vector* self);
+void* Vector__last(Vector* self);
 Vector* Vector__copy(Vector* self);
 void Vector__delete(Vector* self, int index);
+void Vector__clear(Vector* self);
 
 #endif

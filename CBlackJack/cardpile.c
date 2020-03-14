@@ -41,7 +41,7 @@ void CardPile__refresh(CardPile* self) {
 
 void CardPile__print(CardPile* self) {
   for (int i = 0; i < self->m_cards->size; i++) {
-    printf("%s", ((Card*) self->m_cards->items[i])->mRank);
+    printf("%s", ((Card*) self->m_cards->items[i])->m_rank);
   }
   printf("\n");
 }

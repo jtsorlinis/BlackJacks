@@ -16,10 +16,13 @@ void Vector__push(Vector* self, void* element) {
   self->items[self->size++] = element;
 }
 
-void* Vector__pop(Vector* self) {
-  self->items[self->size] = NULL;
-  return self->items[self->size--]; 
+void Vector__pop(Vector* self) {
+  self->items[--self->size] = NULL;
   }
+
+void* Vector__last(Vector* self) {
+    return self->items[self->size-1];
+}
 
 Vector* Vector__copy(Vector* self) {
     Vector* new = malloc(sizeof(Vector));
@@ -39,4 +42,11 @@ void Vector__delete(Vector* self, int index) {
         self->items[i+1] = NULL;
     }
     self->size--;
+}
+
+void Vector__clear(Vector* self) {
+    for(int i = 0; i < self->size; i++) {
+        self->items[i] = NULL;
+    }
+    self->size = 0;
 }
