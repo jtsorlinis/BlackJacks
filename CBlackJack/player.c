@@ -14,6 +14,7 @@ Player* Player__new(Table* table, Player* split) {
   Player* p = malloc(sizeof(Player));
   p->m_hand = Vector__new(5);
   p->m_table = table;
+  p->m_bet_mult = 1;
   if (table == NULL) return p;
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {

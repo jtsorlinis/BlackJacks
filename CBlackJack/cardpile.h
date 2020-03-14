@@ -2,7 +2,7 @@
 
 typedef struct Vector Vector;
 
-typedef struct {
+typedef struct CardPile {
     Vector* m_cards;
     Vector* m_original_cards;
 } CardPile;
