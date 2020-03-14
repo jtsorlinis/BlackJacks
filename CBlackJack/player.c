@@ -19,6 +19,7 @@ Player* Player__new(Table* table, Player* split) {
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {
     Vector__push(p->m_hand, split->m_hand->items[1]);
+    Vector__delete(split->m_hand,1);
     p->m_split_count++;
     sprintf(p->m_player_num, "%sS", split->m_player_num);
     p->m_split_from = split;
@@ -110,4 +111,9 @@ void Player__evaluate(Player* self) {
   if (self->m_aces == 0) {
     self->m_is_soft = false;
   };
+}
+
+void Player__free(Player* self) {
+  Vector__free(self->m_hand);
+  free(self);
 }

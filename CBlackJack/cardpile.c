@@ -34,8 +34,7 @@ CardPile* CardPile__new(int numdecks) {
 }
 
 void CardPile__refresh(CardPile* self) {
-    free(self->m_cards->items);
-    free(self->m_cards);
+    Vector__free(self->m_cards);
     self->m_cards = Vector__copy(self->m_original_cards);
 }
 

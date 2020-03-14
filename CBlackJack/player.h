@@ -28,3 +28,4 @@ void Player__win(Player* self, float mult);
 void Player__lose(Player* self);
 void Player__print(Player* self);
 void Player__evaluate(Player* self);
+void Player__free(Player* self);

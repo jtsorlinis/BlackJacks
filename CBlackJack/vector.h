@@ -15,6 +15,8 @@ void Vector__pop(Vector* self);
 void* Vector__last(Vector* self);
 Vector* Vector__copy(Vector* self);
 void Vector__delete(Vector* self, int index);
+void Vector__insert(Vector* self, void* element, int index);
 void Vector__clear(Vector* self);
+void Vector__free(Vector* self);
 
 #endif

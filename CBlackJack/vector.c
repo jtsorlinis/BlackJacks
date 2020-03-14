@@ -9,6 +9,7 @@ Vector* Vector__new(size_t initial_capacity) {
 }
 
 void Vector__push(Vector* self, void* element) {
+  // Make room if we need to for new item
   if (self->size == self->capacity) {
     self->capacity *= 2;
     self->items = realloc(self->items, self->capacity * sizeof(void*));
@@ -44,9 +45,33 @@ void Vector__delete(Vector* self, int index) {
     self->size--;
 }
 
+void Vector__insert(Vector* self, void* element, int index) {
+  // Make room if we need to for new item
+  if (self->size == self->capacity) {
+    self->capacity *= 2;
+    self->items = realloc(self->items, self->capacity * sizeof(void*));
+  }
+
+  // Increase the size
+  self->size++;
+
+  // Shift all elements right after insertion point
+  for (int i = self->size; i > index; i--) {
+    self->items[i] = self->items[i-1];
+  }
+
+  // Finally, insert the element
+  self->items[index] = element;
+}
+
 void Vector__clear(Vector* self) {
     for(int i = 0; i < self->size; i++) {
         self->items[i] = NULL;
     }
     self->size = 0;
+}
+
+void Vector__free(Vector* self) {
+  free(self->items);
+  free(self);
 }
