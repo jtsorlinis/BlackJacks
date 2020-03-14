@@ -9,7 +9,9 @@ Card* Card__new(char* rank, char* suit) {
   return c;
 }
 
-char* Card__print(Card* const self) { return self->m_rank; }
+char* Card__print(Card* const self) {
+    return self->m_face_down ? "X" : self->m_rank; 
+  }
 
 int Card__evaluate(Card* self) {
   if (strcmp(self->m_rank, "J") == 0 || strcmp(self->m_rank, "Q") == 0 ||
