@@ -12,7 +12,7 @@ const int num_decks = 8;
 const int bet_size = 10;
 const int min_cards = 40;
 
-int rounds = 1000;
+int rounds = 1000000;
 const bool verbose = false;
 
 int main(int argc, char const *argv[]) {

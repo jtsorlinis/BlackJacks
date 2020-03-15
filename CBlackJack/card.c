@@ -6,6 +6,7 @@ Card* Card__new(char* rank, char* suit) {
   c->m_suit = suit;
   c->m_value = Card__evaluate(c);
   c->m_count = Card__count(c);
+  c->m_is_ace = strcmp("A", rank) == 0;
   return c;
 }
 

@@ -18,9 +18,9 @@ typedef struct Table {
     int m_true_count;
     float m_casino_earnings;
 
-    const char** m_strat_hard;
-    const char** m_strat_soft;
-    const char** m_strat_split;
+    char* m_strat_hard;
+    char* m_strat_soft;
+    char* m_strat_split;
 } Table;
 
 Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards, int verbose);
