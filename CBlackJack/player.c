@@ -25,6 +25,8 @@ Player* Player__new(Table* table, Player* split) {
     p->m_split_from = split;
 
   } else {
+    p->m_split_from = NULL;
+    p->m_earnings = 0;
     player_num_count++;
     sprintf(p->m_player_num, "%d", player_num_count);
   }
