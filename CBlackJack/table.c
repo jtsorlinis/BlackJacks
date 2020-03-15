@@ -6,6 +6,7 @@
 #include "cardpile.h"
 #include "dealer.h"
 #include "player.h"
+#include "strategies.h"
 #include "vector.h"
 
 Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards,
@@ -20,6 +21,10 @@ Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards,
   t->m_current_player = 0;
   t->m_running_count = 0;
   t->m_true_count = 0;
+
+  t->m_strat_hard = array_to_map(strat_hard, 21);
+  t->m_strat_soft = array_to_map(strat_soft, 10);
+  t->m_strat_split = array_to_map(strat_split, 9);
 
   t->m_players = Vector__new(num_players);
   for (int i = 0; i < num_players; i++) {
@@ -209,8 +214,24 @@ void Table__auto_play(Table* self) {
   Table__next_player(self);
 }
 
-void Table__action(Table* self, char* action) {
-  // TODO
+void Table__action(Table* self, char action) {
+  switch (action) {
+    case 'H':
+      Table__hit(self);
+      break;
+    case 'S':
+        Table__stand(self);
+        break;
+    case 'D':
+        Table__double_bet(self);
+        break;
+    case 'P':
+        Table__split(self);
+        break;
+    default:
+        printf("No action found\n");
+        exit(1);
+  }
 }
 
 void Table__dealer_play(Table* self) {
@@ -298,10 +319,10 @@ void Table__finish_round(Table* self) {
                ((Player*)self->m_players->items[i])->m_value >
                    self->m_dealer->m_value) {
       Player__win(self->m_players->items[i], 1);
-    } else if (((Player*) self->m_players->items[i])->m_value == self->m_dealer->m_value) {
-
+    } else if (((Player*)self->m_players->items[i])->m_value ==
+               self->m_dealer->m_value) {
     } else {
-        Player__lose(self->m_players->items[i]);
+      Player__lose(self->m_players->items[i]);
     }
   }
 }

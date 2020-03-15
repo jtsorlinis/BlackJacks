@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 const char* strat_hard[][11] = {
     {"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"},
     {"2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"},
@@ -43,3 +45,21 @@ const char* strat_split[][11] = {
     {"8", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"},
     {"9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S"},
     {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}};
+
+const char get_action(int player_val, int dealer_val, const char* strategy[]) {
+  int key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 + dealer_val;
+  return strategy[key][0];
+}
+
+const char** array_to_map(const char* array[][11], int rows) {
+  static const char* temp[1000];
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < 11; col++) {
+        int player_val = atoi(array[row][0]);
+        int dealer_val = atoi(array[0][col]);
+        int key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 + dealer_val;
+        temp[key] = array[row][col];
+    }
+  }
+  return temp;
+}

@@ -18,9 +18,9 @@ typedef struct Table {
     int m_true_count;
     float m_casino_earnings;
 
-    int m_strat_hard;
-    int m_strat_soft;
-    int m_strat_split;
+    const char** m_strat_hard;
+    const char** m_strat_soft;
+    const char** m_strat_split;
 } Table;
 
 Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards, int verbose);
@@ -40,7 +40,7 @@ void Table__split(Table* self);
 void Table__split_aces(Table* self);
 void Table__double_bet(Table* self);
 void Table__auto_play(Table* self);
-void Table__action(Table* self, char* action);
+void Table__action(Table* self, char action);
 void Table__dealer_play(Table* self);
 void Table__next_player(Table* self);
 void Table__check_player_natural(Table* self);
