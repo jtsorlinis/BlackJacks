@@ -12,6 +12,6 @@ typedef struct {
 } Card;
 
 Card* Card__new(char* rank, char* suit);
-char* Card__print(Card* const self);
+char* Card__print(Card* self);
 int Card__evaluate(Card* self);
 int Card__count(Card* self);

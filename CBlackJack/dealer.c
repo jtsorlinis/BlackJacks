@@ -42,7 +42,7 @@ void Dealer__evaluate(Dealer* self) {
 
   if (self->m_aces == 0) {
     self->m_is_soft = false;
-  };
+  }
 }
 
 void Dealer__print(Dealer* self) {
