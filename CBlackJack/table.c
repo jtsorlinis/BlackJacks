@@ -204,17 +204,33 @@ void Table__double_bet(Table* self) {
 }
 
 void Table__auto_play(Table* self) {
-  // TODO: implement strategy
-  while (
-      ((Player*)self->m_players->items[self->m_current_player])->m_value < 17 &&
-      ((Player*)self->m_players->items[self->m_current_player])->m_hand->size <
-          5) {
-    Table__hit(self);
+  while(!((Player*) self->m_players->items[self->m_current_player])->m_is_done) {
+    // check if player just split
+    if(((Player*) self->m_players->items[self->m_current_player])->m_hand->size == 1) {
+      Table__deal(self);
+      Player__evaluate(self->m_players->items[self->m_current_player]);
+    }
+
+    if (((Player*) self->m_players->items[self->m_current_player])->m_hand->size < 5
+    && ((Player*) self->m_players->items[self->m_current_player])->m_value < 21) {
+      int split_card_val = Player__can_split(self->m_players->items[self->m_current_player]);
+      if(split_card_val == 11) {
+        Table__split_aces(self);
+      } else if (split_card_val != 0 && split_card_val != 5 && split_card_val != 10) {
+        Table__action(self, get_action(split_card_val, Dealer__up_card(self->m_dealer), self->m_strat_split));
+      } else if (((Player*) self->m_players->items[self->m_current_player])->m_is_soft) {
+        Table__action(self, get_action(((Player*) self->m_players->items[self->m_current_player])->m_value, Dealer__up_card(self->m_dealer), self->m_strat_soft));
+      } else {
+        Table__action(self, get_action(((Player*) self->m_players->items[self->m_current_player])->m_value, Dealer__up_card(self->m_dealer), self->m_strat_hard));
+      }
+    } else {
+      Table__stand(self);
+    }
   }
   Table__next_player(self);
 }
 
-void Table__action(Table* self, char action) {
+void Table__action(Table* self, const char action) {
   switch (action) {
     case 'H':
       Table__hit(self);

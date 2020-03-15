@@ -15,6 +15,7 @@ Player* Player__new(Table* table, Player* split) {
   p->m_hand = Vector__new(5);
   p->m_table = table;
   p->m_bet_mult = 1;
+  p->m_earnings = 0;
   if (table == NULL) return p;
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {
@@ -26,7 +27,6 @@ Player* Player__new(Table* table, Player* split) {
 
   } else {
     p->m_split_from = NULL;
-    p->m_earnings = 0;
     player_num_count++;
     sprintf(p->m_player_num, "%d", player_num_count);
   }
@@ -49,8 +49,8 @@ void Player__reset_hand(Player* self) {
 
 int Player__can_split(Player* self) {
   if (self->m_hand->size == 2 &&
-      ((Card*)self->m_hand->items[0])->m_rank ==
-          ((Card*)self->m_hand->items[1])->m_rank &&
+      strcmp(((Card*)self->m_hand->items[0])->m_rank,
+          ((Card*)self->m_hand->items[1])->m_rank) == 0 &&
       self->m_split_count < max_splits) {
     return ((Card*)self->m_hand->items[0])->m_value;
   }
