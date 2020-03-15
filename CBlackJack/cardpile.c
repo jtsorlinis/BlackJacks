@@ -5,9 +5,9 @@
 #include <time.h>
 #include <stdio.h>
 
-char ranks[13][3] = {"A", "2", "3",  "4", "5", "6", "7",
+char* ranks[] = {"A", "2", "3",  "4", "5", "6", "7",
                      "8", "9", "10", "J", "Q", "K"};
-char suits[4][10] = {"Clubs", "Hearts", "Spades", "Diamonds"};
+char* suits[] = {"Clubs", "Hearts", "Spades", "Diamonds"};
 
 unsigned int seed;
 
