@@ -25,7 +25,8 @@ Player* Player__new(Table* table, Player* split) {
     Vector__push(p->m_hand, split->m_hand->items[1]);
     Vector__delete(split->m_hand,1);
     p->m_split_count++;
-    sprintf(p->m_player_num, "%sS", split->m_player_num);
+    strcpy(p->m_player_num, split->m_player_num);
+    strcat(p->m_player_num, "S");
     p->m_split_from = split;
 
   } else {
