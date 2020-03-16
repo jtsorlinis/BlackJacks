@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <string>
 #include <vector>
 
@@ -64,8 +63,8 @@ inline std::vector<std::string> vec_to_map(
     for (auto col = 0; col < static_cast<int>(vec[0].size()); col++) {
       const auto player_val = std::stoi(vec[row][0]);
       const auto dealer_val = std::stoi(vec[0][col]);
-      auto key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
-                 dealer_val;
+      const auto key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
+                       dealer_val;
       temp[key] = vec[row][col];
     }
   }

@@ -4,7 +4,7 @@
 
 unsigned int seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
-unsigned int xorShift() {
+unsigned int xorshift() {
   seed ^= seed << 13;
   seed ^= seed >> 17;
   seed ^= seed << 5;
@@ -34,7 +34,7 @@ std::string CardPile::print() {
 void CardPile::shuffle() {
   // Fisher yates
   for (auto i = static_cast<int>(m_cards_.size()) - 1; i > 0; i--) {
-    const auto j = xorShift() % (i + 1);
+    const auto j = xorshift() % (i + 1);
     std::swap(m_cards_[i], m_cards_[j]);
   }
 }
