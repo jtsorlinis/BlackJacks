@@ -8,11 +8,18 @@ Vector* Vector__new(size_t initial_capacity) {
   return ca;
 }
 
+void Vector__resize(Vector* self, int capacity) {
+  void** temp = realloc(self->items, sizeof(void*) * capacity);
+  if(temp) {
+    self->items = temp;
+    self->capacity = capacity;
+  }
+}
+
 void Vector__push(Vector* self, void* element) {
   // Make room if we need to for new item
   if (self->size == self->capacity) {
-    self->capacity *= 2;
-    self->items = realloc(self->items, self->capacity * sizeof(void*));
+    Vector__resize(self, self->capacity*2);
   }
   self->items[self->size++] = element;
 }
@@ -48,8 +55,7 @@ void Vector__delete(Vector* self, int index) {
 void Vector__insert(Vector* self, void* element, int index) {
   // Make room if we need to for new item
   if (self->size == self->capacity) {
-    self->capacity *= 2;
-    self->items = realloc(self->items, self->capacity * sizeof(void*));
+    Vector__resize(self, self->capacity*2);
   }
 
   // Increase the size
