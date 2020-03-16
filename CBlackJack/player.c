@@ -16,6 +16,9 @@ Player* Player__new(Table* table, Player* split) {
   p->m_table = table;
   p->m_bet_mult = 1;
   p->m_earnings = 0;
+  p->m_has_natural = false;
+  p->m_is_done = false;
+  p->m_split_count = 0;
   if (table == NULL) return p;
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {
