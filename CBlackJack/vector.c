@@ -9,7 +9,7 @@ Vector* Vector__new(size_t initial_capacity) {
 }
 
 void Vector__resize(Vector* self, int capacity) {
-  void** temp = realloc(self->items, sizeof(void*) * (capacity + 1));
+  void** temp = realloc(self->items, sizeof(void*) * capacity);
   if(temp) {
     self->items = temp;
     self->capacity = capacity;
@@ -58,13 +58,13 @@ void Vector__insert(Vector* self, void* element, int index) {
     Vector__resize(self, self->capacity*2);
   }
 
-  // Increase the size
-  self->size++;
-
   // Shift all elements right after insertion point
   for (int i = self->size; i > index; i--) {
     self->items[i] = self->items[i-1];
   }
+
+  // Increase the size
+  self->size++;
 
   // Finally, insert the element
   self->items[index] = element;
