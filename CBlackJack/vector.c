@@ -9,7 +9,7 @@ Vector* Vector__new(size_t initial_capacity) {
 }
 
 void Vector__resize(Vector* self, int capacity) {
-  void** temp = realloc(self->items, sizeof(void*) * capacity);
+  void** temp = realloc(self->items, sizeof(void*) * (capacity + 1));
   if(temp) {
     self->items = temp;
     self->capacity = capacity;
