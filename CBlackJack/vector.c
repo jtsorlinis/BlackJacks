@@ -44,10 +44,8 @@ Vector* Vector__copy(Vector* self) {
 }
 
 void Vector__delete(Vector* self, int index) {
-    self->items[index] = NULL;
     for (int i = index; i < self->size-1; i++) {
         self->items[i] = self->items[i+1];
-        self->items[i+1] = NULL;
     }
     self->size--;
 }
