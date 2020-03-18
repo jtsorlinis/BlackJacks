@@ -47,7 +47,7 @@ void Vector__delete(Vector* self, int index) {
     for (int i = index; i < self->size-1; i++) {
         self->items[i] = self->items[i+1];
     }
-    self->size--;
+    self->items[--self->size] = NULL;
 }
 
 void Vector__insert(Vector* self, void* element, int index) {
