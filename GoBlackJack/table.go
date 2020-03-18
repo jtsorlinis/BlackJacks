@@ -25,26 +25,21 @@ type Table struct {
 
 // NewTable constructor
 func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, verbose bool) *Table {
-	t := Table{
-		MVerbose:        verbose,
-		MBetSize:        betsize,
-		MNumOfDecks:     numdecks,
-		MCardPile:       NewCardPile(numdecks),
-		MMinCards:       mincards,
-		MDealer:         NewDealer(),
-		mCurrentPlayer:  0,
-		MCasinoEarnings: 0,
-		MRunningCount:   0,
-		MTrueCount:      0,
-		MStratHard:      array2dToMap(stratHard),
-		MStratSoft:      array2dToMap(stratSoft),
-		MStratSplit:     array2dToMap(stratSplit),
-	}
+	t := new(Table)
+	t.MVerbose = verbose
+	t.MBetSize = betSize
+	t.MNumOfDecks = numdecks
+	t.MCardPile = NewCardPile(numdecks)
+	t.MMinCards = mincards
+	t.MDealer = NewDealer()
+	t.MStratHard = array2dToMap(stratHard)
+	t.MStratSoft = array2dToMap(stratSoft)
+	t.MStratSplit = array2dToMap(stratSplit)
 	for i := int32(0); i < numplayers; i++ {
-		t.MPlayers = append(t.MPlayers, NewPlayer(&t, nil))
+		t.MPlayers = append(t.MPlayers, NewPlayer(t, nil))
 	}
 
-	return &t
+	return t
 }
 
 func (t *Table) dealRound() {

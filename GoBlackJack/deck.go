@@ -14,14 +14,14 @@ type Deck struct {
 
 // NewDeck constructor
 func NewDeck() *Deck {
-	d := Deck{}
+	d := new(Deck)
 	for _, suit := range suits {
 		for _, rank := range ranks {
 			c := NewCard(rank, suit)
 			d.MCards = append(d.MCards, c)
 		}
 	}
-	return &d
+	return d
 }
 
 // Print the cards

@@ -26,7 +26,7 @@ type Player struct {
 
 // NewPlayer constructor
 func NewPlayer(table *Table, split *Player) *Player {
-	p := Player{"", nil, 0, 0, 0, false, 0, false, nil, 1, false, nil, 0}
+	p := new(Player)
 	p.MTable = table
 	p.MInitialBet = p.MTable.MBetSize
 	if split != nil {
@@ -38,7 +38,7 @@ func NewPlayer(table *Table, split *Player) *Player {
 		playerNumCount++
 		p.MPlayerNum = fmt.Sprint(playerNumCount)
 	}
-	return &p
+	return p
 }
 
 // DoubleBet doubles the player's bet

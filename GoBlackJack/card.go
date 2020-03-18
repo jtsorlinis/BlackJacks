@@ -16,11 +16,13 @@ type Card struct {
 
 //NewCard constructor
 func NewCard(rank string, suit string) *Card {
-	c := Card{rank, suit, false, 0, 0, false}
+	c := new(Card)
+	c.MRank = rank
+	c.mSuit = suit
 	c.MValue = c.evaluate()
 	c.mCount = c.count()
 	c.MIsAce = c.MRank == "A"
-	return &c
+	return c
 }
 
 // Print the current value of the card

@@ -13,8 +13,9 @@ type Dealer struct {
 
 // NewDealer constructor
 func NewDealer() *Dealer {
-	d := Dealer{"D", nil, 0, 0, false}
-	return &d
+	d := new(Dealer)
+	d.MPlayerNum = "D"
+	return d
 }
 
 // ResetHand resets dealer's hand

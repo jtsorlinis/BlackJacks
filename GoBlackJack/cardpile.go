@@ -20,14 +20,14 @@ type CardPile struct {
 
 // NewCardPile constructor
 func NewCardPile(numofdecks int32) *CardPile {
-	cp := CardPile{}
+	cp := new(CardPile)
 	for x := int32(0); x < numofdecks; x++ {
 		temp := NewDeck()
 		cp.MCards = append(cp.MCards, temp.MCards...)
 	}
 
 	cp.mOriginalCards = append(cp.mOriginalCards, cp.MCards...)
-	return &cp
+	return cp
 }
 
 // Print the cards
@@ -50,5 +50,5 @@ func (c *CardPile) Shuffle() {
 
 // Refresh the cardpile
 func (c *CardPile) Refresh() {
-	c.MCards = append([]*Card(nil), c.mOriginalCards...)
+	c.MCards = append(c.mOriginalCards[:0:0], c.mOriginalCards...)
 }
