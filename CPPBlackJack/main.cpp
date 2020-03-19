@@ -51,5 +51,5 @@ int main(const int argc, char* argv[]) {
   const auto duration =
       duration_cast<milliseconds>(high_resolution_clock::now() - start);
   std::cout << "\nPlayed " << x - 1 << " rounds in " << std::setprecision(3)
-            << duration.count() / 1000.0 << " seconds.\n\n";
+            << duration.count() / 1000.0 << " seconds.\n";
 }
