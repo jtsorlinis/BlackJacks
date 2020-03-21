@@ -15,9 +15,9 @@ class Table {
     float mCasinoEarnings = 0;
     int mRunningCount = 0;
     int mTrueCount = 0;
-    List<String> mStratHard = Strategies.array2dToMap(Strategies.stratHard);
-    List<String> mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
-    List<String> mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
+    String[] mStratHard = Strategies.array2dToMap(Strategies.stratHard);
+    String[] mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
+    String[] mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
 
     public Table(int numPlayers, int numDecks, int betsize, int minCards, int verbose) {
         mCardPile = new CardPile(numDecks);

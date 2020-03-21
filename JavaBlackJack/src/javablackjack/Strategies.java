@@ -53,19 +53,19 @@ class Strategies {
         {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" }
     };
 
-     static String getAction(int playerVal, int dealerVal, List<String> strategy) {
+     static String getAction(int playerVal, int dealerVal, String[] strategy) {
         int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-		return strategy.get(key);
+		return strategy[key];
     }
 
-     static List<String> array2dToMap(String[][] array) {
-        List<String> temp = Arrays.asList(new String[1000]);
+     static String[] array2dToMap(String[][] array) {
+        String[] temp = new String[1000];
         for(int row = 0; row < array.length; row++) {
             for(int col = 0; col< array[0].length; col++ ) {
                 int playerVal = Integer.parseInt(array[row][0]);
                 int dealerVal = Integer.parseInt(array[0][col]);
                 int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-                temp.set(key, array[row][col]);
+                temp[key] = array[row][col];
             }
         }
         return temp;
