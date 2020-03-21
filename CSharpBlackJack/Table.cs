@@ -7,9 +7,9 @@ namespace CSharpBlackJack {
         private readonly Dealer _dealer = new Dealer();
         private readonly int _minCards;
         private readonly int _numOfDecks;
-        private readonly List<string> _stratHard = Strategies.Array2dToMap(Strategies.StratHard);
-        private readonly List<string> _stratSoft = Strategies.Array2dToMap(Strategies.StratSoft);
-        private readonly List<string> _stratSplit = Strategies.Array2dToMap(Strategies.StratSplit);
+        private readonly string[] _stratHard = Strategies.Array2dToMap(Strategies.StratHard);
+        private readonly string[] _stratSoft = Strategies.Array2dToMap(Strategies.StratSoft);
+        private readonly string[] _stratSplit = Strategies.Array2dToMap(Strategies.StratSplit);
         private readonly int _verbose;
         public readonly int mBetSize;
         public readonly CardPile mCardPile;
