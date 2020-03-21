@@ -1,8 +1,5 @@
 package javablackjack;
 
-import java.util.Arrays;
-import java.util.List;
-
 class Strategies {
      static String[][] stratHard = {
         {"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" },
