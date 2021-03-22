@@ -11,7 +11,7 @@ type Table struct {
 	MBetSize        int32
 	MPlayers        []*Player
 	MNumOfDecks     int32
-	MCardPile       *CardPile
+	MCardPile       CardPile
 	MMinCards       int32
 	MDealer         *Dealer
 	mCurrentPlayer  int32

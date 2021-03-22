@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 // var rnd = NewSource(time.Now().Unix())
 var seed = time.Now().Unix()
@@ -15,18 +17,18 @@ func xorShift() uint32 {
 // CardPile class
 type CardPile struct {
 	MCards         []*Card
-	mOriginalCards []*Card
+	mOriginalCards []Card
 }
 
 // NewCardPile constructor
-func NewCardPile(numofdecks int32) *CardPile {
-	cp := new(CardPile)
+func NewCardPile(numofdecks int32) CardPile {
+	var cp CardPile
 	for x := int32(0); x < numofdecks; x++ {
 		temp := NewDeck()
-		cp.MCards = append(cp.MCards, temp.MCards...)
+		cp.mOriginalCards = append(cp.mOriginalCards, temp.MCards...)
 	}
 
-	cp.mOriginalCards = append(cp.mOriginalCards, cp.MCards...)
+	cp.Refresh()
 	return cp
 }
 
@@ -50,5 +52,8 @@ func (c *CardPile) Shuffle() {
 
 // Refresh the cardpile
 func (c *CardPile) Refresh() {
-	c.MCards = append(c.mOriginalCards[:0:0], c.mOriginalCards...)
+	c.MCards = c.MCards[:0]
+	for i := range c.mOriginalCards {
+		c.MCards = append(c.MCards, &c.mOriginalCards[i])
+	}
 }
