@@ -19,8 +19,8 @@ const stratHard = [
   ['18', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
   ['19', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
   ['20', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
-  ['21', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
-];
+  ['21', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S']
+]
 
 const stratSoft = [
   ['0', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
@@ -32,8 +32,8 @@ const stratSoft = [
   ['18', 'S', 'D', 'D', 'D', 'D', 'S', 'S', 'H', 'H', 'H'],
   ['19', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
   ['20', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
-  ['21', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'],
-];
+  ['21', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S']
+]
 
 const stratSplit = [
   ['0', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
@@ -44,29 +44,29 @@ const stratSplit = [
   ['7', 'P', 'P', 'P', 'P', 'P', 'P', 'H', 'H', 'H', 'H'],
   ['8', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
   ['9', 'P', 'P', 'P', 'P', 'P', 'S', 'P', 'P', 'S', 'S'],
-  ['11', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-];
+  ['11', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P']
+]
 
-function getAction(playerval, dealerval, strategy) {
-  const playerVal = parseInt(playerval, 10);
-  const dealerVal = parseInt(dealerval, 10);
-  const key = ((playerVal + dealerVal)
-    * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-  return strategy[key];
+function getAction (playerval, dealerval, strategy) {
+  const playerVal = parseInt(playerval, 10)
+  const dealerVal = parseInt(dealerval, 10)
+  const key = ((playerVal + dealerVal) *
+    (playerVal + dealerVal + 1)) / 2 + dealerVal
+  return strategy[key]
 }
 
-function array2dToMap(array) {
+function array2dToMap (array) {
   const temp = []
   for (let row = 0; row < array.length; row++) {
     for (let col = 0; col < array[0].length; col++) {
-      const playerVal = parseInt(array[row][0], 10);
-      const dealerVal = parseInt(array[0][col], 10);
-      const key = ((playerVal + dealerVal)
-        * (playerVal + dealerVal + 1)) / 2 + dealerVal;
-      temp[key] = array[row][col];
+      const playerVal = parseInt(array[row][0], 10)
+      const dealerVal = parseInt(array[0][col], 10)
+      const key = ((playerVal + dealerVal) *
+        (playerVal + dealerVal + 1)) / 2 + dealerVal
+      temp[key] = array[row][col]
     }
   }
-  return temp;
+  return temp
 }
 
 module.exports = {
@@ -74,5 +74,5 @@ module.exports = {
   stratSoft,
   stratSplit,
   getAction,
-  array2dToMap,
-};
+  array2dToMap
+}
