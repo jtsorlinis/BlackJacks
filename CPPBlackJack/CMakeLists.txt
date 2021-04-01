@@ -9,5 +9,5 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 # add the executable
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 add_executable(CPPBlackJack ${SOURCES})
