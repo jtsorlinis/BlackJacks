@@ -8,12 +8,12 @@ class Table {
  public:
   bool m_verbose_;
   int m_bet_size_;
-  std::vector<Player> m_players_;
+  std::list<Player> m_players_;
   int m_num_of_decks_;
   CardPile m_card_pile_;
   int m_min_cards_;
   Dealer m_dealer_;
-  int m_current_player_;
+  std::list<Player>::iterator m_current_player_;
   float m_casino_earnings_;
   int m_running_count_;
   int m_true_count_;
