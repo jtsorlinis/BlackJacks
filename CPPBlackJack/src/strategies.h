@@ -48,12 +48,12 @@ std::vector<std::vector<std::string>> strat_split = {
     {"9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S"},
     {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}};
 
-inline std::string get_action(int const& player_val, int& dealer_val,
+inline char const get_action(int const player_val, int dealer_val,
                               std::vector<std::string>* strategy) {
   const auto key =
       (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
       dealer_val;
-  return (*strategy)[key];
+  return (*strategy)[key][0];
 }
 
 inline std::vector<std::string> vec_to_map(

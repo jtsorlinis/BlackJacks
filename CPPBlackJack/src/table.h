@@ -6,7 +6,7 @@
 
 class Table {
  public:
-  int m_verbose_;
+  bool m_verbose_;
   int m_bet_size_;
   std::list<Player> m_players_;
   int m_num_of_decks_;
@@ -22,7 +22,7 @@ class Table {
   std::vector<std::string> m_strat_split_;
 
   Table(int num_players, int num_of_decks, int bet_size, int min_cards,
-        int verbose = 0);
+        bool verbose);
   void deal_round();
   void evaluate_all();
   void deal();
@@ -39,7 +39,7 @@ class Table {
   void split_aces();
   void double_bet();
   void auto_play();
-  void action(std::string const& action);
+  void action(const char action);
   void dealer_play();
   void next_player();
   void check_player_natural();

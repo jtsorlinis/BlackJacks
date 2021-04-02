@@ -7,5 +7,5 @@ class Dealer : public Player {
 
   Dealer();
   void reset_hand() override;
-  int& up_card();
+  int up_card();
 };

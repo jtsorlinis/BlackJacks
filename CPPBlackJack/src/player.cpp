@@ -5,6 +5,7 @@
 int Player::player_num_count_ = 0;
 
 Player::Player(Table* table, Player* split) {
+  m_hand_.reserve(5);
   m_value_ = 0;
   m_earnings_ = 0;
   m_aces_ = 0;
@@ -46,7 +47,7 @@ void Player::reset_hand() {
 }
 
 int Player::can_split() {
-  if (m_hand_.size() == 2 && m_hand_[0]->m_rank_ == m_hand_[1]->m_rank_ &&
+  if (m_hand_.size() == 2 && m_hand_[0]->m_rank_[0] == m_hand_[1]->m_rank_[0] &&
       m_split_count_ < max_splits_) {
     return m_hand_[0]->m_value_;
   }

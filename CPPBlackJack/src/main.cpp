@@ -13,7 +13,7 @@ int base_bet = 10;
 int min_cards = 40;
 
 int rounds = 1000000;
-int verbose = 0;
+bool verbose = false;
 
 int main(const int argc, char* argv[]) {
   if (argc == 2) {
@@ -27,7 +27,7 @@ int main(const int argc, char* argv[]) {
 
   auto x = 0;
   while (x++ < rounds) {
-    if (verbose > 0) {
+    if (verbose) {
       std::cout << "Round " << x << "\n";
     }
     if (verbose == 0 && rounds > 1000 && x % (rounds / 100) == 0) {

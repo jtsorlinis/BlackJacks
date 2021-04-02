@@ -6,7 +6,7 @@
 #include "strategies.h"
 
 Table::Table(const int num_players, const int num_of_decks, const int bet_size,
-             const int min_cards, const int verbose)
+             const int min_cards, const bool verbose)
     : m_card_pile_(CardPile(num_of_decks)) {
   m_verbose_ = verbose;
   m_bet_size_ = bet_size;
@@ -70,7 +70,7 @@ void Table::deal_dealer(const bool face_down) {
 void Table::start_round() {
   clear();
   update_count();
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << m_card_pile_.m_cards_.size() << " cards left\n";
     std::cout << "Running count is: " << m_running_count_
               << "\tTrue count is: " << m_true_count_ << "\n";
@@ -87,7 +87,7 @@ void Table::start_round() {
     finish_round();
   } else {
     check_player_natural();
-    if (m_verbose_ > 0) {
+    if (m_verbose_) {
       print();
     }
     auto_play();
@@ -100,7 +100,7 @@ void Table::get_new_cards() {
     m_card_pile_.shuffle();
     m_true_count_ = 0;
     m_running_count_ = 0;
-    if (m_verbose_ > 0) {
+    if (m_verbose_) {
       std::cout << "Got " << m_num_of_decks_
                 << " new decks as number of cards is below " << m_min_cards_
                 << "\n";
@@ -129,13 +129,13 @@ void Table::update_count() {
 void Table::hit() {
   deal();
   m_current_player_->evaluate();
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << "Player " << m_current_player_->m_player_num_ << " hits\n";
   }
 }
 
 void Table::stand() {
-  if (m_verbose_ > 0 && m_current_player_->m_value_ <= 21) {
+  if (m_verbose_ && m_current_player_->m_value_ <= 21) {
     std::cout << "Player " << m_current_player_->m_player_num_ << " stands\n";
     print();
   }
@@ -148,13 +148,13 @@ void Table::split() {
   m_players_.insert(next(m_current_player_), std::move(split_player));
   m_current_player_->evaluate();
   next(m_current_player_)->evaluate();
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << "Player " << m_current_player_->m_player_num_ << " splits\n";
   }
 }
 
 void Table::split_aces() {
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << "Player " << m_current_player_->m_player_num_
               << " splits aces\n";
   }
@@ -168,7 +168,7 @@ void Table::split_aces() {
   deal();
   m_current_player_->evaluate();
   stand();
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     print();
   }
 }
@@ -177,7 +177,7 @@ void Table::double_bet() {
   if (m_current_player_->m_bet_mult_ == 1 &&
       m_current_player_->m_hand_.size() == 2) {
     m_current_player_->double_bet();
-    if (m_verbose_ > 0) {
+    if (m_verbose_) {
       std::cout << "Player " << m_current_player_->m_player_num_
                 << " doubles\n";
     }
@@ -192,7 +192,7 @@ void Table::auto_play() {
   while (!m_current_player_->m_is_done_) {
     // check if player just Split
     if (m_current_player_->m_hand_.size() == 1) {
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << m_current_player_->m_player_num_
                   << " gets 2nd card after splitting";
       }
@@ -223,16 +223,22 @@ void Table::auto_play() {
   next_player();
 }
 
-void Table::action(std::string const& action) {
-  if (action == "H") {
+void Table::action(char action) {
+  switch (action)
+  {
+  case 'H':
     hit();
-  } else if (action == "S") {
+    break;
+  case 'S':
     stand();
-  } else if (action == "D") {
+    break;
+  case 'D':
     double_bet();
-  } else if (action == "P") {
+    break;
+  case 'P':
     split();
-  } else {
+    break;
+  default:
     std::cout << "No action found";
     exit(1);
   }
@@ -249,12 +255,12 @@ void Table::dealer_play() {
   m_dealer_.m_hand_[1]->m_face_down_ = false;
   m_running_count_ += m_dealer_.m_hand_[1]->m_count_;
   m_dealer_.evaluate();
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << "Dealer's turn\n";
     print();
   }
   if (all_busted) {
-    if (m_verbose_ > 0) {
+    if (m_verbose_) {
       std::cout << "Dealer automatically wins cause all players busted\n";
     }
     finish_round();
@@ -262,7 +268,7 @@ void Table::dealer_play() {
     while (m_dealer_.m_value_ < 17 && m_dealer_.m_hand_.size() < 5) {
       deal_dealer();
       m_dealer_.evaluate();
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Dealer hits\n";
         print();
       }
@@ -293,7 +299,7 @@ bool Table::check_dealer_natural() {
   if (m_dealer_.evaluate() == 21) {
     m_dealer_.m_hand_[1]->m_face_down_ = false;
     m_running_count_ += m_dealer_.m_hand_[1]->m_count_;
-    if (m_verbose_ > 0) {
+    if (m_verbose_) {
       print();
       std::cout << "Dealer has a natural 21\n\n";
     }
@@ -314,20 +320,20 @@ void Table::check_earnings() {
 }
 
 void Table::finish_round() {
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     std::cout << "Scoring round\n";
   }
   for (auto& player : m_players_) {
     if (player.m_has_natural_) {
       player.win(1.5);
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Wins "
                   << 1.5 * player.m_bet_mult_ * player.m_initial_bet_
                   << " with a natural 21\n";
       }
     } else if (player.m_value_ > 21) {
       player.lose();
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Busts and Loses "
                   << player.m_bet_mult_ *
                          static_cast<float>(player.m_initial_bet_)
@@ -337,19 +343,19 @@ void Table::finish_round() {
     } else if (m_dealer_.m_value_ > 21 ||
                player.m_value_ > m_dealer_.m_value_) {
       player.win();
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Wins "
                   << player.m_bet_mult_ *
                          static_cast<float>(player.m_initial_bet_)
                   << "\n";
       }
     } else if (player.m_value_ == m_dealer_.m_value_) {
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Draws\n";
       }
     } else {
       player.lose();
-      if (m_verbose_ > 0) {
+      if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Loses "
                   << player.m_bet_mult_ *
                          static_cast<float>(player.m_initial_bet_)
@@ -357,7 +363,7 @@ void Table::finish_round() {
       }
     }
   }
-  if (m_verbose_ > 0) {
+  if (m_verbose_) {
     for (auto& player : m_players_) {
       if (player.m_split_from_ == nullptr) {
         std::cout << "Player " << player.m_player_num_
