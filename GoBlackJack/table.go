@@ -233,15 +233,16 @@ func (t *Table) autoPlay() {
 }
 
 func (t *Table) action(action byte) {
-	if action == 'H' {
+	switch action {
+	case 'H':
 		t.hit()
-	} else if action == 'S' {
+	case 'S':
 		t.stand()
-	} else if action == 'D' {
+	case 'D':
 		t.doubleBet()
-	} else if action == 'P' {
+	case 'P':
 		t.split()
-	} else {
+	default:
 		println("No action found")
 		os.Exit(1)
 	}
