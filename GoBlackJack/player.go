@@ -61,7 +61,7 @@ func (p *Player) ResetHand() {
 
 // CanSplit checks if the player can split
 func (p *Player) CanSplit() int32 {
-	if len(p.MHand) == 2 && p.MHand[0].MRank == p.MHand[1].MRank && p.MSplitCount < maxSplits {
+	if len(p.MHand) == 2 && p.MHand[0].MRank[0] == p.MHand[1].MRank[0] && p.MSplitCount < maxSplits {
 		return p.MHand[0].MValue
 	}
 	return 0

@@ -18,9 +18,9 @@ type Table struct {
 	MCasinoEarnings float32
 	MRunningCount   int32
 	MTrueCount      int32
-	MStratHard      []string
-	MStratSoft      []string
-	MStratSplit     []string
+	MStratHard      []byte
+	MStratSoft      []byte
+	MStratSplit     []byte
 }
 
 // NewTable constructor
@@ -231,14 +231,14 @@ func (t *Table) autoPlay() {
 	t.nextPlayer()
 }
 
-func (t *Table) action(action string) {
-	if action == "H" {
+func (t *Table) action(action byte) {
+	if action == 'H' {
 		t.hit()
-	} else if action == "S" {
+	} else if action == 'S' {
 		t.stand()
-	} else if action == "D" {
+	} else if action == 'D' {
 		t.doubleBet()
-	} else if action == "P" {
+	} else if action == 'P' {
 		t.split()
 	} else {
 		println("No action found")
