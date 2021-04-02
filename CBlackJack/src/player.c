@@ -54,8 +54,7 @@ void Player__reset_hand(Player* self) {
 
 int Player__can_split(Player* self) {
   if (self->m_hand->size == 2 &&
-      strcmp(((Card*)self->m_hand->items[0])->m_rank,
-          ((Card*)self->m_hand->items[1])->m_rank) == 0 &&
+      ((Card*)self->m_hand->items[0])->m_rank[0] == ((Card*)self->m_hand->items[1])->m_rank[0] &&
       self->m_split_count < max_splits) {
     return ((Card*)self->m_hand->items[0])->m_value;
   }
