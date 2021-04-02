@@ -51,19 +51,19 @@ namespace CSharpBlackJack {
             {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}
         };
 
-        public static string GetAction(int playerVal, int dealerVal, string[] strategy) {
+        public static char GetAction(int playerVal, int dealerVal, char[] strategy) {
             var key = (playerVal + dealerVal) * (playerVal + dealerVal + 1) / 2 + dealerVal;
             return strategy[key];
         }
 
-        public static string[] Array2dToMap(string[,] array) {
-            var temp = new string[1000];
+        public static char[] Array2dToMap(string[,] array) {
+            var temp = new char[1000];
             for (var row = 0; row < array.GetLength(0); row++)
             for (var col = 0; col < array.GetLength(1); col++) {
                 var playerVal = int.Parse(array[row, 0]);
                 var dealerVal = int.Parse(array[0, col]);
                 var key = (playerVal + dealerVal) * (playerVal + dealerVal + 1) / 2 + dealerVal;
-                temp[key] = array[row, col];
+                temp[key] = array[row, col][0];
             }
 
             return temp;

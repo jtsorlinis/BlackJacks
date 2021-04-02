@@ -52,7 +52,7 @@ namespace CSharpBlackJack {
         }
 
         public int CanSplit() {
-            if (mHand.Count == 2 && mHand[0].mRank == mHand[1].mRank && _splitCount < MaxSplits)
+            if (mHand.Count == 2 && mHand[0].mRank[0] == mHand[1].mRank[0] && _splitCount < MaxSplits)
                 return mHand[0].mValue;
             return 0;
         }

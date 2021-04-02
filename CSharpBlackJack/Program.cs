@@ -10,11 +10,11 @@ namespace CSharpBlackJack {
             const int minCards = 40;
 
             var rounds = 1000000;
-            int verbosity = 0;
+            bool verbose = false;
 
             if (args.Length == 1) rounds = int.Parse(args[0]);
 
-            var table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards);
+            var table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards, verbose);
             table1.mCardPile.Shuffle();
 
             var timer = new Stopwatch();
@@ -22,8 +22,8 @@ namespace CSharpBlackJack {
 
             var x = 0;
             while (x++ < rounds) {
-                if (verbosity > 0) Console.WriteLine("Round " + x);
-                if (verbosity == 0 && rounds > 1000 && x % (rounds / 100) == 0)
+                if (verbose) Console.WriteLine("Round " + x);
+                if (!verbose && rounds > 1000 && x % (rounds / 100) == 0)
                     Console.Write("\tProgress: " + x*100/rounds + "%\r");
 
                 table1.StartRound();
