@@ -124,9 +124,10 @@ func (t *Table) getNewCards() {
 
 func (t *Table) clear() {
 	for i := len(t.MPlayers) - 1; i >= 0; i-- {
-		t.MPlayers[i].ResetHand()
 		if t.MPlayers[i].MSplitFrom != nil {
 			t.MPlayers = append(t.MPlayers[:i], t.MPlayers[i+1:]...)
+		} else {
+			t.MPlayers[i].ResetHand()
 		}
 	}
 	t.MDealer.ResetHand()
