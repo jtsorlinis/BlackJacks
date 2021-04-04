@@ -1,4 +1,5 @@
 #include "vector.h"
+
 #include <string.h>
 
 Vector* Vector__new(size_t initial_capacity) {
@@ -20,7 +21,7 @@ void Vector__resize(Vector* self, int capacity) {
 void Vector__push(Vector* self, void* element) {
   // Make room if we need to for new item
   if (self->size == self->capacity) {
-    Vector__resize(self, self->capacity * 2);
+    Vector__resize(self, self->capacity + 2);
   }
   self->items[self->size++] = element;
 }
@@ -47,7 +48,7 @@ void Vector__delete(Vector* self, int index) {
 void Vector__insert(Vector* self, void* element, int index) {
   // Make room if we need to for new item
   if (self->size == self->capacity) {
-    Vector__resize(self, self->capacity * 2);
+    Vector__resize(self, self->capacity + 2);
   }
 
   // Shift all elements right after insertion point
@@ -62,9 +63,7 @@ void Vector__insert(Vector* self, void* element, int index) {
   self->items[index] = element;
 }
 
-void Vector__clear(Vector* self) {
-  self->size = 0;
-}
+void Vector__clear(Vector* self) { self->size = 0; }
 
 void Vector__free(Vector* self) {
   free(self->items);
