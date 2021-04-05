@@ -3,6 +3,6 @@ Java version of PyBlackJack
 
 To build and run
 ```
-javac ./JavaBlackJack/src/javablackjack/*.java
-java -cp ./JavaBlackJack/src/ javablackjack.Main
+javac src/javablackjack/*.java
+java -cp src/ javablackjack.Main
 ```
