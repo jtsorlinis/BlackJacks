@@ -40,7 +40,6 @@ CardPile::CardPile(const int num_of_decks) {
                     temp_deck.m_cards_.end());
   }
   m_original_cards_ = m_cards_;
-  m_num_of_decks_ = num_of_decks;
 }
 
 void CardPile::refresh() { m_cards_ = m_original_cards_; }
