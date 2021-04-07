@@ -1,5 +1,6 @@
 #include "cardpile.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <time.h>
 
