@@ -109,10 +109,15 @@ void Table::get_new_cards() {
 }
 
 void Table::clear() {
-  m_players_.erase(
-      std::remove_if(m_players_.begin(), m_players_.end(),
-                     [](auto& player) { return player.m_split_from_; }),
-      m_players_.end());
+  auto it = m_players_.end();
+  while (it != m_players_.begin()) {
+    std::advance(it, -1);
+    if (it->m_split_from_) {
+      std::prev(it)->m_earnings_ += it->m_earnings_;
+      it = m_players_.erase(it);
+    }
+  }
+
   for (auto& player : m_players_) {
     player.reset_hand();
   }
@@ -194,7 +199,7 @@ void Table::auto_play() {
     if (m_current_player_->m_hand_.size() == 1) {
       if (m_verbose_) {
         std::cout << "Player " << m_current_player_->m_player_num_
-                  << " gets 2nd card after splitting";
+                  << " gets 2nd card after splitting\n";
       }
       deal();
       m_current_player_->evaluate();
@@ -224,23 +229,22 @@ void Table::auto_play() {
 }
 
 void Table::action(char action) {
-  switch (action)
-  {
-  case 'H':
-    hit();
-    break;
-  case 'S':
-    stand();
-    break;
-  case 'D':
-    double_bet();
-    break;
-  case 'P':
-    split();
-    break;
-  default:
-    std::cout << "No action found";
-    exit(1);
+  switch (action) {
+    case 'H':
+      hit();
+      break;
+    case 'S':
+      stand();
+      break;
+    case 'D':
+      double_bet();
+      break;
+    case 'P':
+      split();
+      break;
+    default:
+      std::cout << "No action found";
+      exit(1);
   }
 }
 
@@ -314,7 +318,8 @@ void Table::check_earnings() {
     check += player.m_earnings_;
   }
   if (check * -1 != m_casino_earnings_) {
-    std::cout << "NO MATCH";
+    std::cout << "NO MATCH\t Casino earnings: " << m_casino_earnings_
+              << "\t Player earnings: " << check << "\n";
     exit(1);
   }
 }

@@ -55,23 +55,15 @@ int Player::can_split() {
 }
 
 void Player::win(const float mult) {
-  if (m_split_from_ != nullptr) {
-    m_split_from_->win(mult);
-  } else {
-    m_earnings_ += static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
-    m_table_->m_casino_earnings_ -=
-        static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
-  }
+  float x = static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
+  m_earnings_ += x;
+  m_table_->m_casino_earnings_ -= x;
 }
 
 void Player::lose() {
-  if (m_split_from_ != nullptr) {
-    m_split_from_->lose();
-  } else {
-    m_earnings_ -= static_cast<float>(m_initial_bet_) * m_bet_mult_;
-    m_table_->m_casino_earnings_ +=
-        static_cast<float>(m_initial_bet_) * m_bet_mult_;
-  }
+  float x = static_cast<float>(m_initial_bet_) * m_bet_mult_;
+  m_earnings_ -= x;
+  m_table_->m_casino_earnings_ += x;
 }
 
 std::string Player::print() {
