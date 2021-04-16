@@ -27,7 +27,7 @@ namespace CSharpBlackJack
       UInt32 l = (UInt32)m;
       if (l < s)
       {
-        UInt32 t = (UInt32)(-s % s);
+        UInt32 t = (UInt32)((UInt32)(-s) % s);
         while (l < t)
         {
           x = Pcg32();
