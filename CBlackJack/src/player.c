@@ -1,10 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include "player.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "card.h"
-#include "player.h"
 #include "table.h"
 #include "vector.h"
 
@@ -24,10 +25,11 @@ Player* Player__new(Table* table, Player* split) {
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {
     Vector__push(p->m_hand, split->m_hand->items[1]);
-    Vector__delete(split->m_hand,1);
+    Vector__delete(split->m_hand, 1);
     p->m_split_count++;
     strcpy(p->m_player_num, split->m_player_num);
     strcat(p->m_player_num, "S");
+    p->m_initial_bet = split->m_initial_bet;
     p->m_split_from = split;
 
   } else {
@@ -54,7 +56,8 @@ void Player__reset_hand(Player* self) {
 
 int Player__can_split(Player* self) {
   if (self->m_hand->size == 2 &&
-      ((Card*)self->m_hand->items[0])->m_rank[0] == ((Card*)self->m_hand->items[1])->m_rank[0] &&
+      ((Card*)self->m_hand->items[0])->m_rank[0] ==
+          ((Card*)self->m_hand->items[1])->m_rank[0] &&
       self->m_split_count < max_splits) {
     return ((Card*)self->m_hand->items[0])->m_value;
   }
@@ -62,22 +65,15 @@ int Player__can_split(Player* self) {
 }
 
 void Player__win(Player* self, float mult) {
-  if (self->m_split_from != NULL) {
-    Player__win(self->m_split_from, mult);
-  } else {
-    self->m_earnings += self->m_initial_bet * self->m_bet_mult * mult;
-    self->m_table->m_casino_earnings -=
-        self->m_initial_bet * self->m_bet_mult * mult;
-  }
+  float x = self->m_initial_bet * self->m_bet_mult * mult;
+  self->m_earnings += x;
+  self->m_table->m_casino_earnings -= x;
 }
 
 void Player__lose(Player* self) {
-  if (self->m_split_from != NULL) {
-    Player__lose(self->m_split_from);
-  } else {
-    self->m_earnings -= self->m_initial_bet * self->m_bet_mult;
-    self->m_table->m_casino_earnings += self->m_initial_bet * self->m_bet_mult;
-  }
+  float x = self->m_initial_bet * self->m_bet_mult;
+  self->m_earnings -= x;
+  self->m_table->m_casino_earnings += x;
 }
 
 void Player__print(Player* self) {

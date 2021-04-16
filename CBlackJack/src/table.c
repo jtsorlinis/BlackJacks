@@ -1,4 +1,5 @@
 #include "table.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -121,6 +122,8 @@ void Table__clear(Table* self) {
   for (int i = self->m_players->size - 1; i >= 0; i--) {
     Player__reset_hand(self->m_players->items[i]);
     if (((Player*)self->m_players->items[i])->m_split_from != NULL) {
+      ((Player*)self->m_players->items[i - 1])->m_earnings +=
+          ((Player*)self->m_players->items[i])->m_earnings;
       Player__free(self->m_players->items[i]);
       Vector__delete(self->m_players, i);
     }
@@ -204,24 +207,41 @@ void Table__double_bet(Table* self) {
 }
 
 void Table__auto_play(Table* self) {
-  while(!((Player*) self->m_players->items[self->m_current_player])->m_is_done) {
+  while (
+      !((Player*)self->m_players->items[self->m_current_player])->m_is_done) {
     // check if player just split
-    if(((Player*) self->m_players->items[self->m_current_player])->m_hand->size == 1) {
+    if (((Player*)self->m_players->items[self->m_current_player])
+            ->m_hand->size == 1) {
       Table__deal(self);
       Player__evaluate(self->m_players->items[self->m_current_player]);
     }
 
-    if (((Player*) self->m_players->items[self->m_current_player])->m_hand->size < 5
-    && ((Player*) self->m_players->items[self->m_current_player])->m_value < 21) {
-      int split_card_val = Player__can_split(self->m_players->items[self->m_current_player]);
-      if(split_card_val == 11) {
+    if (((Player*)self->m_players->items[self->m_current_player])
+                ->m_hand->size < 5 &&
+        ((Player*)self->m_players->items[self->m_current_player])->m_value <
+            21) {
+      int split_card_val =
+          Player__can_split(self->m_players->items[self->m_current_player]);
+      if (split_card_val == 11) {
         Table__split_aces(self);
-      } else if (split_card_val != 0 && split_card_val != 5 && split_card_val != 10) {
-        Table__action(self, get_action(split_card_val, Dealer__up_card(self->m_dealer), self->m_strat_split));
-      } else if (((Player*) self->m_players->items[self->m_current_player])->m_is_soft) {
-        Table__action(self, get_action(((Player*) self->m_players->items[self->m_current_player])->m_value, Dealer__up_card(self->m_dealer), self->m_strat_soft));
+      } else if (split_card_val != 0 && split_card_val != 5 &&
+                 split_card_val != 10) {
+        Table__action(
+            self, get_action(split_card_val, Dealer__up_card(self->m_dealer),
+                             self->m_strat_split));
+      } else if (((Player*)self->m_players->items[self->m_current_player])
+                     ->m_is_soft) {
+        Table__action(
+            self,
+            get_action(((Player*)self->m_players->items[self->m_current_player])
+                           ->m_value,
+                       Dealer__up_card(self->m_dealer), self->m_strat_soft));
       } else {
-        Table__action(self, get_action(((Player*) self->m_players->items[self->m_current_player])->m_value, Dealer__up_card(self->m_dealer), self->m_strat_hard));
+        Table__action(
+            self,
+            get_action(((Player*)self->m_players->items[self->m_current_player])
+                           ->m_value,
+                       Dealer__up_card(self->m_dealer), self->m_strat_hard));
       }
     } else {
       Table__stand(self);
@@ -236,17 +256,17 @@ void Table__action(Table* self, const char action) {
       Table__hit(self);
       break;
     case 'S':
-        Table__stand(self);
-        break;
+      Table__stand(self);
+      break;
     case 'D':
-        Table__double_bet(self);
-        break;
+      Table__double_bet(self);
+      break;
     case 'P':
-        Table__split(self);
-        break;
+      Table__split(self);
+      break;
     default:
-        printf("No action found\n");
-        exit(1);
+      printf("No action found\n");
+      exit(1);
   }
 }
 
