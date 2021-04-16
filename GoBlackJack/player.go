@@ -29,10 +29,12 @@ func NewPlayer(table *Table, split *Player) *Player {
 	p := new(Player)
 	p.MTable = table
 	p.MInitialBet = p.MTable.MBetSize
+	p.MBetMult = 1
 	if split != nil {
 		p.MHand = append(p.MHand, split.MHand[1])
 		p.MSplitCount++
 		p.MPlayerNum = split.MPlayerNum + "S"
+		p.MInitialBet = split.MInitialBet
 		p.MSplitFrom = split
 	} else {
 		playerNumCount++
@@ -69,23 +71,17 @@ func (p *Player) CanSplit() int32 {
 
 // Win increases player earnings
 func (p *Player) Win(mult float32) {
-	if p.MSplitFrom != nil {
-		p.MSplitFrom.Win(mult)
-	} else {
-		p.MEarnings += (float32(p.MInitialBet) * p.MBetMult * mult)
-		p.MTable.MCasinoEarnings -= (float32(p.MInitialBet) * p.MBetMult * mult)
-	}
+	x := float32(p.MInitialBet) * p.MBetMult * mult
+	p.MEarnings += x
+	p.MTable.MCasinoEarnings -= x
 
 }
 
 // Lose decreases player earnings
 func (p *Player) Lose() {
-	if p.MSplitFrom != nil {
-		p.MSplitFrom.Lose()
-	} else {
-		p.MEarnings -= (float32(p.MInitialBet) * p.MBetMult)
-		p.MTable.MCasinoEarnings += (float32(p.MInitialBet) * p.MBetMult)
-	}
+	x := float32(p.MInitialBet) * p.MBetMult
+	p.MEarnings -= x
+	p.MTable.MCasinoEarnings += x
 }
 
 // Print prints the players number and hand
