@@ -31,6 +31,7 @@ namespace CSharpBlackJack
         mHand.Add(split.mHand[1]);
         _splitCount++;
         mPlayerNum = split.mPlayerNum + "S";
+        mInitialBet = split.mInitialBet;
         mSplitFrom = split;
       }
       else
