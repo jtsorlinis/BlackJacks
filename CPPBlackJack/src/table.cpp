@@ -115,11 +115,9 @@ void Table::clear() {
     if (it->m_split_from_) {
       std::prev(it)->m_earnings_ += it->m_earnings_;
       it = m_players_.erase(it);
+    } else {
+      it->reset_hand();
     }
-  }
-
-  for (auto& player : m_players_) {
-    player.reset_hand();
   }
   m_dealer_.reset_hand();
 }
