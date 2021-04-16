@@ -15,7 +15,7 @@ namespace CSharpBlackJack
       UInt64 oldState = state;
       state = oldState * 6364136223846793005U + 1;
       UInt32 xorshifted = (UInt32)(((oldState >> 18) ^ oldState) >> 27);
-      UInt32 rot = (UInt32)oldState >> 59;
+      UInt32 rot = (UInt32)(oldState >> 59);
       return (xorshifted >> (int)rot) | (xorshifted << (((int)-rot) & 31));
     }
 
