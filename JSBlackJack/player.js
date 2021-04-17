@@ -21,6 +21,7 @@ module.exports = class Player {
         this.mHand.push(split.mHand.pop())
         this.mSplitCount++
         this.mPlayerNum = `${split.mPlayerNum}S`
+        this.mInitialBet = split.mInitialBet
         this.mSplitFrom = split
       } else {
         PlayerNumCount++
@@ -47,28 +48,22 @@ module.exports = class Player {
 
   canSplit () {
     if (this.mHand.length === 2 && this.mHand[0].mRank ===
-        this.mHand[1].mRank && this.mSplitCount < MaxSplits) {
+      this.mHand[1].mRank && this.mSplitCount < MaxSplits) {
       return this.mHand[0].mValue
     }
     return 0
   }
 
   win (mult = 1) {
-    if (this.mSplitFrom != null) {
-      this.mSplitFrom.win(mult)
-    } else {
-      this.mEarnings += (this.mInitialBet * this.mBetMult * mult)
-      this.mTable.mCasinoEarnings -= (this.mInitialBet * this.mBetMult * mult)
-    }
+    const x = this.mInitialBet * this.mBetMult * mult
+    this.mEarnings += x
+    this.mTable.mCasinoEarnings -= x
   }
 
   lose () {
-    if (this.mSplitFrom != null) {
-      this.mSplitFrom.lose()
-    } else {
-      this.mEarnings -= (this.mInitialBet * this.mBetMult)
-      this.mTable.mCasinoEarnings += (this.mInitialBet * this.mBetMult)
-    }
+    const x = this.mInitialBet * this.mBetMult
+    this.mEarnings -= x
+    this.mTable.mCasinoEarnings += x
   }
 
   print () {

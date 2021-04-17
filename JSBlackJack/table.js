@@ -55,8 +55,7 @@ module.exports = class Table {
 
   selectBet (player) {
     if (this.mTrueCount >= 2) {
-      // eslint-disable-next-line no-param-reassign
-      player.mInitialBet = Math.floor(this.mBetSize * (this.mTrueCount - 1))
+      player.mInitialBet = this.mBetSize * Math.floor(this.mTrueCount - 1)
     }
   }
 
@@ -81,7 +80,7 @@ module.exports = class Table {
     this.dealRound()
     this.dealDealer()
     this.dealRound()
-    this.dealDealer()
+    this.dealDealer(true)
     this.evaluateAll()
     this.mCurrentPlayer = 0
     if (this.checkDealerNatural()) {
@@ -109,9 +108,11 @@ module.exports = class Table {
 
   clear () {
     for (let i = this.mPlayers.length - 1; i >= 0; i--) {
-      this.mPlayers[i].resetHand()
       if (this.mPlayers[i].mSplitFrom != null) {
+        this.mPlayers[i - 1].mEarnings += this.mPlayers[i].mEarnings
         this.mPlayers.splice(i, 1)
+      } else {
+        this.mPlayers[i].resetHand()
       }
     }
     this.mDealer.resetHand()
@@ -170,7 +171,7 @@ module.exports = class Table {
 
   doubleBet () {
     if (this.mPlayers[this.mCurrentPlayer].mBetMult === 1 &&
-        this.mPlayers[this.mCurrentPlayer].mHand.length === 2) {
+      this.mPlayers[this.mCurrentPlayer].mHand.length === 2) {
       this.mPlayers[this.mCurrentPlayer].doubleBet()
       if (this.mVerbose) {
         console.log(`Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} doubles`)
@@ -192,7 +193,7 @@ module.exports = class Table {
         this.mPlayers[this.mCurrentPlayer].evaluate()
       }
       if (this.mPlayers[this.mCurrentPlayer].mHand.length < 5 &&
-            this.mPlayers[this.mCurrentPlayer].mValue < 21) {
+        this.mPlayers[this.mCurrentPlayer].mValue < 21) {
         const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit()
         if (splitCardVal === 11) {
           this.splitAces()
@@ -271,7 +272,7 @@ module.exports = class Table {
   checkPlayerNatural () {
     for (let i = 0; i < this.mPlayers.length; i++) {
       if (this.mPlayers[i].mValue === 21 && this.mPlayers[i].mHand.length === 2 &&
-            this.mPlayers[i].mSplitFrom == null) {
+        this.mPlayers[i].mSplitFrom == null) {
         this.mPlayers[i].mHasNatural = true
       }
     }
