@@ -52,18 +52,14 @@ class Player:
         return 0
 
     def win(self, mult=1):
-        if self.split_from:
-            self.split_from.win(mult)
-        else:
-            self.earnings += self.initial_bet * self.bet_mult * mult
-            self.table.casino_earnings -= self.initial_bet * self.bet_mult * mult
+        x = self.initial_bet * self.bet_mult * mult
+        self.earnings += x
+        self.table.casino_earnings -= x
 
     def lose(self):
-        if self.split_from:
-            self.split_from.lose()
-        else:
-            self.earnings -= self.initial_bet * self.bet_mult
-            self.table.casino_earnings += self.initial_bet * self.bet_mult
+        x = self.initial_bet * self.bet_mult
+        self.earnings -= x
+        self.table.casino_earnings += x
 
     def print(self):
         output = "Player " + str(self.player_num) + ": "

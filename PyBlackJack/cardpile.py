@@ -18,8 +18,8 @@ class CardPile:
     def shuffle(self):
         # random.shuffle(self.cards)
         leng = len(self.cards) - 1
-        for i in range(leng, 1, -1):
-            j = int(i * random.random())
+        for i in range(leng, 0, -1):
+            j = random.randint(0, i)
             self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
 
     def refresh(self):

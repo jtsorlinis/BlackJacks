@@ -2,6 +2,7 @@ import time
 import sys
 from table import Table
 
+
 def main():
 
     players = 5
@@ -10,13 +11,10 @@ def main():
     min_cards = 40
 
     rounds = 1000000
-    verbose = 0
+    verbose = False
 
     if len(sys.argv) == 2:
         rounds = int(sys.argv[1])
-
-    if verbose and rounds > 100:
-        sys.stdout = open("output.txt", "w")
 
     table1 = Table(players, decks, bet_size, min_cards, verbose)
     table1.cardpile.shuffle()
@@ -49,6 +47,7 @@ def main():
         + format(time.perf_counter() - start_time, ".2f")
         + " seconds"
     )
+
 
 if __name__ == "__main__":
     main()

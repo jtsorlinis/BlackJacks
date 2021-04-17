@@ -68,7 +68,8 @@ def array_to_dict(array):
         for col, _ in enumerate(array[0]):
             dealerval = int(array[0][col])
             if row != 0 and col != 0:
-                key = ((playerval + dealerval) * (playerval + dealerval + 1)) / 2 + dealerval
+                key = ((playerval + dealerval) *
+                       (playerval + dealerval + 1)) / 2 + dealerval
                 temp[int(key)] = array[row][col]
     return temp
 

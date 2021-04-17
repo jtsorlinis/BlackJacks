@@ -41,7 +41,7 @@ class Table:
     # check count and bet accordingly
     def select_bet(self, player):
         if int(self.true_count) >= 2:
-            player.initial_bet = int(self.betsize * (self.true_count - 1))
+            player.initial_bet = self.betsize * int(self.true_count - 1)
 
     def deal_dealer(self, face_down=False):
         card = self.cardpile.cards.pop()
@@ -92,10 +92,12 @@ class Table:
                 )
 
     def clear(self):
-        for player in self.players[:]:
-            player.reset_hand()
-            if player.split_from:
-                self.players.remove(player)
+        for i in range(len(self.players)-1, -1, -1):
+            if self.players[i].split_from:
+                self.players[i-1].earnings += self.players[i].earnings
+                del self.players[i]
+            else:
+                self.players[i].reset_hand()
         self.dealer.reset_hand()
         self.current_player = 0
 
@@ -106,12 +108,14 @@ class Table:
 
     def update_count(self):
         if len(self.cardpile.cards) > 51:
-            self.true_count = self.running_count / int(len(self.cardpile.cards) / 52)
+            self.true_count = self.running_count / \
+                int(len(self.cardpile.cards) / 52)
 
     def hit(self):
         if self.verbose == 1:
             print(
-                "Player " + str(self.players[self.current_player].player_num) + " hits"
+                "Player " +
+                str(self.players[self.current_player].player_num) + " hits"
             )
         self.deal()
         self.players[self.current_player].evaluate()
@@ -133,7 +137,8 @@ class Table:
         self.players[self.current_player + 1].evaluate()
         if self.verbose == 1:
             print(
-                "Player " + str(self.players[self.current_player].player_num) + " splits"
+                "Player " +
+                str(self.players[self.current_player].player_num) + " splits"
             )
 
     def split_aces(self):
