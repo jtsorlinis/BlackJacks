@@ -7,7 +7,7 @@ namespace CSharpBlackJack
     private const int MaxSplits = 10;
     private static int _playerNumCount;
     private readonly Table _table;
-    public readonly List<Card> mHand = new List<Card>();
+    public readonly List<Card> mHand = new();
     public readonly Player mSplitFrom;
     private int _aces;
     private int _splitCount;

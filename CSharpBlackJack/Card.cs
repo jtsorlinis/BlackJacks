@@ -6,7 +6,7 @@ namespace CSharpBlackJack
     public readonly bool mIsAce;
     public readonly string mRank;
     public readonly int mValue;
-    private string _suit;
+    private readonly string _suit;
     public bool mFaceDown = false;
 
     public Card(string rank, string suit)

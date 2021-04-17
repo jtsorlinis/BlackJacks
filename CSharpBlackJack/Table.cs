@@ -6,7 +6,7 @@ namespace CSharpBlackJack
 {
   internal class Table
   {
-    private readonly Dealer _dealer = new Dealer();
+    private readonly Dealer _dealer = new();
     private readonly int _minCards;
     private readonly int _numOfDecks;
     private readonly char[] _stratHard = Strategies.Array2dToMap(Strategies.StratHard);
@@ -15,7 +15,7 @@ namespace CSharpBlackJack
     private readonly bool _verbose;
     public readonly int mBetSize;
     public readonly CardPile mCardPile;
-    public readonly List<Player> mPlayers = new List<Player>();
+    public readonly List<Player> mPlayers = new();
     private int _currentPlayer;
     private int _runningCount;
     private int _trueCount;

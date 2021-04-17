@@ -38,7 +38,7 @@ namespace CSharpBlackJack
       return (UInt32)(m >> 32);
     }
 
-    public List<Card> mCards = new List<Card>();
+    public List<Card> mCards = new();
 
     public CardPile(int numOfDecks)
     {
