@@ -26,13 +26,13 @@ class Table {
         mNumOfDecks = numDecks;
         mMinCards = minCards;
 
-        for(int i = 0; i < numPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++) {
             mPlayers.add(new Player(this));
         }
     }
 
     void dealRound() {
-        for(Player player : mPlayers){
+        for (Player player : mPlayers) {
             deal();
             mCurrentPlayer++;
         }
@@ -59,7 +59,7 @@ class Table {
     }
 
     void selectBet(Player player) {
-        if(mTrueCount >=2) {
+        if (mTrueCount >= 2) {
             player.mInitialBet = mBetSize * (mTrueCount - 1);
         }
     }
@@ -73,7 +73,7 @@ class Table {
         mCardPile.mCards.remove(mCardPile.mCards.size() - 1);
         card.mFaceDown = faceDown;
         mDealer.mHand.add(card);
-        if(!faceDown) {
+        if (!faceDown) {
             mRunningCount += card.mCount;
         }
     }
@@ -81,7 +81,7 @@ class Table {
     public void startRound() {
         clear();
         updateCount();
-        if(mVerbose > 0) {
+        if (mVerbose > 0) {
             System.out.println(mCardPile.mCards.size() + " cards left");
             System.out.println("Running count is: " + mRunningCount + "\tTrue count is: " + mTrueCount);
         }
@@ -93,12 +93,11 @@ class Table {
         dealDealer(true);
         evaluateAll();
         mCurrentPlayer = 0;
-        if(checkDealerNatural()) {
+        if (checkDealerNatural()) {
             finishRound();
-        } 
-        else {
+        } else {
             checkPlayerNatural();
-            if(mVerbose > 0) {
+            if (mVerbose > 0) {
                 print();
             }
             autoPlay();
@@ -106,23 +105,24 @@ class Table {
     }
 
     void getNewCards() {
-        if(mCardPile.mCards.size() < mMinCards) {
+        if (mCardPile.mCards.size() < mMinCards) {
             mCardPile.refresh();
             mCardPile.shuffle();
             mTrueCount = 0;
             mRunningCount = 0;
-            if(mVerbose > 0) {
+            if (mVerbose > 0) {
                 System.out.println("Got " + mNumOfDecks + " new decks as number of cards left is below " + mMinCards);
             }
         }
     }
 
     public void clear() {
-        for(int i = mPlayers.size() -1; i >= 0; i--) {
-            if (mPlayers.get(i).mSplitFrom == null) {
-                mPlayers.get(i).resetHand();
-            } else {
+        for (int i = mPlayers.size() - 1; i >= 0; i--) {
+            if (mPlayers.get(i).mSplitFrom != null) {
+                mPlayers.get(i - 1).mEarnings += mPlayers.get(i).mEarnings;
                 mPlayers.remove(i);
+            } else {
+                mPlayers.get(i).resetHand();
             }
         }
         mDealer.resetHand();
@@ -130,21 +130,21 @@ class Table {
     }
 
     void updateCount() {
-        if(mCardPile.mCards.size() > 51) {
-            mTrueCount = mRunningCount / (mCardPile.mCards.size()/52);
+        if (mCardPile.mCards.size() > 51) {
+            mTrueCount = mRunningCount / (mCardPile.mCards.size() / 52);
         }
     }
 
     void hit() {
         deal();
         mPlayers.get(mCurrentPlayer).evaluate();
-        if(mVerbose > 0) {
+        if (mVerbose > 0) {
             System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " hits");
         }
     }
 
     void stand() {
-        if(mVerbose > 0 && mPlayers.get(mCurrentPlayer).mValue <= 21) {
+        if (mVerbose > 0 && mPlayers.get(mCurrentPlayer).mValue <= 21) {
             System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " stands");
             print();
         }
@@ -153,22 +153,22 @@ class Table {
 
     void split() {
         Player splitPlayer = new Player(this, mPlayers.get(mCurrentPlayer));
-        mPlayers.get(mCurrentPlayer).mHand.remove(mPlayers.get(mCurrentPlayer).mHand.size()-1);
-        mPlayers.add(mCurrentPlayer+1, splitPlayer);
+        mPlayers.get(mCurrentPlayer).mHand.remove(mPlayers.get(mCurrentPlayer).mHand.size() - 1);
+        mPlayers.add(mCurrentPlayer + 1, splitPlayer);
         mPlayers.get(mCurrentPlayer).evaluate();
-        mPlayers.get(mCurrentPlayer+1).evaluate();
-        if( mVerbose > 0) {
+        mPlayers.get(mCurrentPlayer + 1).evaluate();
+        if (mVerbose > 0) {
             System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " splits");
         }
     }
 
     void splitAces() {
-        if(mVerbose > 0) {
+        if (mVerbose > 0) {
             System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " splits Aces");
         }
         Player splitPlayer = new Player(this, mPlayers.get(mCurrentPlayer));
-        mPlayers.get(mCurrentPlayer).mHand.remove(mPlayers.get(mCurrentPlayer).mHand.size()-1);
-        mPlayers.add(mCurrentPlayer+1, splitPlayer);
+        mPlayers.get(mCurrentPlayer).mHand.remove(mPlayers.get(mCurrentPlayer).mHand.size() - 1);
+        mPlayers.add(mCurrentPlayer + 1, splitPlayer);
         deal();
         mPlayers.get(mCurrentPlayer).evaluate();
         stand();
@@ -176,22 +176,21 @@ class Table {
         deal();
         mPlayers.get(mCurrentPlayer).evaluate();
         stand();
-        if(mVerbose > 0) {
+        if (mVerbose > 0) {
             print();
         }
 
     }
 
     void doubleBet() {
-        if(mPlayers.get(mCurrentPlayer).mBetMult == 1 && mPlayers.get(mCurrentPlayer).mHand.size() == 2) {
+        if (mPlayers.get(mCurrentPlayer).mBetMult == 1 && mPlayers.get(mCurrentPlayer).mHand.size() == 2) {
             mPlayers.get(mCurrentPlayer).doubleBet();
-            if(mVerbose > 0) {
+            if (mVerbose > 0) {
                 System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " doubles");
             }
             hit();
             stand();
-        }
-        else {
+        } else {
             hit();
         }
 
@@ -202,7 +201,8 @@ class Table {
             // check if player just split
             if (mPlayers.get(mCurrentPlayer).mHand.size() == 1) {
                 if (mVerbose > 0) {
-                    System.out.println("Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " gets 2nd card after splitting");
+                    System.out.println(
+                            "Player " + mPlayers.get(mCurrentPlayer).mPlayerNum + " gets 2nd card after splitting");
                 }
                 deal();
                 mPlayers.get(mCurrentPlayer).evaluate();
@@ -212,18 +212,14 @@ class Table {
                 int splitPlayerVal = mPlayers.get(mCurrentPlayer).canSplit();
                 if (splitPlayerVal == 11) {
                     splitAces();
-                }
-                else if (splitPlayerVal != 0 && (splitPlayerVal != 5 && splitPlayerVal != 10)) {
+                } else if (splitPlayerVal != 0 && (splitPlayerVal != 5 && splitPlayerVal != 10)) {
                     action(Strategies.getAction(splitPlayerVal, mDealer.upCard(), mStratSplit));
-                }
-                else if (mPlayers.get(mCurrentPlayer).mIsSoft) {
+                } else if (mPlayers.get(mCurrentPlayer).mIsSoft) {
                     action(Strategies.getAction(mPlayers.get(mCurrentPlayer).mValue, mDealer.upCard(), mStratSoft));
-                }
-                else {
+                } else {
                     action(Strategies.getAction(mPlayers.get(mCurrentPlayer).mValue, mDealer.upCard(), mStratHard));
                 }
-            }
-            else {
+            } else {
                 stand();
             }
         }
@@ -233,17 +229,13 @@ class Table {
     void action(String action) {
         if (action == "H") {
             hit();
-        }
-        else if (action == "S") {
+        } else if (action == "S") {
             stand();
-        }
-        else if (action == "D") {
+        } else if (action == "D") {
             doubleBet();
-        }
-        else if (action == "P") {
+        } else if (action == "P") {
             split();
-        }
-        else {
+        } else {
             System.out.println("No action found");
             System.exit(1);
         }
@@ -251,8 +243,8 @@ class Table {
 
     void dealerPlay() {
         boolean allBusted = true;
-        for(Player player : mPlayers){
-            if(player.mValue < 22) {
+        for (Player player : mPlayers) {
+            if (player.mValue < 22) {
                 allBusted = false;
                 break;
             }
@@ -260,21 +252,20 @@ class Table {
         mDealer.mHand.get(1).mFaceDown = false;
         mRunningCount += mDealer.mHand.get(1).mCount;
         mDealer.evaluate();
-        if(mVerbose > 0) {
+        if (mVerbose > 0) {
             System.out.println("Dealer's turn");
             print();
         }
-        if(allBusted) {
-            if(mVerbose > 0) {
+        if (allBusted) {
+            if (mVerbose > 0) {
                 System.out.println("Dealer automatically wins cause all players busted");
             }
             finishRound();
-        } 
-        else {
-            while(mDealer.mValue < 17 && mDealer.mHand.size() < 5) {
+        } else {
+            while (mDealer.mValue < 17 && mDealer.mHand.size() < 5) {
                 dealDealer();
                 mDealer.evaluate();
-                if(mVerbose > 0) {
+                if (mVerbose > 0) {
                     System.out.println("Dealer hits");
                     print();
                 }
@@ -284,27 +275,27 @@ class Table {
     }
 
     void nextPlayer() {
-        if(++mCurrentPlayer < mPlayers.size()){
+        if (++mCurrentPlayer < mPlayers.size()) {
             autoPlay();
         } else {
             dealerPlay();
         }
-        
+
     }
 
     void checkPlayerNatural() {
         for (Player player : mPlayers) {
-            if(player.mValue == 21 && player.mHand.size() == 2 && player.mSplitFrom == null){
+            if (player.mValue == 21 && player.mHand.size() == 2 && player.mSplitFrom == null) {
                 player.mHasNatural = true;
             }
         }
     }
 
     boolean checkDealerNatural() {
-        if(mDealer.evaluate() == 21) {
+        if (mDealer.evaluate() == 21) {
             mDealer.mHand.get(1).mFaceDown = false;
             mRunningCount += mDealer.mHand.get(1).mCount;
-            if(mVerbose > 0) {
+            if (mVerbose > 0) {
                 print();
                 System.out.println("Dealer has a natural 21");
             }
@@ -315,10 +306,10 @@ class Table {
 
     public void checkEarnings() {
         float check = 0;
-        for(Player player : mPlayers) {
+        for (Player player : mPlayers) {
             check += player.mEarnings;
         }
-        if(check * -1 != mCasinoEarnings) {
+        if (check * -1 != mCasinoEarnings) {
             System.out.println("Earnings don't match");
             System.exit(1);
         }
@@ -332,36 +323,36 @@ class Table {
             if (player.mHasNatural) {
                 player.win(1.5f);
                 if (mVerbose > 0) {
-                    System.out.println("Player " + player.mPlayerNum + " Wins " + (1.5 * player.mBetMult * player.mInitialBet) + " with a natural 21");
+                    System.out.println("Player " + player.mPlayerNum + " Wins "
+                            + (1.5 * player.mBetMult * player.mInitialBet) + " with a natural 21");
                 }
-            }
-            else if (player.mValue > 21) {
+            } else if (player.mValue > 21) {
                 player.lose();
                 if (mVerbose > 0) {
-                    System.out.println("Player " + player.mPlayerNum + " Busts and Loses " + (player.mBetMult * player.mInitialBet));
+                    System.out.println("Player " + player.mPlayerNum + " Busts and Loses "
+                            + (player.mBetMult * player.mInitialBet));
                 }
 
-            }
-            else if (mDealer.mValue > 21 || player.mValue > mDealer.mValue) {
+            } else if (mDealer.mValue > 21 || player.mValue > mDealer.mValue) {
                 player.win();
                 if (mVerbose > 0) {
-                    System.out.println("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
+                    System.out
+                            .println("Player " + player.mPlayerNum + " Wins " + (player.mBetMult * player.mInitialBet));
                 }
-            }
-            else if (player.mValue == mDealer.mValue) {
+            } else if (player.mValue == mDealer.mValue) {
                 if (mVerbose > 0) {
                     System.out.println("Player " + player.mPlayerNum + " Draws");
                 }
-            }
-            else {
+            } else {
                 player.lose();
                 if (mVerbose > 0) {
-                    System.out.println("Player " + player.mPlayerNum + " Loses " + (player.mBetMult * player.mInitialBet));
+                    System.out.println(
+                            "Player " + player.mPlayerNum + " Loses " + (player.mBetMult * player.mInitialBet));
                 }
             }
         }
         if (mVerbose > 0) {
-            for(Player player : mPlayers) {
+            for (Player player : mPlayers) {
                 if (player.mSplitFrom == null) {
                     System.out.println("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
                 }
@@ -371,9 +362,9 @@ class Table {
     }
 
     void print() {
-        for(Player player : mPlayers) {
+        for (Player player : mPlayers) {
             System.out.println(player.print());
         }
-        System.out.println(mDealer.print()+"\n");
+        System.out.println(mDealer.print() + "\n");
     }
 }

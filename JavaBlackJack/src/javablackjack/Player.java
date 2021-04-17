@@ -7,36 +7,37 @@ class Player {
     static int playerNumCount = 0;
     int maxsplits = 10;
 
-     String mPlayerNum;
-     List<Card> mHand = new ArrayList<>();
-     int mValue = 0;
-     float mEarnings = 0;
-     int mAces = 0;
-     boolean mIsSoft = false;
-     int mSplitCount = 0;
-     boolean mIsDone = false;
-     Player mSplitFrom = null;
-     float mBetMult = 1;
-     boolean mHasNatural = false;
-     Table mTable;
-     int mInitialBet;
+    String mPlayerNum;
+    List<Card> mHand = new ArrayList<>();
+    int mValue = 0;
+    float mEarnings = 0;
+    int mAces = 0;
+    boolean mIsSoft = false;
+    int mSplitCount = 0;
+    boolean mIsDone = false;
+    Player mSplitFrom = null;
+    float mBetMult = 1;
+    boolean mHasNatural = false;
+    Table mTable;
+    int mInitialBet;
 
-     Player() {
-         this(null);
-     }
-
-     Player(Table table) {
-        this(table,null);
+    Player() {
+        this(null);
     }
 
-     Player(Table table, Player split) {
+    Player(Table table) {
+        this(table, null);
+    }
+
+    Player(Table table, Player split) {
         mTable = table;
-        if(table != null) {
+        if (table != null) {
             mInitialBet = mTable.mBetSize;
-            if(split != null) {
+            if (split != null) {
                 mHand.add(split.mHand.get(1));
                 mSplitCount++;
                 mPlayerNum = split.mPlayerNum + "S";
+                mInitialBet = split.mInitialBet;
                 mSplitFrom = split;
             } else {
                 playerNumCount++;
@@ -50,7 +51,7 @@ class Player {
     }
 
     void resetHand() {
-        mHand.clear();;
+        mHand.clear();
         mValue = 0;
         mAces = 0;
         mIsSoft = false;
@@ -62,7 +63,7 @@ class Player {
     }
 
     int canSplit() {
-        if(mHand.size() == 2 && mHand.get(0).mRank == mHand.get(1).mRank && mSplitCount < maxsplits) {
+        if (mHand.size() == 2 && mHand.get(0).mRank == mHand.get(1).mRank && mSplitCount < maxsplits) {
             return mHand.get(0).mValue;
         } else {
             return 0;
@@ -74,26 +75,20 @@ class Player {
     }
 
     void win(float mult) {
-        if (mSplitFrom != null) {
-            mSplitFrom.win(mult);
-        } else {
-            mEarnings += (mInitialBet * mBetMult * mult);
-            mTable.mCasinoEarnings -= (mInitialBet * mBetMult * mult);
-        }
+        float x = mInitialBet * mBetMult * mult;
+        mEarnings += x;
+        mTable.mCasinoEarnings -= x;
     }
 
     void lose() {
-        if (mSplitFrom != null) {
-                mSplitFrom.lose();
-            } else {
-                mEarnings -= (mInitialBet * mBetMult);
-                mTable.mCasinoEarnings += (mInitialBet * mBetMult);
-            }
+        float x = mInitialBet * mBetMult;
+        mEarnings -= x;
+        mTable.mCasinoEarnings += x;
     }
 
     String print() {
         String output = "Player " + mPlayerNum + ": ";
-        for(Card i : mHand) {
+        for (Card i : mHand) {
             output += i.print() + " ";
         }
         for (int i = mHand.size(); i < 5; i++) {
@@ -114,25 +109,25 @@ class Player {
     int evaluate() {
         mAces = 0;
         mValue = 0;
-        for(Card card : mHand){
+        for (Card card : mHand) {
             mValue += card.mValue;
             // check for ace
-            if(card.mIsAce) {
+            if (card.mIsAce) {
                 mAces++;
                 mIsSoft = true;
             }
         }
 
-        while(mValue > 21 && mAces > 0) {
+        while (mValue > 21 && mAces > 0) {
             mValue -= 10;
             mAces--;
         }
 
-        if(mAces == 0) {
+        if (mAces == 0) {
             mIsSoft = false;
         }
 
         return mValue;
     }
-    
+
 }

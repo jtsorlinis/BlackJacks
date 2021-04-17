@@ -7,7 +7,7 @@ class Dealer extends Player {
         mPlayerNum = "D";
         mValue = 0;
     }
-    
+
     @Override
     void resetHand() {
         mHand.clear();

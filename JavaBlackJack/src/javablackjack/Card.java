@@ -13,13 +13,13 @@ class Card {
         mSuit = suit;
         mValue = evaluate();
         mCount = count();
-        if(mRank == "A") {
+        if (mRank == "A") {
             mIsAce = true;
         }
     }
 
     public String print() {
-        if(mFaceDown) {
+        if (mFaceDown) {
             return "X";
         } else {
             return mRank;
@@ -27,7 +27,7 @@ class Card {
     }
 
     int evaluate() {
-        if(mRank == "J" || mRank == "Q" || mRank == "K") {
+        if (mRank == "J" || mRank == "Q" || mRank == "K") {
             return 10;
         } else if (mRank == "A") {
             return 11;
@@ -39,11 +39,9 @@ class Card {
     int count() {
         if (mRank == "10" || mRank == "J" || mRank == "Q" || mRank == "K" || mRank == "A") {
             return -1;
-        }
-        else if (mRank == "7" || mRank == "8" || mRank == "9") {
+        } else if (mRank == "7" || mRank == "8" || mRank == "9") {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
