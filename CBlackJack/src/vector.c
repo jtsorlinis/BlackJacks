@@ -50,9 +50,8 @@ void Vector__insert(Vector* self, void* element, int index) {
   }
 
   // Shift all elements right after insertion point
-  for (int i = self->size; i > index; i--) {
-    self->items[i] = self->items[i - 1];
-  }
+  memmove(&self->items[index + 1], &self->items[index],
+          (self->size - index) * sizeof(void*));
 
   // Increase the size
   self->size++;
