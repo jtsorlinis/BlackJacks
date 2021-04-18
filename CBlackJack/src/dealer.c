@@ -1,26 +1,27 @@
+#include "dealer.h"
+
 #include <stdio.h>
 
-#include "dealer.h"
-#include "vector.h"
 #include "card.h"
+#include "vector.h"
 
 Dealer* Dealer__new() {
-    Dealer* d = malloc(sizeof(Dealer));
-    d->m_hand = Vector__new(5);
-    d->m_player_num = "D";
-    d->m_value = 0;
-    d->m_aces = 0;
-    d->m_is_soft = 0;
-    return d;
+  Dealer* d = malloc(sizeof(Dealer));
+  d->m_hand = Vector__new(5);
+  d->m_player_num = "D";
+  d->m_value = 0;
+  d->m_aces = 0;
+  d->m_is_soft = 0;
+  return d;
 }
 
 void Dealer__reset_hand(Dealer* self) {
-    Vector__clear(self->m_hand);
-    self->m_value = 0;
+  Vector__clear(self->m_hand);
+  self->m_value = 0;
 }
 
 int Dealer__up_card(Dealer* self) {
-    return ((Card*)self->m_hand->items[0])->m_value;
+  return ((Card*)self->m_hand->items[0])->m_value;
 }
 
 void Dealer__evaluate(Dealer* self) {

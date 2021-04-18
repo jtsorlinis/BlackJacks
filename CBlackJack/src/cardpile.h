@@ -3,8 +3,8 @@
 typedef struct Vector Vector;
 
 typedef struct CardPile {
-    Vector* m_cards;
-    Vector* m_original_cards;
+  Vector* m_cards;
+  Vector* m_original_cards;
 } CardPile;
 
 CardPile* CardPile__new(int numdecks);

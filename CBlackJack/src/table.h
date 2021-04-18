@@ -6,24 +6,25 @@ typedef struct Player Player;
 typedef struct Vector Vector;
 
 typedef struct Table {
-    Dealer* m_dealer;
-    int m_min_cards;
-    int m_num_decks;
-    int m_verbose;
-    int m_bet_size;
-    CardPile* m_card_pile;
-    Vector* m_players;
-    int m_current_player;
-    int m_running_count;
-    int m_true_count;
-    float m_casino_earnings;
+  Dealer* m_dealer;
+  int m_min_cards;
+  int m_num_decks;
+  int m_verbose;
+  int m_bet_size;
+  CardPile* m_card_pile;
+  Vector* m_players;
+  int m_current_player;
+  int m_running_count;
+  int m_true_count;
+  float m_casino_earnings;
 
-    char* m_strat_hard;
-    char* m_strat_soft;
-    char* m_strat_split;
+  char* m_strat_hard;
+  char* m_strat_soft;
+  char* m_strat_split;
 } Table;
 
-Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards, int verbose);
+Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards,
+                  int verbose);
 void Table__deal_round(Table* self);
 void Table__evaluate_all(Table* self);
 void Table__deal(Table* self);

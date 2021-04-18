@@ -30,13 +30,11 @@ void Vector__pop(Vector* self) { --self->size; }
 
 void* Vector__last(Vector* self) { return self->items[self->size - 1]; }
 
-Vector* Vector__copy(Vector* self) {
-  Vector* new = malloc(sizeof(Vector));
-  new->items = malloc(self->capacity * sizeof(void*));
-  new->size = self->size;
-  new->capacity = self->capacity;
-  memcpy(new->items, self->items, self->size * sizeof(void*));
-  return new;
+void Vector__copy(Vector* self, Vector* target) {
+  target->items = realloc(target->items, self->capacity * sizeof(void*));
+  target->size = self->size;
+  target->capacity = self->capacity;
+  memcpy(target->items, self->items, self->size * sizeof(void*));
 }
 
 void Vector__delete(Vector* self, int index) {

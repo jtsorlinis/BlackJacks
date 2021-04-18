@@ -14,7 +14,7 @@ void Vector__resize(Vector* self, int capacity);
 void Vector__push(Vector* self, void* element);
 void Vector__pop(Vector* self);
 void* Vector__last(Vector* self);
-Vector* Vector__copy(Vector* self);
+void Vector__copy(Vector* self, Vector* target);
 void Vector__delete(Vector* self, int index);
 void Vector__insert(Vector* self, void* element, int index);
 void Vector__clear(Vector* self);

@@ -2,13 +2,12 @@
 
 typedef struct Vector Vector;
 
-typedef struct Dealer
-{
-    Vector* m_hand;
-    char* m_player_num;
-    int m_value;
-    int m_aces;
-    bool m_is_soft;
+typedef struct Dealer {
+  Vector* m_hand;
+  char* m_player_num;
+  int m_value;
+  int m_aces;
+  bool m_is_soft;
 } Dealer;
 
 Dealer* Dealer__new();

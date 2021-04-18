@@ -3,9 +3,9 @@
 #include <time.h>
 
 #include "cardpile.h"
+#include "player.h"
 #include "table.h"
 #include "vector.h"
-#include "player.h"
 
 const int num_players = 5;
 const int num_decks = 8;
@@ -24,9 +24,9 @@ int main(int argc, char const *argv[]) {
   clock_t start = clock();
 
   for (int x = 0; x < rounds; x++) {
-    if(verbose) printf("Round %d\n", x+1);
-    if(!verbose && rounds > 1000 && x % (rounds / 100) == 0) {
-      printf("\tProgress: %d%%\r", x*100/rounds);
+    if (verbose) printf("Round %d\n", x + 1);
+    if (!verbose && rounds > 1000 && x % (rounds / 100) == 0) {
+      printf("\tProgress: %d%%\r", x * 100 / rounds);
       fflush(stdout);
     }
 
@@ -36,15 +36,17 @@ int main(int argc, char const *argv[]) {
 
   Table__clear(t);
 
-  for(int i = 0; i < t->m_players->size; i++) {
-    printf("Player %s earnings: %f\t\tWin Percentage: %f%%\n", 
-      ((Player*) t->m_players->items[i])->m_player_num, 
-      ((Player*) t->m_players->items[i])->m_earnings, 
-      (50 + ((Player*) t->m_players->items[i])->m_earnings / (rounds * bet_size) * 50.0));
+  for (int i = 0; i < t->m_players->size; i++) {
+    printf("Player %s earnings: %f\t\tWin Percentage: %f%%\n",
+           ((Player *)t->m_players->items[i])->m_player_num,
+           ((Player *)t->m_players->items[i])->m_earnings,
+           (50 + ((Player *)t->m_players->items[i])->m_earnings /
+                     (rounds * bet_size) * 50.0));
   }
 
   printf("Casino earnings: %f\n\n", t->m_casino_earnings);
-  printf("Played %d rounds in %f seconds\n", rounds, (double)(clock() - start) / CLOCKS_PER_SEC);
+  printf("Played %d rounds in %f seconds\n", rounds,
+         (double)(clock() - start) / CLOCKS_PER_SEC);
 
   return 0;
 }

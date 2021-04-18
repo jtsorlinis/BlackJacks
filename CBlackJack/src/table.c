@@ -120,12 +120,12 @@ void Table__get_new_cards(Table* self) {
 
 void Table__clear(Table* self) {
   for (int i = self->m_players->size - 1; i >= 0; i--) {
-    Player__reset_hand(self->m_players->items[i]);
     if (((Player*)self->m_players->items[i])->m_split_from != NULL) {
       ((Player*)self->m_players->items[i - 1])->m_earnings +=
           ((Player*)self->m_players->items[i])->m_earnings;
-      Player__free(self->m_players->items[i]);
       Vector__delete(self->m_players, i);
+    } else {
+      Player__reset_hand(self->m_players->items[i]);
     }
   }
   Dealer__reset_hand(self->m_dealer);

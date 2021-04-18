@@ -44,21 +44,21 @@ uint32_t pcg32_range(uint32_t s) {
 CardPile* CardPile__new(int numdecks) {
   state = time(NULL);
   CardPile* cp = malloc(sizeof(CardPile));
+  cp->m_original_cards = Vector__new(52 * numdecks);
   cp->m_cards = Vector__new(52 * numdecks);
   for (int i = 0; i < numdecks; i++) {
     for (int suit = 0; suit < 4; suit++) {
       for (int rank = 0; rank < 13; rank++) {
-        Vector__push(cp->m_cards, Card__new(ranks[rank], suits[suit]));
+        Vector__push(cp->m_original_cards, Card__new(ranks[rank], suits[suit]));
       }
     }
   }
-  cp->m_original_cards = Vector__copy(cp->m_cards);
+  CardPile__refresh(cp);
   return cp;
 }
 
 void CardPile__refresh(CardPile* self) {
-  Vector__free(self->m_cards);
-  self->m_cards = Vector__copy(self->m_original_cards);
+  Vector__copy(self->m_original_cards, self->m_cards);
 }
 
 void CardPile__print(CardPile* self) {
