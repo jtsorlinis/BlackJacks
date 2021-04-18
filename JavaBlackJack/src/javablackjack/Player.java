@@ -8,7 +8,7 @@ class Player {
     int maxsplits = 10;
 
     String mPlayerNum;
-    List<Card> mHand = new ArrayList<>();
+    List<Card> mHand = new ArrayList<>(5);
     int mValue = 0;
     float mEarnings = 0;
     int mAces = 0;

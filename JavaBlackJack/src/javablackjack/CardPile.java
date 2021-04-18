@@ -20,7 +20,7 @@ class CardPile {
 
     // use nearly divisionless technique found here
     // https://github.com/lemire/FastShuffleExperiments
-    int pcg32_range(int s) {
+    int pcg32Range(int s) {
         int x = pcg32();
         long m = Integer.toUnsignedLong(x) * Integer.toUnsignedLong(s);
         int l = (int) m;
@@ -58,7 +58,7 @@ class CardPile {
 
     void shuffle() {
         for (int i = mCards.size() - 1; i > 0; i--) {
-            int j = pcg32_range(i + 1);
+            int j = pcg32Range(i + 1);
             Collections.swap(mCards, i, j);
         }
     }

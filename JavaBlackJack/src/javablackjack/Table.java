@@ -15,9 +15,9 @@ class Table {
     float mCasinoEarnings = 0;
     int mRunningCount = 0;
     int mTrueCount = 0;
-    String[] mStratHard = Strategies.array2dToMap(Strategies.stratHard);
-    String[] mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
-    String[] mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
+    char[] mStratHard = Strategies.array2dToMap(Strategies.stratHard);
+    char[] mStratSoft = Strategies.array2dToMap(Strategies.stratSoft);
+    char[] mStratSplit = Strategies.array2dToMap(Strategies.stratSplit);
 
     public Table(int numPlayers, int numDecks, int betsize, int minCards, int verbose) {
         mCardPile = new CardPile(numDecks);
@@ -226,14 +226,14 @@ class Table {
         nextPlayer();
     }
 
-    void action(String action) {
-        if (action == "H") {
+    void action(char action) {
+        if (action == 'H') {
             hit();
-        } else if (action == "S") {
+        } else if (action == 'S') {
             stand();
-        } else if (action == "D") {
+        } else if (action == 'D') {
             doubleBet();
-        } else if (action == "P") {
+        } else if (action == 'P') {
             split();
         } else {
             System.out.println("No action found");
