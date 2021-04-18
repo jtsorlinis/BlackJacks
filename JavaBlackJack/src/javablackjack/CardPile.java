@@ -7,13 +7,33 @@ import java.util.List;
 class CardPile {
     List<Card> mCards = new ArrayList<>();
     List<Card> mOriginalCards = new ArrayList<>();
-    int seed = (int) System.currentTimeMillis();
+    long state = System.currentTimeMillis();
 
-    int xorShift() {
-        seed ^= seed << 13;
-        seed ^= seed >> 17;
-        seed ^= seed << 5;
-        return Math.abs(seed);
+    // From https://www.pcg-random.org/download.html#minimal-c-implementation
+    int pcg32() {
+        long oldState = state;
+        state = oldState * 6364136223846793005L + 1;
+        int xorShifted = (int) (((oldState >>> 18) ^ oldState) >>> 27);
+        int rot = (int) (oldState >>> 59);
+        return Integer.rotateRight(xorShifted, rot);
+    }
+
+    // use nearly divisionless technique found here
+    // https://github.com/lemire/FastShuffleExperiments
+    int pcg32_range(int s) {
+        int x = pcg32();
+        long m = Integer.toUnsignedLong(x) * Integer.toUnsignedLong(s);
+        int l = (int) m;
+
+        if (Integer.compareUnsigned(l, s) < 0) {
+            int t = Integer.remainderUnsigned(-s, s);
+            while (Integer.compareUnsigned(l, t) < 0) {
+                x = pcg32();
+                m = Integer.toUnsignedLong(x) * Integer.toUnsignedLong(s);
+                l = (int) m;
+            }
+        }
+        return (int) (m >> 32);
     }
 
     CardPile(int numOfDecks) {
@@ -38,7 +58,7 @@ class CardPile {
 
     void shuffle() {
         for (int i = mCards.size() - 1; i > 0; i--) {
-            int j = xorShift() % (i + 1);
+            int j = pcg32_range(i + 1);
             Collections.swap(mCards, i, j);
         }
     }
