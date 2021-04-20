@@ -109,10 +109,10 @@ class Player {
     int evaluate() {
         mAces = 0;
         mValue = 0;
-        for (Card card : mHand) {
-            mValue += card.mValue;
+        for (int i = 0; i < mHand.size(); i++) {
+            mValue += mHand.get(i).mValue;
             // check for ace
-            if (card.mIsAce) {
+            if (mHand.get(i).mIsAce) {
                 mAces++;
                 mIsSoft = true;
             }

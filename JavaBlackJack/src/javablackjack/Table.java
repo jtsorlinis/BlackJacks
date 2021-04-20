@@ -32,7 +32,7 @@ class Table {
     }
 
     void dealRound() {
-        for (Player player : mPlayers) {
+        for (int i = 0; i < mPlayers.size(); i++) {
             deal();
             mCurrentPlayer++;
         }
@@ -40,8 +40,8 @@ class Table {
     }
 
     void evaluateAll() {
-        for (Player player : mPlayers) {
-            player.evaluate();
+        for (int i = 0; i < mPlayers.size(); i++) {
+            mPlayers.get(i).evaluate();
         }
     }
 
@@ -53,8 +53,8 @@ class Table {
     }
 
     void predeal() {
-        for (Player player : mPlayers) {
-            selectBet(player);
+        for (int i = 0; i < mPlayers.size(); i++) {
+            selectBet(mPlayers.get(i));
         }
     }
 
@@ -243,8 +243,8 @@ class Table {
 
     void dealerPlay() {
         boolean allBusted = true;
-        for (Player player : mPlayers) {
-            if (player.mValue < 22) {
+        for (int i = 0; i < mPlayers.size(); i++) {
+            if (mPlayers.get(i).mValue < 22) {
                 allBusted = false;
                 break;
             }
@@ -284,7 +284,8 @@ class Table {
     }
 
     void checkPlayerNatural() {
-        for (Player player : mPlayers) {
+        for (int i = 0; i < mPlayers.size(); i++) {
+            Player player = mPlayers.get(i);
             if (player.mValue == 21 && player.mHand.size() == 2 && player.mSplitFrom == null) {
                 player.mHasNatural = true;
             }
@@ -306,8 +307,8 @@ class Table {
 
     public void checkEarnings() {
         float check = 0;
-        for (Player player : mPlayers) {
-            check += player.mEarnings;
+        for (int i = 0; i < mPlayers.size(); i++) {
+            check += mPlayers.get(i).mEarnings;
         }
         if (check * -1 != mCasinoEarnings) {
             System.out.println("Earnings don't match");
@@ -319,7 +320,8 @@ class Table {
         if (mVerbose > 0) {
             System.out.println("Scoring round");
         }
-        for (Player player : mPlayers) {
+        for (int i = 0; i < mPlayers.size(); i++) {
+            Player player = mPlayers.get(i);
             if (player.mHasNatural) {
                 player.win(1.5f);
                 if (mVerbose > 0) {
