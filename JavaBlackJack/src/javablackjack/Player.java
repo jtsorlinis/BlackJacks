@@ -63,7 +63,8 @@ class Player {
     }
 
     int canSplit() {
-        if (mHand.size() == 2 && mHand.get(0).mRank == mHand.get(1).mRank && mSplitCount < maxsplits) {
+        if (mHand.size() == 2 && mHand.get(0).mRank.charAt(0) == mHand.get(1).mRank.charAt(0)
+                && mSplitCount < maxsplits) {
             return mHand.get(0).mValue;
         } else {
             return 0;
