@@ -26,7 +26,7 @@ class Player {
 
   explicit Player(Table* table = nullptr, Player* split = nullptr);
   void double_bet();
-  virtual void reset_hand();
+  void reset_hand();
   int can_split();
   void win(float mult = 1);
   void lose();

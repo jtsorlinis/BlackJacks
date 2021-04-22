@@ -6,6 +6,6 @@ class Dealer : public Player {
   bool m_hide_second_;
 
   Dealer();
-  void reset_hand() override;
+  void reset_hand();
   int up_card();
 };
