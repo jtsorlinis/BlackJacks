@@ -18,6 +18,7 @@ Table::Table(const int num_players, const int num_of_decks, const int bet_size,
   m_running_count_ = 0;
   m_true_count_ = 0;
 
+  m_players_.reserve(num_players * 3);
   for (auto i = 0; i < num_players; i++) {
     m_players_.emplace_back(this);
   }
