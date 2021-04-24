@@ -27,7 +27,7 @@ Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards,
   t->m_strat_soft = array_to_map(strat_soft, 10);
   t->m_strat_split = array_to_map(strat_split, 9);
 
-  t->m_players = Vector__new(num_players);
+  t->m_players = Vector__new(num_players * 3);
   for (int i = 0; i < num_players; i++) {
     Vector__push(t->m_players, Player__new(t, NULL));
   }
