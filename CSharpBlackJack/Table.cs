@@ -15,7 +15,7 @@ namespace CSharpBlackJack
     private readonly bool _verbose;
     public readonly int mBetSize;
     public readonly CardPile mCardPile;
-    public readonly List<Player> mPlayers = new();
+    public readonly List<Player> mPlayers;
     private int _currentPlayer;
     private int _runningCount;
     private int _trueCount;
@@ -28,7 +28,7 @@ namespace CSharpBlackJack
       mBetSize = betSize;
       _numOfDecks = numDecks;
       _minCards = minCards;
-
+      mPlayers = new(numPlayers * 3);
       for (var i = 0; i < numPlayers; i++) mPlayers.Add(new Player(this));
     }
 

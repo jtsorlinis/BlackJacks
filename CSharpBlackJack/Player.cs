@@ -7,7 +7,7 @@ namespace CSharpBlackJack
     private const int MaxSplits = 10;
     private static int _playerNumCount;
     private readonly Table _table;
-    public readonly List<Card> mHand = new();
+    public readonly List<Card> mHand;
     public readonly Player mSplitFrom;
     private int _aces;
     private int _splitCount;
@@ -23,6 +23,7 @@ namespace CSharpBlackJack
 
     public Player(Table table = null, Player split = null)
     {
+      mHand = new(5);
       _table = table;
       if (table == null) return;
       mInitialBet = _table.mBetSize;
