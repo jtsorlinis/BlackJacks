@@ -30,6 +30,7 @@ func NewPlayer(table *Table, split *Player) *Player {
 	p.MTable = table
 	p.MInitialBet = p.MTable.MBetSize
 	p.MBetMult = 1
+	p.MHand = make([]*Card, 0, 5)
 	if split != nil {
 		p.MHand = append(p.MHand, split.MHand[1])
 		p.MSplitCount++
