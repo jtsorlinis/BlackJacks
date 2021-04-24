@@ -6,7 +6,7 @@ import java.util.List;
 class Table {
     int mVerbose;
     int mBetSize;
-    List<Player> mPlayers = new ArrayList<Player>();
+    List<Player> mPlayers;
     int mNumOfDecks;
     public CardPile mCardPile;
     int mMinCards;
@@ -25,7 +25,7 @@ class Table {
         mBetSize = betsize;
         mNumOfDecks = numDecks;
         mMinCards = minCards;
-
+        mPlayers = new ArrayList<Player>(numPlayers * 3);
         for (int i = 0; i < numPlayers; i++) {
             mPlayers.add(new Player(this));
         }
