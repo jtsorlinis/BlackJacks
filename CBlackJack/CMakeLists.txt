@@ -5,7 +5,6 @@ include(CheckIPOSupported)
 project(CBlackJack)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_BUILD_TYPE Release)
 
 # add the executable
 file(GLOB SOURCES "src/*.c")
@@ -17,10 +16,4 @@ if(result)
   set_property(TARGET CBlackJack PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 else()
   message(WARNING "IPO is not supported: ${output}")
-endif()
-
-# IPO doesn't work on mac with gcc
-if ((${CMAKE_SYSTEM_NAME} MATCHES "Darwin") AND (CMAKE_C_COMPILER_ID STREQUAL "GNU"))
-  message("GCC on OSX detected. Adding LTO manually")
-  set(CMAKE_C_FLAGS "-flto")
 endif()
