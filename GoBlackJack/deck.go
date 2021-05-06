@@ -9,7 +9,7 @@ var ranks = []string{"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q"
 
 // Deck class
 type Deck struct {
-	MCards []Card
+	MCards []*Card
 }
 
 // NewDeck constructor

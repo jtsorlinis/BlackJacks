@@ -15,8 +15,8 @@ type Card struct {
 }
 
 //NewCard constructor
-func NewCard(rank string, suit string) Card {
-	var c Card
+func NewCard(rank string, suit string) *Card {
+	c := new(Card)
 	c.MRank = rank
 	c.mSuit = suit
 	c.MValue = c.evaluate()

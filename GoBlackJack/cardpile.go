@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-var state uint64 = uint64(time.Now().Unix())
+var state = uint64(time.Now().Unix())
 
 // From https://www.pcg-random.org/download.html#minimal-c-implementation
 func pcg32() uint32 {
@@ -34,7 +34,7 @@ func pcg32Range(s uint32) uint32 {
 // CardPile class
 type CardPile struct {
 	MCards         []*Card
-	mOriginalCards []Card
+	mOriginalCards []*Card
 }
 
 // NewCardPile constructor
@@ -70,7 +70,5 @@ func (c *CardPile) Shuffle() {
 // Refresh the cardpile
 func (c *CardPile) Refresh() {
 	c.MCards = c.MCards[:0]
-	for i := range c.mOriginalCards {
-		c.MCards = append(c.MCards, &c.mOriginalCards[i])
-	}
+	c.MCards = append(c.MCards, c.mOriginalCards...)
 }
