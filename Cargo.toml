@@ -8,8 +8,9 @@ edition = "2018"
 
 [dependencies]
 lazy_static = "1.4.0"
-rpmalloc = "0.2.0"
+rpmalloc = "0.2.2"
 
 [profile.release]
-lto = true
+lto = "fat"
 codegen-units=1
+panic = "abort"
