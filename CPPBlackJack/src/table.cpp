@@ -182,7 +182,7 @@ void Table::split_aces() {
 }
 
 void Table::double_bet() {
-  if (m_players_[m_current_player_].m_bet_mult_ == 1 &&
+  if (std::abs(m_players_[m_current_player_].m_bet_mult_ - 1) < 0.1 &&
       m_players_[m_current_player_].m_hand_.size() == 2) {
     m_players_[m_current_player_].double_bet();
     if (m_verbose_) {
@@ -320,7 +320,7 @@ void Table::check_earnings() {
   for (auto& player : m_players_) {
     check += player.m_earnings_;
   }
-  if (check * -1 != m_casino_earnings_) {
+  if (std::abs(check + m_casino_earnings_) > 0.1) {
     std::cout << "NO MATCH\t Casino earnings: " << m_casino_earnings_
               << "\t Player earnings: " << check << "\n";
     exit(1);
