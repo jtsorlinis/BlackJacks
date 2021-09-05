@@ -25,7 +25,7 @@ impl Deck {
                 vec.push(card);
             }
         }
-        return vec;
+        vec
     }
 
     // pub fn print(&self) -> String {

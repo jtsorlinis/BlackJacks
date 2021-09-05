@@ -21,33 +21,33 @@ impl Card {
 
     pub fn print(&self) -> &str {
         if self.m_facedown {
-            return "X";
+            "X"
         } else {
-            return self.m_rank;
+            self.m_rank
         }
     }
 
     fn isace(rank: &str) -> bool {
-        return rank == "A";
+        rank == "A"
     }
 
     fn evaluate(rank: &str) -> i32 {
         if rank == "J" || rank == "Q" || rank == "K" {
-            return 10;
+            10
         } else if rank == "A" {
-            return 11;
+            11
         } else {
-            return rank.parse::<i32>().unwrap();
+            rank.parse::<i32>().unwrap()
         }
     }
 
     fn count(rank: &str) -> i32 {
         if rank == "10" || rank == "J" || rank == "Q" || rank == "K" || rank == "A" {
-            return -1;
+            -1
         } else if rank == "7" || rank == "8" || rank == "9" {
-            return 0;
+            0
         } else {
-            return 1;
+            1
         }
     }
 }

@@ -50,12 +50,12 @@ lazy_static! {
     pub static ref MAP_SPLIT: Vec<char> = vec_to_map(&STRAT_SPLIT);
 }
 
-pub fn get_action(player_val: i32, dealer_val: i32, strategy: &Vec<char>) -> char {
+pub fn get_action(player_val: i32, dealer_val: i32, strategy: &[char]) -> char {
     let key = ((player_val + dealer_val) * (player_val + dealer_val + 1)) / 2 + dealer_val;
-    return strategy[key as usize];
+    strategy[key as usize]
 }
 
-pub fn vec_to_map(vec: &Vec<Vec<&'static str>>) -> Vec<char> {
+pub fn vec_to_map(vec: &[Vec<&'static str>]) -> Vec<char> {
     let mut temp = vec![' '; 1000];
     for row in 0..vec.len() {
         for col in 0..vec[0].len() {
@@ -65,5 +65,5 @@ pub fn vec_to_map(vec: &Vec<Vec<&'static str>>) -> Vec<char> {
             temp[key as usize] = vec[row][col].chars().next().unwrap();
         }
     }
-    return temp;
+    temp
 }

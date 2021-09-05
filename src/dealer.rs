@@ -22,9 +22,7 @@ impl Dealer {
     }
 
     pub fn up_card(&self) -> i32 {
-        unsafe {
-            return (*self.m_hand[0]).m_value;
-        }
+        unsafe { (*self.m_hand[0]).m_value }
     }
 
     pub fn reset_hand(&mut self) {
@@ -59,7 +57,7 @@ impl Dealer {
             } else {
                 output += "        ";
             }
-            return output;
+            output
         }
     }
 

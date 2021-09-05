@@ -59,9 +59,9 @@ impl Player {
                 && (*self.m_hand[0]).m_rank == (*self.m_hand[1]).m_rank
                 && self.m_splitcount < MAXSPLITS
             {
-                return (*self.m_hand[0]).m_value;
+                (*self.m_hand[0]).m_value
             } else {
-                return 0;
+                0
             }
         }
     }
@@ -69,13 +69,13 @@ impl Player {
     pub fn win(&mut self, mult: f32) -> f32 {
         let x = self.m_initialbet as f32 * self.m_betmult * mult;
         self.m_earnings += x;
-        return -x;
+        -x
     }
 
     pub fn lose(&mut self) -> f32 {
         let x = self.m_initialbet as f32 * self.m_betmult;
         self.m_earnings -= x;
-        return x;
+        x
     }
 
     pub fn print(&self) -> String {
@@ -99,7 +99,7 @@ impl Player {
             }
             output += "\tBet: ";
             output += &(self.m_initialbet as f32 * self.m_betmult).to_string();
-            return output;
+            output
         }
     }
 

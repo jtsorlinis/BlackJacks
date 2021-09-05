@@ -24,7 +24,7 @@ impl CardPile {
 
         cp.refresh();
 
-        return cp;
+        cp
     }
 
     // From https://www.pcg-random.org/download.html#minimal-c-implementation
@@ -33,7 +33,7 @@ impl CardPile {
         self.state = oldstate.wrapping_mul(6364136223846793005).wrapping_add(1);
         let xorshifted: u32 = (((oldstate >> 18) ^ oldstate) >> 27) as u32;
         let rot: u32 = (oldstate >> 59) as u32;
-        return xorshifted.rotate_right(rot);
+        xorshifted.rotate_right(rot)
     }
 
     // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
@@ -42,14 +42,14 @@ impl CardPile {
         let mut m = x as u64 * s as u64;
         let mut l = m as u32;
         if l < s {
-            let t = s.wrapping_neg() % s;
-            while l < t {
+            let thresh = s.wrapping_neg() % s;
+            while l < thresh {
                 x = self.pcg_32();
                 m = x as u64 * s as u64;
                 l = m as u32;
             }
         }
-        return (m >> 32) as u32;
+        (m >> 32) as u32
     }
 
     fn generate_cardpile(decks: i32) -> Vec<*mut Card> {
@@ -58,7 +58,7 @@ impl CardPile {
             let mut temp = Deck::new();
             vec.append(&mut temp.m_cards);
         }
-        return vec;
+        vec
     }
 
     // pub fn print(&self) -> String {

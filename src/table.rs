@@ -45,7 +45,7 @@ impl Table {
         for i in 0..numplayers {
             temp.push(Player::new(&(i + 1).to_string(), betsize, 0));
         }
-        return temp;
+        temp
     }
 
     fn deal_round(&mut self) {
@@ -231,7 +231,7 @@ impl Table {
     }
 
     fn double_bet(&mut self) {
-        if self.m_players[self.m_currentplayer].m_betmult == 1.0
+        if self.m_players[self.m_currentplayer].m_betmult < 1.1
             && self.m_players[self.m_currentplayer].m_hand.len() == 2
         {
             self.m_players[self.m_currentplayer].double_bet();
@@ -328,7 +328,6 @@ impl Table {
             if self.m_verbose {
                 println!("Dealer automatically wins cause all players busted");
             }
-            self.finish_round();
         } else {
             while self.m_dealer.m_value < 17 && self.m_dealer.m_hand.len() < 5 {
                 self.deal_dealer(false);
@@ -338,8 +337,8 @@ impl Table {
                     self.print();
                 }
             }
-            self.finish_round();
         }
+        self.finish_round();
     }
 
     fn next_player(&mut self) {
@@ -372,7 +371,7 @@ impl Table {
             }
             return true;
         }
-        return false;
+        false
     }
 
     pub fn check_earnings(&self) {
@@ -380,7 +379,7 @@ impl Table {
         for player in self.m_players.iter() {
             check += player.m_earnings;
         }
-        if check * -1.0 != self.m_casinoearnings {
+        if check + self.m_casinoearnings > 0.1 {
             println!(
                 "Earnings dont match! Player total: {}, Casino total: {}",
                 check, self.m_casinoearnings
