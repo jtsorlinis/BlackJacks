@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 )
 
@@ -194,7 +193,7 @@ func (t *Table) splitAces() {
 }
 
 func (t *Table) doubleBet() {
-	if math.Abs(float64(t.MPlayers[t.mCurrentPlayer].MBetMult)-1) < 0.1 && len(t.MPlayers[t.mCurrentPlayer].MHand) == 2 {
+	if t.MPlayers[t.mCurrentPlayer].MBetMult < 1.1 && len(t.MPlayers[t.mCurrentPlayer].MHand) == 2 {
 		t.MPlayers[t.mCurrentPlayer].DoubleBet()
 		if t.MVerbose {
 			println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " doubles")
@@ -321,7 +320,7 @@ func (t *Table) CheckEarnings() {
 	for _, player := range t.MPlayers {
 		check += player.MEarnings
 	}
-	if math.Abs(float64(check+t.MCasinoEarnings)) > 0.1 {
+	if check+t.MCasinoEarnings != 0 {
 		println("Earnings don't match")
 		os.Exit(1)
 	}
