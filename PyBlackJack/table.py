@@ -162,7 +162,7 @@ class Table:
 
     def double(self):
         if (
-                self.players[self.current_player].bet_mult == 1
+                self.players[self.current_player].bet_mult < 1.1
                 and len(self.players[self.current_player].hand) == 2
         ):
             self.players[self.current_player].double()
@@ -292,7 +292,7 @@ class Table:
         check = 0
         for player in self.players:
             check += player.earnings
-        if check * -1 != self.casino_earnings:
+        if check + self.casino_earnings != 0:
             print("NO MATCH")
             sys.exit()
 
