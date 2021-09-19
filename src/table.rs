@@ -231,7 +231,7 @@ impl Table {
     }
 
     fn double_bet(&mut self) {
-        if (self.m_players[self.m_currentplayer].m_betmult - 1.0).abs() < 0.1
+        if self.m_players[self.m_currentplayer].m_betmult < 1.1
             && self.m_players[self.m_currentplayer].m_hand.len() == 2
         {
             self.m_players[self.m_currentplayer].double_bet();
@@ -379,7 +379,7 @@ impl Table {
         for player in self.m_players.iter() {
             check += player.m_earnings;
         }
-        if (check + self.m_casinoearnings).abs() > 0.1 {
+        if check + self.m_casinoearnings != 0.0 {
             println!(
                 "Earnings dont match! Player total: {}, Casino total: {}",
                 check, self.m_casinoearnings
