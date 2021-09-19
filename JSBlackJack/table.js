@@ -170,7 +170,7 @@ module.exports = class Table {
   }
 
   doubleBet () {
-    if (this.mPlayers[this.mCurrentPlayer].mBetMult === 1 &&
+    if (this.mPlayers[this.mCurrentPlayer].mBetMult < 1.1 &&
       this.mPlayers[this.mCurrentPlayer].mHand.length === 2) {
       this.mPlayers[this.mCurrentPlayer].doubleBet()
       if (this.mVerbose) {
@@ -297,7 +297,7 @@ module.exports = class Table {
     for (let i = 0; i < this.mPlayers.length; i++) {
       check += this.mPlayers[i].mEarnings
     }
-    if (check * -1 !== this.mCasinoEarnings) {
+    if (check + this.mCasinoEarnings !== 0) {
       console.log('Earning\'s dont match')
       process.exit(1)
     }
