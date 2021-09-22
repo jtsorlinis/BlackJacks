@@ -11,7 +11,11 @@ pub struct CardPile {
 
 impl CardPile {
     pub fn new(decks: i32) -> CardPile {
-        let c = CardPile::generate_cardpile(decks);
+        let mut c: Vec<*mut Card> = vec![];
+        for _ in 0..decks {
+            let mut temp = Deck::new();
+            c.append(&mut temp.m_cards);
+        }
         let mut cp = CardPile {
             m_decks: decks,
             m_original_cards: c.clone(),
@@ -50,15 +54,6 @@ impl CardPile {
             }
         }
         (m >> 32) as u32
-    }
-
-    fn generate_cardpile(decks: i32) -> Vec<*mut Card> {
-        let mut vec: Vec<*mut Card> = Vec::new();
-        for _ in 0..decks {
-            let mut temp = Deck::new();
-            vec.append(&mut temp.m_cards);
-        }
-        vec
     }
 
     // pub fn print(&self) -> String {
