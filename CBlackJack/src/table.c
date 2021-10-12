@@ -190,8 +190,8 @@ void Table__split_aces(Table* self) {
 }
 
 void Table__double_bet(Table* self) {
-  if (((Player*)self->m_players->items[self->m_current_player])->m_bet_mult ==
-          1 &&
+  if (((Player*)self->m_players->items[self->m_current_player])->m_bet_mult <
+          1.1 &&
       ((Player*)self->m_players->items[self->m_current_player])->m_hand->size ==
           2) {
     Player__double_bet(self->m_players->items[self->m_current_player]);
@@ -339,9 +339,10 @@ void Table__check_earnings(Table* self) {
   for (int i = 0; i < self->m_players->size; i++) {
     check += ((Player*)self->m_players->items[i])->m_earnings;
   }
-  if (check * -1 == self->m_casino_earnings) return;
-  printf("Earnings don't match\n");
-  exit(1);
+  if (check + self->m_casino_earnings != 0) {
+    printf("Earnings don't match\n");
+    exit(1);
+  }
 }
 
 void Table__finish_round(Table* self) {
