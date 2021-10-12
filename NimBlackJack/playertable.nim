@@ -250,7 +250,7 @@ proc splitAces(self: Table) =
         self.print()
 
 proc doubleBet(self: Table) =
-    if self.mPlayers[self.mCurrentPlayer].mBetMult == 1 and self.mPlayers[
+    if self.mPlayers[self.mCurrentPlayer].mBetMult < 1.1 and self.mPlayers[
             self.mCurrentPlayer].mHand.len() == 2:
         self.mPlayers[self.mCurrentPlayer].doubleBet()
         if self.mVerbose:
@@ -366,10 +366,10 @@ proc checkEarnings*(self: Table) =
     var check = 0.0
     for player in self.mPlayers:
         check += player.mEarnings
-    if check * -1 == self.mCasinoEarnings:
-        return
-    echo "Earnings don't match"
-    quit(1)
+    if check + self.mCasinoEarnings != 0:
+        echo "Earnings don't match"
+        quit(1)
+    
 
 proc startRound*(self: Table) =
     self.clear()

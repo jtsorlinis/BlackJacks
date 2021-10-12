@@ -34,7 +34,7 @@ t.clear()
 for player in t.mPlayers:
     let winperc = 50 + player.mEarnings / float32(rounds * betSize) * 50
     echo "Player " & player.mPlayerNum & " earnings: " & $player.mEarnings &
-            "\t\tWin Percentage: " & $winperc & "%"
+            "\t\tWin Percentage: " & winperc.formatFloat(ffDecimal, 2) & "%"
 
 echo "Casino earnings: " & $t.mCasinoEarnings
 echo "Played " & $rounds & " rounds in " & $(cpuTime()-start) & " seconds"
