@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 lazy_static = "1.4.0"
-rpmalloc = "0.2.2"
+mimalloc = { version = "*", default-features = false }
 
 [profile.release]
 lto = "fat"

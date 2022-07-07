@@ -9,12 +9,13 @@ mod table;
 #[macro_use]
 extern crate lazy_static;
 
+use mimalloc::MiMalloc;
 use std::env;
 use std::time::Instant;
 use table::Table;
 
 #[global_allocator]
-static ALLOC: rpmalloc::RpMalloc = rpmalloc::RpMalloc;
+static GLOBAL: MiMalloc = MiMalloc;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

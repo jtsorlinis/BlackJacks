@@ -15,35 +15,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
-name = "libc"
-version = "0.2.99"
+name = "libmimalloc-sys"
+version = "0.1.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7f823d141fe0a24df1e23b4af4e3c7ba9e5966ec514ea068c93024aa7deb765"
-
-[[package]]
-name = "pkg-config"
-version = "0.3.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
-
-[[package]]
-name = "rpmalloc"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86179c13cdc0bcedbb60e63c1aebe3bac82162ddfa746320de6dcea31ebe2b06"
+checksum = "11ca136052550448f55df7898c6dbe651c6b574fe38a0d9ea687a9f8088a2e2c"
 dependencies = [
- "rpmalloc-sys",
+ "cc",
 ]
 
 [[package]]
-name = "rpmalloc-sys"
-version = "0.2.2+1.4.1"
+name = "mimalloc"
+version = "0.1.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "370e623bf2ca97dd497b7dd0e2889ec953a46c8c268489a818a5e305633e8609"
+checksum = "2f64ad83c969af2e732e907564deb0d0ed393cec4af80776f77dd77a1a427698"
 dependencies = [
- "cc",
- "libc",
- "pkg-config",
+ "libmimalloc-sys",
 ]
 
 [[package]]
@@ -51,5 +37,5 @@ name = "rust_black_jack"
 version = "0.1.0"
 dependencies = [
  "lazy_static",
- "rpmalloc",
+ "mimalloc",
 ]
