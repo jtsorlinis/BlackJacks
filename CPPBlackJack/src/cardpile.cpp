@@ -5,32 +5,28 @@
 uint64_t state =
     std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
-// From https://www.pcg-random.org/download.html#minimal-c-implementation
-uint32_t pcg32() {
-  uint64_t oldstate = state;
-  // Advance internal state
-  state = oldstate * 6364136223846793005ULL + 1;
-  // Calculate output function (XSH RR), uses old state for max ILP
-  uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
-  uint32_t rot = oldstate >> 59u;
-  return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+// From https://github.com/lemire/testingRNG
+uint64_t wyrand() {
+  state += UINT64_C(0xa0761d6478bd642f);
+  __uint128_t t = (__uint128_t)state * (state ^ UINT64_C(0xe7037ed1a0b428db));
+  return (t >> 64) ^ t;
 }
 
 // use nearly divisionless technique found here
 // https://github.com/lemire/FastShuffleExperiments
-uint32_t pcg32_range(uint32_t s) {
-  uint32_t x = pcg32();
-  uint64_t m = (uint64_t)x * (uint64_t)s;
-  uint32_t l = (uint32_t)m;
+uint64_t rand_range(uint64_t s) {
+  uint64_t x = wyrand();
+  __uint128_t m = (__uint128_t)x * (__uint128_t)s;
+  uint64_t l = (uint64_t)m;
   if (l < s) {
-    uint32_t t = -s % s;
+    uint64_t t = -s % s;
     while (l < t) {
-      x = pcg32();
-      m = (uint64_t)x * (uint64_t)s;
-      l = (uint32_t)m;
+      x = wyrand();
+      m = (__uint128_t)x * (__uint128_t)s;
+      l = (uint64_t)m;
     }
   }
-  return m >> 32;
+  return m >> 64;
 }
 
 CardPile::CardPile(const int num_of_decks) {
@@ -55,7 +51,7 @@ std::string CardPile::print() {
 void CardPile::shuffle() {
   // Fisher yates
   for (auto i = static_cast<int>(m_cards_.size()) - 1; i > 0; i--) {
-    const auto j = pcg32_range(i + 1);
+    const auto j = rand_range(i + 1);
     std::swap(m_cards_[i], m_cards_[j]);
   }
 }

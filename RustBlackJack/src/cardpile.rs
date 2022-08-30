@@ -31,29 +31,27 @@ impl CardPile {
         cp
     }
 
-    // From https://www.pcg-random.org/download.html#minimal-c-implementation
-    fn pcg_32(&mut self) -> u32 {
-        let oldstate: u64 = self.state;
-        self.state = oldstate.wrapping_mul(6364136223846793005).wrapping_add(1);
-        let xorshifted: u32 = (((oldstate >> 18) ^ oldstate) >> 27) as u32;
-        let rot: u32 = (oldstate >> 59) as u32;
-        xorshifted.rotate_right(rot)
+    // From https://github.com/lemire/testingRNG
+    fn wyrand(&mut self) -> u64 {
+        self.state = self.state.wrapping_add(0xa0761d6478bd642f);
+        let t: u128 = (self.state as u128).wrapping_mul((self.state ^ 0xe7037ed1a0b428db) as u128);
+        (t.wrapping_shr(64) ^ t) as u64
     }
 
     // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
-    fn pcg_32_range(&mut self, s: u32) -> u32 {
-        let mut x = self.pcg_32();
-        let mut m = x as u64 * s as u64;
-        let mut l = m as u32;
+    fn rand_range(&mut self, s: u64) -> u64 {
+        let mut x = self.wyrand();
+        let mut m = x as u128 * s as u128;
+        let mut l = m as u64;
         if l < s {
             let thresh = s.wrapping_neg() % s;
             while l < thresh {
-                x = self.pcg_32();
-                m = x as u64 * s as u64;
-                l = m as u32;
+                x = self.wyrand();
+                m = x as u128 * s as u128;
+                l = m as u64;
             }
         }
-        (m >> 32) as u32
+        (m >> 64) as u64
     }
 
     // pub fn print(&self) -> String {
@@ -67,7 +65,7 @@ impl CardPile {
 
     pub fn shuffle(&mut self) {
         for i in (1..self.m_cards.len()).rev() {
-            let j = self.pcg_32_range((i + 1) as u32) as usize;
+            let j = self.rand_range((i + 1) as u64) as usize;
             self.m_cards.swap(i, j);
         }
     }
