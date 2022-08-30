@@ -1,29 +1,28 @@
 package main
 
 import (
+	"math/bits"
 	"time"
 )
 
 var state = uint64(time.Now().Unix())
 
 // From https://www.pcg-random.org/download.html#minimal-c-implementation
-func pcg32() uint32 {
-	oldState := state
-	state = oldState*6364136223846793005 + 1
-	xorshifted := uint32(((oldState >> 18) ^ oldState) >> 27)
-	rot := uint32(oldState >> 59)
-	return (xorshifted >> rot) | (xorshifted << ((-rot) & 31))
+func yrand() uint32 {
+	state += 0xa0761d6478bd642f
+	hi, lo := bits.Mul64(state^0xe7037ed1a0b428db, state)
+	return uint32(hi ^ lo)
 }
 
 // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
-func pcg32Range(s uint32) uint32 {
-	x := pcg32()
+func rand_range(s uint32) uint32 {
+	x := yrand()
 	m := uint64(x) * uint64(s)
 	l := uint32(m)
 	if l < s {
 		t := -s % s
 		for l < t {
-			x = pcg32()
+			x = yrand()
 			m = uint64(x) * uint64(s)
 			l = uint32(m)
 		}
@@ -62,7 +61,7 @@ func (c *CardPile) Print() string {
 func (c *CardPile) Shuffle() {
 	var i = uint32(len(c.MCards) - 1)
 	for ; i > 0; i-- {
-		j := pcg32Range(i + 1)
+		j := rand_range(i + 1)
 		c.MCards[i], c.MCards[j] = c.MCards[j], c.MCards[i]
 	}
 }
