@@ -55,7 +55,7 @@ namespace CSharpBlackJack
 
     public static char GetAction(int playerVal, int dealerVal, char[] strategy)
     {
-      var key = (playerVal + dealerVal) * (playerVal + dealerVal + 1) / 2 + dealerVal;
+      var key = playerVal * 12 + dealerVal;
       return strategy[key];
     }
 
@@ -67,7 +67,7 @@ namespace CSharpBlackJack
         {
           var playerVal = int.Parse(array[row, 0]);
           var dealerVal = int.Parse(array[0, col]);
-          var key = (playerVal + dealerVal) * (playerVal + dealerVal + 1) / 2 + dealerVal;
+          var key = playerVal * 12 + dealerVal;
           temp[key] = array[row, col][0];
         }
 

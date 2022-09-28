@@ -51,7 +51,7 @@ lazy_static! {
 }
 
 pub fn get_action(player_val: i32, dealer_val: i32, strategy: &[char]) -> char {
-    let key = ((player_val + dealer_val) * (player_val + dealer_val + 1)) / 2 + dealer_val;
+    let key = player_val * 12 + dealer_val;
     strategy[key as usize]
 }
 
@@ -61,7 +61,7 @@ pub fn vec_to_map(vec: &[Vec<&'static str>]) -> Vec<char> {
         for col in 0..vec[0].len() {
             let player_val = vec[row][0].parse::<i32>().unwrap();
             let dealer_val = vec[0][col].parse::<i32>().unwrap();
-            let key = ((player_val + dealer_val) * (player_val + dealer_val + 1)) / 2 + dealer_val;
+            let key = player_val * 12 + dealer_val;
             temp[key as usize] = vec[row][col].chars().next().unwrap();
         }
     }

@@ -47,8 +47,7 @@ const char* strat_split[][11] = {
     {"11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"}};
 
 const char get_action(int player_val, int dealer_val, char* strategy) {
-  int key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
-            dealer_val;
+  int key = player_val * 12 + dealer_val;
   return strategy[key];
 }
 
@@ -58,8 +57,7 @@ char* array_to_map(const char* array[][11], int rows) {
     for (int col = 0; col < 11; col++) {
       int player_val = atoi(array[row][0]);
       int dealer_val = atoi(array[0][col]);
-      int key = (player_val + dealer_val) * (player_val + dealer_val + 1) / 2 +
-                dealer_val;
+      int key = player_val * 12 + dealer_val;
       temp[key] = array[row][col][0];
     }
   }

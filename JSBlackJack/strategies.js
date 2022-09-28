@@ -50,8 +50,7 @@ const stratSplit = [
 function getAction (playerval, dealerval, strategy) {
   const playerVal = parseInt(playerval, 10)
   const dealerVal = parseInt(dealerval, 10)
-  const key = ((playerVal + dealerVal) *
-    (playerVal + dealerVal + 1)) / 2 + dealerVal
+  const key = playerVal * 12 + dealerVal
   return strategy[key]
 }
 
@@ -61,8 +60,7 @@ function array2dToMap (array) {
     for (let col = 0; col < array[0].length; col++) {
       const playerVal = parseInt(array[row][0], 10)
       const dealerVal = parseInt(array[0][col], 10)
-      const key = ((playerVal + dealerVal) *
-        (playerVal + dealerVal + 1)) / 2 + dealerVal
+      const key = playerVal * 12 + dealerVal
       temp[key] = array[row][col]
     }
   }

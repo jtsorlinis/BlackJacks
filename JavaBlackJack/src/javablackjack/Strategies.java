@@ -45,7 +45,7 @@ class Strategies {
             { "11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P" } };
 
     static char getAction(int playerVal, int dealerVal, char[] strategy) {
-        int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
+        int key = playerVal * 12 + dealerVal;
         return strategy[key];
     }
 
@@ -55,7 +55,7 @@ class Strategies {
             for (int col = 0; col < array[0].length; col++) {
                 int playerVal = Integer.parseInt(array[row][0]);
                 int dealerVal = Integer.parseInt(array[0][col]);
-                int key = ((playerVal + dealerVal) * (playerVal + dealerVal + 1)) / 2 + dealerVal;
+                int key = playerVal * 12 + dealerVal;
                 temp[key] = array[row][col].charAt(0);
             }
         }

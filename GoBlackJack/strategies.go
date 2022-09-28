@@ -2,7 +2,7 @@ package main
 
 import "strconv"
 
-//StratHard is the hard hand strategy
+// StratHard is the hard hand strategy
 var stratHard = [][]string{
 	{"0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"},
 	{"2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"},
@@ -53,7 +53,7 @@ var stratSplit = [][]string{
 }
 
 func getAction(playerVal int32, dealerVal int32, strategy *[]byte) byte {
-	var key = ((playerVal+dealerVal)*(playerVal+dealerVal+1))/2 + dealerVal
+	var key = playerVal*12 + dealerVal
 	return (*strategy)[key]
 }
 
@@ -63,7 +63,7 @@ func array2dToMap(array [][]string) []byte {
 		for col := 0; col < len(array[0]); col++ {
 			playerVal, _ := strconv.Atoi(array[row][0])
 			dealerVal, _ := strconv.Atoi(array[0][col])
-			key := ((playerVal+dealerVal)*(playerVal+dealerVal+1))/2 + dealerVal
+			key := playerVal*12 + dealerVal
 			temp[int32(key)] = array[row][col][0]
 		}
 	}
