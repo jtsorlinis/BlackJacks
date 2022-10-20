@@ -7,8 +7,8 @@ import (
 
 var state = uint64(time.Now().Unix())
 
-// From https://www.pcg-random.org/download.html#minimal-c-implementation
-func yrand() uint32 {
+// From https://github.com/lemire/testingRNG
+func wyrand() uint32 {
 	state += 0xa0761d6478bd642f
 	hi, lo := bits.Mul64(state^0xe7037ed1a0b428db, state)
 	return uint32(hi ^ lo)
@@ -16,13 +16,13 @@ func yrand() uint32 {
 
 // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
 func rand_range(s uint32) uint32 {
-	x := yrand()
+	x := wyrand()
 	m := uint64(x) * uint64(s)
 	l := uint32(m)
 	if l < s {
 		t := -s % s
 		for l < t {
-			x = yrand()
+			x = wyrand()
 			m = uint64(x) * uint64(s)
 			l = uint32(m)
 		}
