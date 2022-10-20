@@ -7,35 +7,31 @@ namespace CSharpBlackJack
   {
     private readonly List<Card> _originalCards;
 
-    private UInt64 state = (UInt64)DateTime.Now.Ticks;
+    private ulong state = (UInt64)DateTime.Now.Ticks;
 
-    // From https://www.pcg-random.org/download.html#minimal-c-implementation
-    private uint Pcg32()
+    // From https://github.com/lemire/testingRNG
+    private ulong wyRand()
     {
-      UInt64 oldState = state;
-      state = oldState * 6364136223846793005U + 1;
-      UInt32 xorshifted = (UInt32)(((oldState >> 18) ^ oldState) >> 27);
-      UInt32 rot = (UInt32)(oldState >> 59);
-      return (xorshifted >> (int)rot) | (xorshifted << (((int)-rot) & 31));
+      state += 0xa0761d6478bd642f;
+      var hi = Math.BigMul(state ^ 0xe7037ed1a0b428db, state, out ulong lo);
+      return hi ^ lo;
     }
 
     // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
-    private UInt32 Pcg32Range(UInt32 s)
+    private ulong randRange(ulong s)
     {
-      UInt32 x = Pcg32();
-      UInt64 m = (UInt64)x * (UInt64)s;
-      UInt32 l = (UInt32)m;
-      if (l < s)
+      var x = wyRand();
+      var mHi = Math.BigMul(x, s, out ulong mLo);
+      if (mLo < s)
       {
-        UInt32 t = (UInt32)((UInt32)(-s) % s);
-        while (l < t)
+        var t = (ulong.MaxValue - s + 1) % s;
+        while (mLo < t)
         {
-          x = Pcg32();
-          m = (UInt64)x * (UInt64)s;
-          l = (UInt32)m;
+          x = wyRand();
+          mHi = Math.BigMul(x, s, out mLo);
         }
       }
-      return (UInt32)(m >> 32);
+      return mHi;
     }
 
     public List<Card> mCards = new();
@@ -71,7 +67,7 @@ namespace CSharpBlackJack
       // Fisher Yates
       for (var i = mCards.Count - 1; i > 0; i--)
       {
-        var j = (int)Pcg32Range((UInt32)(i + 1));
+        int j = (int)randRange((ulong)i + 1);
         (mCards[i], mCards[j]) = (mCards[j], mCards[i]);
       }
     }

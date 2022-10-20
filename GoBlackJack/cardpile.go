@@ -11,20 +11,18 @@ var state = uint64(time.Now().Unix())
 func wyrand() uint64 {
 	state += 0xa0761d6478bd642f
 	hi, lo := bits.Mul64(state^0xe7037ed1a0b428db, state)
-	return uint64(hi ^ lo)
+	return hi ^ lo
 }
 
 // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
 func rand_range(s uint64) uint64 {
 	x := wyrand()
 	mhi, mlo := bits.Mul64(x, s)
-	l := mlo
-	if l < s {
+	if mlo < s {
 		t := -s % s
-		for l < t {
+		for mlo < t {
 			x = wyrand()
 			mhi, mlo = bits.Mul64(x, s)
-			l = mlo
 		}
 	}
 	return mhi
