@@ -49,8 +49,7 @@ namespace CSharpBlackJack
 
     public void Refresh()
     {
-      mCards.Clear();
-      mCards.AddRange(_originalCards);
+      mCards = _originalCards.GetRange(0, _originalCards.Count);
     }
 
     public string Print()
@@ -62,8 +61,6 @@ namespace CSharpBlackJack
 
     public void Shuffle()
     {
-      //mCards = mCards.OrderBy(item => rnd.Next()).ToList();
-
       // Fisher Yates
       for (var i = mCards.Count - 1; i > 0; i--)
       {
