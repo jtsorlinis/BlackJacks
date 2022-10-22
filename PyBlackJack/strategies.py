@@ -62,7 +62,7 @@ def get_action(playerval, dealerval, strategy):
 
 
 def array_to_dict(array):
-    temp = [0]*1000
+    temp = [0]*300
     for row, _ in enumerate(array):
         playerval = int(array[row][0])
         for col, _ in enumerate(array[0]):

@@ -51,7 +51,7 @@ proc getAction*(playerVal: int32, dealerVal: int32, strategy: seq[char]): char =
     return strategy[key]
 
 proc seqToMap*(arr: seq[seq[string]]): seq[char] =
-    var temp = newSeq[char](1000)
+    var temp = newSeq[char](300)
     for row in 0..<arr.len():
         for col in 0..<arr[0].len():
             var playerVal = parseInt(arr[row][0])

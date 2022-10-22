@@ -55,7 +55,7 @@ inline char const get_action(int const player_val, int dealer_val,
 }
 
 inline std::vector<char> vec_to_map(std::vector<std::vector<std::string>> vec) {
-  std::vector<char> temp(1000);
+  std::vector<char> temp(300);
   for (auto row = 0; row < static_cast<int>(vec.size()); row++) {
     for (auto col = 0; col < static_cast<int>(vec[0].size()); col++) {
       const auto player_val = std::stoi(vec[row][0]);

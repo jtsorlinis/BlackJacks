@@ -50,7 +50,7 @@ class Strategies {
     }
 
     static char[] array2dToMap(String[][] array) {
-        char[] temp = new char[1000];
+        char[] temp = new char[300];
         for (int row = 0; row < array.length; row++) {
             for (int col = 0; col < array[0].length; col++) {
                 int playerVal = Integer.parseInt(array[row][0]);

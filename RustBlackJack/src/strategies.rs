@@ -56,7 +56,7 @@ pub fn get_action(player_val: i32, dealer_val: i32, strategy: &[char]) -> char {
 }
 
 pub fn vec_to_map(vec: &[Vec<&'static str>]) -> Vec<char> {
-    let mut temp = vec![' '; 1000];
+    let mut temp = vec![' '; 300];
     for row in 0..vec.len() {
         for col in 0..vec[0].len() {
             let player_val = vec[row][0].parse::<i32>().unwrap();

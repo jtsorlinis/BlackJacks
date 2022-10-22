@@ -61,7 +61,7 @@ namespace CSharpBlackJack
 
     public static char[] Array2dToMap(string[,] array)
     {
-      var temp = new char[1000];
+      var temp = new char[300];
       for (var row = 0; row < array.GetLength(0); row++)
         for (var col = 0; col < array.GetLength(1); col++)
         {

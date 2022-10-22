@@ -58,7 +58,7 @@ func getAction(playerVal int32, dealerVal int32, strategy *[]byte) byte {
 }
 
 func array2dToMap(array [][]string) []byte {
-	temp := make([]byte, 1000)
+	temp := make([]byte, 300)
 	for row := 0; row < len(array); row++ {
 		for col := 0; col < len(array[0]); col++ {
 			playerVal, _ := strconv.Atoi(array[row][0])

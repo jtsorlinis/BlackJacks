@@ -52,7 +52,7 @@ const char get_action(int player_val, int dealer_val, char* strategy) {
 }
 
 char* array_to_map(const char* array[][11], int rows) {
-  char* temp = malloc(sizeof(char) * 1000);
+  char* temp = malloc(sizeof(char) * 300);
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < 11; col++) {
       int player_val = atoi(array[row][0]);
