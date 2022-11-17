@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <PublishAot>true</PublishAot>
+    <TieredPGO>true</TieredPGO>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
