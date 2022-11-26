@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System;
 
 namespace CSharpBlackJack
@@ -62,10 +63,11 @@ namespace CSharpBlackJack
     public void Shuffle()
     {
       // Fisher Yates
+      Span<Card> cardsSpan = CollectionsMarshal.AsSpan(mCards);
       for (var i = mCards.Count - 1; i > 0; i--)
       {
         int j = (int)randRange((ulong)i + 1);
-        (mCards[i], mCards[j]) = (mCards[j], mCards[i]);
+        (cardsSpan[i], cardsSpan[j]) = (cardsSpan[j], cardsSpan[i]);
       }
     }
   }
