@@ -108,7 +108,7 @@ impl Table {
     }
 
     fn select_bet(&mut self) {
-        if self.m_truecount as i32 >= 2 {
+        if self.m_truecount >= 2 {
             self.m_players[self.m_currentplayer].m_initialbet =
                 self.m_betsize * (self.m_truecount - 1);
         }
