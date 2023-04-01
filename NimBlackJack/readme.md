@@ -1,4 +1,5 @@
-To run, fastest speed:
+To run
 
 ```
-nim r -d:danger --gc=arc -t=-flto main.nim
+nimble run
+```

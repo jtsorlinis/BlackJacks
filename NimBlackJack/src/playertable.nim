@@ -369,7 +369,7 @@ proc checkEarnings*(self: Table) =
     if check + self.mCasinoEarnings != 0:
         echo "Earnings don't match"
         quit(1)
-    
+
 
 proc startRound*(self: Table) =
     self.clear()

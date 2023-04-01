@@ -26,6 +26,11 @@ cd GoBlackJack
 go build
 cd ..
 
+echo "Building NimBlackJack"
+cd NimBlackJack
+nimble build
+cd ..
+
 echo "Building RustBlackJack"
 cd RustBlackJack
 cargo build --release
@@ -37,6 +42,7 @@ hyperfine --warmup 3 --export-markdown results.md \
 "RustBlackJack/target/release/rust_black_jack" \
 "dotnet CSharpBlackJack/bin/release/net7.0/CSharpBlackJack.dll" \
 "GoBlackJack/GoBlackJack" \
+"NimBlackJack/NimBlackJack" \
 "node JSBlackJack/." \
 "python3 PyBlackJack/main.py" 
 
