@@ -1,5 +1,6 @@
 {
   "name": "jsblackjack",
+  "type": "module",
   "version": "1.0.0",
   "description": "JavaScript (Node) version of PyBlackJack",
   "main": "main.js",

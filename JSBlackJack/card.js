@@ -1,4 +1,4 @@
-module.exports = class Card {
+export default class Card {
   constructor(rank, suit) {
     this.mRank = rank;
     this.mSuit = suit;
@@ -40,4 +40,4 @@ module.exports = class Card {
     }
     return 1;
   }
-};
+}
