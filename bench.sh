@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ROUNDS='100,1000000,10000000'
+
 echo "Building CBlackJack"
 cd CBlackjack
 mkdir -p build
@@ -36,14 +38,14 @@ cd RustBlackJack
 cargo build --release
 cd ..
 
-hyperfine --warmup 3 --export-markdown results.md \
-"CBlackJack/build/bin/CBlackJack" \
-"CPPBlackJack/build/bin/CPPBlackJack" \
-"RustBlackJack/target/release/rust_black_jack" \
-"dotnet CSharpBlackJack/bin/release/net7.0/CSharpBlackJack.dll" \
-"GoBlackJack/GoBlackJack" \
-"NimBlackJack/NimBlackJack" \
-"node JSBlackJack/." \
-"python3 PyBlackJack/main.py" 
-
+hyperfine --warmup 3 -L num_rounds $ROUNDS --export-markdown results.md \
+"CBlackJack/build/bin/CBlackJack {num_rounds}" \
+"CPPBlackJack/build/bin/CPPBlackJack {num_rounds}" \
+"RustBlackJack/target/release/rust_black_jack {num_rounds}" \
+"dotnet CSharpBlackJack/bin/release/net7.0/CSharpBlackJack.dll {num_rounds}" \
+"GoBlackJack/GoBlackJack {num_rounds}" \
+"NimBlackJack/NimBlackJack {num_rounds}" \
+"node JSBlackJack/. {num_rounds}" \
+"bun JSBlackJack/main.js {num_rounds}" \
+"python3 PyBlackJack/main.py {num_rounds}" 
 exit 0
