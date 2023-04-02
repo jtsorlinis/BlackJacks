@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROUNDS='100,1000000,10000000'
+ROUNDS='100000,1000000,10000000'
 
 echo "Building CBlackJack"
 cd CBlackjack
