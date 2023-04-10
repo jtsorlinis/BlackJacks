@@ -13,32 +13,28 @@ char* suits[] = {"Clubs", "Hearts", "Spades", "Diamonds"};
 
 uint64_t state;
 
-// From https://www.pcg-random.org/download.html#minimal-c-implementation
-uint32_t pcg32() {
-  uint64_t oldstate = state;
-  // Advance internal state
-  state = oldstate * 6364136223846793005ULL + 1;
-  // Calculate output function (XSH RR), uses old state for max ILP
-  uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
-  uint32_t rot = oldstate >> 59u;
-  return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+// From https://github.com/lemire/testingRNG
+uint64_t wyrand() {
+  state += UINT64_C(0xa0761d6478bd642f);
+  __uint128_t t = (__uint128_t)state * (state ^ UINT64_C(0xe7037ed1a0b428db));
+  return (t >> 64) ^ t;
 }
 
 // use nearly divisionless technique found here
 // https://github.com/lemire/FastShuffleExperiments
-uint32_t pcg32_range(uint32_t s) {
-  uint32_t x = pcg32();
-  uint64_t m = (uint64_t)x * (uint64_t)s;
-  uint32_t l = (uint32_t)m;
+uint64_t rand_range(uint64_t s) {
+  uint64_t x = wyrand();
+  __uint128_t m = (__uint128_t)x * (__uint128_t)s;
+  uint64_t l = (uint64_t)m;
   if (l < s) {
-    uint32_t t = -s % s;
+    uint64_t t = -s % s;
     while (l < t) {
-      x = pcg32();
-      m = (uint64_t)x * (uint64_t)s;
-      l = (uint32_t)m;
+      x = wyrand();
+      m = (__uint128_t)x * (__uint128_t)s;
+      l = (uint64_t)m;
     }
   }
-  return m >> 32;
+  return m >> 64;
 }
 
 CardPile* CardPile__new(int numdecks) {
@@ -70,7 +66,7 @@ void CardPile__print(CardPile* self) {
 
 void CardPile__shuffle(CardPile* self) {
   for (int i = self->m_cards->size - 1; i > 0; i--) {
-    int j = pcg32_range(i + 1);
+    int j = rand_range(i + 1);
     Card* temp = self->m_cards->items[i];
     self->m_cards->items[i] = self->m_cards->items[j];
     self->m_cards->items[j] = temp;
