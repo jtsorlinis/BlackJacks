@@ -1,3 +1,5 @@
+use arrayvec::ArrayVec;
+
 use crate::card::Card;
 // use crate::rand;
 
@@ -7,7 +9,7 @@ static RANKS: [&str; 13] = [
 static SUITS: [&str; 4] = ["Clubs", "Hearts", "Spades", "Diamonds"];
 
 pub struct Deck {
-    pub m_cards: Vec<*mut Card>,
+    pub m_cards: ArrayVec<*mut Card, 64>,
 }
 
 impl Deck {
@@ -17,8 +19,8 @@ impl Deck {
         }
     }
 
-    fn generate_deck() -> Vec<*mut Card> {
-        let mut vec: Vec<*mut Card> = Vec::new();
+    fn generate_deck() -> ArrayVec<*mut Card, 64> {
+        let mut vec = ArrayVec::<*mut Card, 64>::new();
         for suit in SUITS.iter() {
             for rank in RANKS.iter() {
                 let card = Box::into_raw(Box::new(Card::new(rank, suit)));
