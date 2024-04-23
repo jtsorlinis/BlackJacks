@@ -6,9 +6,6 @@ mod player;
 mod strategies;
 mod table;
 
-#[macro_use]
-extern crate lazy_static;
-
 use mimalloc::MiMalloc;
 use std::env;
 use std::time::Instant;
@@ -18,6 +15,7 @@ use table::Table;
 static GLOBAL: MiMalloc = MiMalloc;
 
 fn main() {
+    strategies::fill_strats();
     let args: Vec<String> = env::args().collect();
 
     const NUM_PLAYERS: i32 = 5;

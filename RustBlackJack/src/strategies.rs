@@ -1,5 +1,11 @@
-lazy_static! {
-    pub static ref STRAT_HARD: Vec<Vec<&'static str>> = vec![
+use std::sync::OnceLock;
+
+pub static MAP_HARD: OnceLock<Vec<char>> = OnceLock::new();
+pub static MAP_SOFT: OnceLock<Vec<char>> = OnceLock::new();
+pub static MAP_SPLIT: OnceLock<Vec<char>> = OnceLock::new();
+
+pub fn fill_strats() {
+    let strat_hard = vec![
         vec!["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
         vec!["2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"],
         vec!["3", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"],
@@ -20,9 +26,9 @@ lazy_static! {
         vec!["18", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
         vec!["19", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
         vec!["20", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
-        vec!["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]
+        vec!["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
     ];
-    pub static ref STRAT_SOFT: Vec<Vec<&'static str>> = vec![
+    let strat_soft = vec![
         vec!["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
         vec!["13", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"],
         vec!["14", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"],
@@ -32,9 +38,9 @@ lazy_static! {
         vec!["18", "S", "D", "D", "D", "D", "S", "S", "H", "H", "H"],
         vec!["19", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
         vec!["20", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
-        vec!["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]
+        vec!["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
     ];
-    pub static ref STRAT_SPLIT: Vec<Vec<&'static str>> = vec![
+    let strat_split = vec![
         vec!["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
         vec!["2", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"],
         vec!["3", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"],
@@ -43,16 +49,16 @@ lazy_static! {
         vec!["7", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"],
         vec!["8", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
         vec!["9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S"],
-        vec!["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"]
+        vec!["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
     ];
-    pub static ref MAP_HARD: Vec<char> = vec_to_map(&STRAT_HARD);
-    pub static ref MAP_SOFT: Vec<char> = vec_to_map(&STRAT_SOFT);
-    pub static ref MAP_SPLIT: Vec<char> = vec_to_map(&STRAT_SPLIT);
+    MAP_HARD.set(vec_to_map(&strat_hard)).unwrap();
+    MAP_SOFT.set(vec_to_map(&strat_soft)).unwrap();
+    MAP_SPLIT.set(vec_to_map(&strat_split)).unwrap()
 }
 
-pub fn get_action(player_val: i32, dealer_val: i32, strategy: &[char]) -> char {
+pub fn get_action(player_val: i32, dealer_val: i32, strategy: &OnceLock<Vec<char>>) -> char {
     let key = player_val * 12 + dealer_val;
-    strategy[key as usize]
+    strategy.get().unwrap()[key as usize]
 }
 
 pub fn vec_to_map(vec: &[Vec<&'static str>]) -> Vec<char> {
