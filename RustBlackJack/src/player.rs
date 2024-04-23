@@ -1,5 +1,3 @@
-use arrayvec::ArrayVec;
-
 use crate::card::Card;
 
 static MAXSPLITS: i32 = 10;
@@ -16,7 +14,7 @@ pub struct Player {
     pub m_table: bool,
     pub m_initialbet: i32,
     pub m_originalbet: i32,
-    pub m_hand: ArrayVec<*mut Card, 5>,
+    pub m_hand: Vec<*mut Card>,
     pub m_playernum: String,
 }
 
@@ -34,7 +32,7 @@ impl Player {
             m_table: true,
             m_initialbet: betsize,
             m_originalbet: betsize,
-            m_hand: ArrayVec::<*mut Card, 5>::new(),
+            m_hand: Vec::<*mut Card>::with_capacity(5),
             m_playernum: playernum.to_owned(),
         }
     }

@@ -1,12 +1,10 @@
-use arrayvec::ArrayVec;
-
 use crate::card::Card;
 
 pub struct Dealer {
     pub m_value: i32,
     pub m_aces: i32,
     pub m_issoft: bool,
-    pub m_hand: ArrayVec<*mut Card, 5>,
+    pub m_hand: Vec<*mut Card>,
     pub m_playernum: String,
     pub m_hide: bool,
 }
@@ -17,7 +15,7 @@ impl Dealer {
             m_value: 0,
             m_aces: 0,
             m_issoft: false,
-            m_hand: ArrayVec::<*mut Card, 5>::new(),
+            m_hand: Vec::<*mut Card>::with_capacity(5),
             m_playernum: "D".to_owned(),
             m_hide: true,
         }
