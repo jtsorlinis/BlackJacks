@@ -1,22 +1,20 @@
-use arrayvec::ArrayVec;
-
 use crate::card::Card;
 use crate::deck::Deck;
 use std::time;
 
 pub struct CardPile {
     pub m_decks: i32,
-    pub m_cards: ArrayVec<*mut Card, 512>,
-    pub m_original_cards: ArrayVec<*mut Card, 512>,
+    pub m_cards: Vec<*mut Card>,
+    pub m_original_cards: Vec<*mut Card>,
     pub state: u64,
 }
 
 impl CardPile {
     pub fn new(decks: i32) -> CardPile {
-        let mut c = ArrayVec::<*mut Card, 512>::new();
+        let mut c = Vec::<*mut Card>::with_capacity(decks as usize * 52);
         for _ in 0..decks {
-            let temp = Deck::new();
-            c.try_extend_from_slice(&temp.m_cards).unwrap();
+            let mut temp = Deck::new();
+            c.append(&mut temp.m_cards);
         }
         let mut cp = CardPile {
             m_decks: decks,
