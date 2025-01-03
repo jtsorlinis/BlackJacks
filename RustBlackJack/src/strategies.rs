@@ -51,9 +51,9 @@ pub fn fill_strats() {
         vec!["9", "P", "P", "P", "P", "P", "S", "P", "P", "S", "S"],
         vec!["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
     ];
-    MAP_HARD.set(vec_to_map(&strat_hard)).unwrap();
-    MAP_SOFT.set(vec_to_map(&strat_soft)).unwrap();
-    MAP_SPLIT.set(vec_to_map(&strat_split)).unwrap()
+    MAP_HARD.get_or_init(|| vec_to_map(&strat_hard));
+    MAP_SOFT.get_or_init(|| vec_to_map(&strat_soft));
+    MAP_SPLIT.get_or_init(|| vec_to_map(&strat_split));
 }
 
 pub fn get_action(player_val: i32, dealer_val: i32, strategy: &OnceLock<Vec<char>>) -> char {
