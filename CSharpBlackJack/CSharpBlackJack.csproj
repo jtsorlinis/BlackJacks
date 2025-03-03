@@ -4,7 +4,8 @@
     <OutputType>Exe</OutputType>
     <PublishAot>true</PublishAot>
     <TieredPGO>true</TieredPGO>
-    <TargetFramework>net8.0</TargetFramework>
+    <StripSymbols>false</StripSymbols>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
 </Project>
