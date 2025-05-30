@@ -1,5 +1,6 @@
 pub struct Card {
     pub m_rank: &'static str,
+    #[allow(dead_code)]
     pub m_suit: &'static str,
     pub m_facedown: bool,
     pub m_count: i32,

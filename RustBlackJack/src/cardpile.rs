@@ -3,6 +3,7 @@ use crate::deck::Deck;
 use std::time;
 
 pub struct CardPile {
+    #[allow(dead_code)]
     pub m_decks: i32,
     pub m_cards: Vec<*mut Card>,
     pub m_original_cards: Vec<*mut Card>,

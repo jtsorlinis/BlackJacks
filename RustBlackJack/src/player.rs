@@ -11,6 +11,7 @@ pub struct Player {
     pub m_isdone: bool,
     pub m_betmult: f32,
     pub m_hasnatural: bool,
+    #[allow(dead_code)]
     pub m_table: bool,
     pub m_initialbet: i32,
     pub m_originalbet: i32,

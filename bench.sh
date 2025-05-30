@@ -28,24 +28,18 @@ cd GoBlackJack
 go build
 cd ..
 
-echo "Building NimBlackJack"
-cd NimBlackJack
-nimble build
-cd ..
-
 echo "Building RustBlackJack"
 cd RustBlackJack
 cargo build --release
 cd ..
 
-hyperfine --warmup 3 -L num_rounds $ROUNDS --export-markdown results.md \
-"CBlackJack/build/bin/CBlackJack {num_rounds}" \
-"CPPBlackJack/build/bin/CPPBlackJack {num_rounds}" \
-"RustBlackJack/target/release/rust_black_jack {num_rounds}" \
-"dotnet CSharpBlackJack/bin/release/net7.0/CSharpBlackJack.dll {num_rounds}" \
-"GoBlackJack/GoBlackJack {num_rounds}" \
-"NimBlackJack/NimBlackJack {num_rounds}" \
-"node JSBlackJack/. {num_rounds}" \
-"bun JSBlackJack/main.js {num_rounds}" \
-"python3 PyBlackJack/main.py {num_rounds}" 
+hyperfine --warmup 3 -L num_rounds $ROUNDS --export-markdown results.md --sort mean-time \
+-n C "CBlackJack/build/bin/CBlackJack {num_rounds}" \
+-n C++ "CPPBlackJack/build/bin/CPPBlackJack {num_rounds}" \
+-n Rust "RustBlackJack/target/release/rust_black_jack {num_rounds}" \
+-n C# "dotnet CSharpBlackJack/bin/Release/net9.0/CSharpBlackJack.dll {num_rounds}" \
+-n Go "GoBlackJack/GoBlackJack {num_rounds}" \
+-n Node "node JSBlackJack/. {num_rounds}" \
+-n Bun "bun JSBlackJack/main.js {num_rounds}" \
+-n Python "python3 PyBlackJack/main.py {num_rounds}" 
 exit 0
