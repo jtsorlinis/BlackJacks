@@ -1,14 +1,5 @@
 import Deck from "./deck.js";
 
-let seed = Date.now();
-
-const xorShift = () => {
-  seed ^= seed << 13;
-  seed ^= seed >> 17;
-  seed ^= seed << 5;
-  return Math.abs(seed);
-};
-
 export default class CardPile {
   constructor(numofdecks) {
     this.mCards = [];
@@ -34,7 +25,7 @@ export default class CardPile {
 
   shuffle() {
     for (let i = this.mCards.length - 1; i > 0; i--) {
-      const j = xorShift() % (i + 1);
+      const j = Math.floor(Math.random() * (i + 1));
       // [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
       const temp = this.mCards[i];
       this.mCards[i] = this.mCards[j];
