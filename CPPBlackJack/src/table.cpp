@@ -197,38 +197,42 @@ void Table::double_bet() {
 }
 
 void Table::auto_play() {
-  while (!m_players_[m_current_player_].m_is_done_) {
-    // check if player just Split
-    if (m_players_[m_current_player_].m_hand_.size() == 1) {
-      if (m_verbose_) {
-        std::cout << "Player " << m_players_[m_current_player_].m_player_num_
-                  << " gets 2nd card after splitting\n";
+  while (m_current_player_ < static_cast<int>(m_players_.size())) {
+    while (!m_players_[m_current_player_].m_is_done_) {
+      // check if player just Split
+      if (m_players_[m_current_player_].m_hand_.size() == 1) {
+        if (m_verbose_) {
+          std::cout << "Player " << m_players_[m_current_player_].m_player_num_
+                    << " gets 2nd card after splitting\n";
+        }
+        deal();
+        m_players_[m_current_player_].evaluate();
       }
-      deal();
-      m_players_[m_current_player_].evaluate();
-    }
 
-    if (m_players_[m_current_player_].m_hand_.size() < 5 &&
-        m_players_[m_current_player_].m_value_ < 21) {
-      auto split_card_val = m_players_[m_current_player_].can_split();
-      if (split_card_val == 11) {
-        split_aces();
-      } else if (split_card_val != 0 &&
-                 (split_card_val != 5 && split_card_val != 10)) {
-        action(
-            get_action(split_card_val, m_dealer_.up_card(), &m_strat_split_));
-      } else if (m_players_[m_current_player_].m_is_soft_) {
-        action(get_action(m_players_[m_current_player_].m_value_,
-                          m_dealer_.up_card(), &m_strat_soft_));
+      if (m_players_[m_current_player_].m_hand_.size() < 5 &&
+          m_players_[m_current_player_].m_value_ < 21) {
+        auto split_card_val = m_players_[m_current_player_].can_split();
+        auto dealer_up_card = m_dealer_.up_card();
+        if (split_card_val == 11) {
+          split_aces();
+        } else if (split_card_val != 0 &&
+                   (split_card_val != 5 && split_card_val != 10)) {
+          action(get_action(split_card_val, dealer_up_card, &m_strat_split_));
+        } else if (m_players_[m_current_player_].m_is_soft_) {
+          action(get_action(m_players_[m_current_player_].m_value_,
+                            dealer_up_card, &m_strat_soft_));
+        } else {
+          action(get_action(m_players_[m_current_player_].m_value_,
+                            dealer_up_card, &m_strat_hard_));
+        }
       } else {
-        action(get_action(m_players_[m_current_player_].m_value_,
-                          m_dealer_.up_card(), &m_strat_hard_));
+        stand();
       }
-    } else {
-      stand();
     }
+    ++m_current_player_;
   }
-  next_player();
+  m_current_player_ = 0;
+  dealer_play();
 }
 
 void Table::action(char action) {
@@ -281,15 +285,6 @@ void Table::dealer_play() {
       }
     }
     finish_round();
-  }
-}
-
-void Table::next_player() {
-  if (m_current_player_ < m_players_.size() - 1) {
-    ++m_current_player_;
-    auto_play();
-  } else {
-    dealer_play();
   }
 }
 

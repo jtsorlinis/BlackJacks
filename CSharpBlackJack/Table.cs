@@ -204,37 +204,42 @@ namespace CSharpBlackJack
 
     private void AutoPlay()
     {
-      while (!mPlayers[_currentPlayer].mIsDone)
+      while (_currentPlayer < mPlayers.Count)
       {
-        // check if player just split
-        if (mPlayers[_currentPlayer].mHand.Count == 1)
+        while (!mPlayers[_currentPlayer].mIsDone)
         {
-          if (_verbose)
-            Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum +
-                              " gets 2nd card after splitting");
-          Deal();
-          mPlayers[_currentPlayer].Evaluate();
-        }
+          // check if player just split
+          if (mPlayers[_currentPlayer].mHand.Count == 1)
+          {
+            if (_verbose)
+              Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum +
+                                " gets 2nd card after splitting");
+            Deal();
+            mPlayers[_currentPlayer].Evaluate();
+          }
 
-        if (mPlayers[_currentPlayer].mHand.Count < 5 && mPlayers[_currentPlayer].mValue < 21)
-        {
-          var splitCardVal = mPlayers[_currentPlayer].CanSplit();
-          if (splitCardVal == 11)
-            SplitAces();
-          else if (splitCardVal != 0 && splitCardVal != 5 && splitCardVal != 10)
-            Action(Strategies.GetAction(splitCardVal, _dealer.UpCard(), _stratSplit));
-          else if (mPlayers[_currentPlayer].mIsSoft)
-            Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, _dealer.UpCard(), _stratSoft));
+          if (mPlayers[_currentPlayer].mHand.Count < 5 && mPlayers[_currentPlayer].mValue < 21)
+          {
+            var splitCardVal = mPlayers[_currentPlayer].CanSplit();
+            var dealerUp = _dealer.UpCard();
+            if (splitCardVal == 11)
+              SplitAces();
+            else if (splitCardVal != 0 && splitCardVal != 5 && splitCardVal != 10)
+              Action(Strategies.GetAction(splitCardVal, dealerUp, _stratSplit));
+            else if (mPlayers[_currentPlayer].mIsSoft)
+              Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, dealerUp, _stratSoft));
+            else
+              Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, dealerUp, _stratHard));
+          }
           else
-            Action(Strategies.GetAction(mPlayers[_currentPlayer].mValue, _dealer.UpCard(), _stratHard));
+          {
+            Stand();
+          }
         }
-        else
-        {
-          Stand();
-        }
+        _currentPlayer++;
       }
-
-      NextPlayer();
+      _currentPlayer = 0;
+      DealerPlay();
     }
 
     private void Action(char action)
@@ -297,14 +302,6 @@ namespace CSharpBlackJack
 
         FinishRound();
       }
-    }
-
-    private void NextPlayer()
-    {
-      if (++_currentPlayer < mPlayers.Count)
-        AutoPlay();
-      else
-        DealerPlay();
     }
 
     private void CheckPlayerNatural()

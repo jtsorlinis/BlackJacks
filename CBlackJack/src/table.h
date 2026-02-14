@@ -43,7 +43,6 @@ void Table__double_bet(Table* self);
 void Table__auto_play(Table* self);
 void Table__action(Table* self, char action);
 void Table__dealer_play(Table* self);
-void Table__next_player(Table* self);
 void Table__check_player_natural(Table* self);
 bool Table__check_dealer_natural(Table* self);
 void Table__check_earnings(Table* self);

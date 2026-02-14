@@ -207,47 +207,51 @@ void Table__double_bet(Table* self) {
 }
 
 void Table__auto_play(Table* self) {
-  while (
-      !((Player*)self->m_players->items[self->m_current_player])->m_is_done) {
-    // check if player just split
-    if (((Player*)self->m_players->items[self->m_current_player])
-            ->m_hand->size == 1) {
-      Table__deal(self);
-      Player__evaluate(self->m_players->items[self->m_current_player]);
-    }
-
-    if (((Player*)self->m_players->items[self->m_current_player])
-                ->m_hand->size < 5 &&
-        ((Player*)self->m_players->items[self->m_current_player])->m_value <
-            21) {
-      int split_card_val =
-          Player__can_split(self->m_players->items[self->m_current_player]);
-      if (split_card_val == 11) {
-        Table__split_aces(self);
-      } else if (split_card_val != 0 && split_card_val != 5 &&
-                 split_card_val != 10) {
-        Table__action(
-            self, get_action(split_card_val, Dealer__up_card(self->m_dealer),
-                             self->m_strat_split));
-      } else if (((Player*)self->m_players->items[self->m_current_player])
-                     ->m_is_soft) {
-        Table__action(
-            self,
-            get_action(((Player*)self->m_players->items[self->m_current_player])
-                           ->m_value,
-                       Dealer__up_card(self->m_dealer), self->m_strat_soft));
-      } else {
-        Table__action(
-            self,
-            get_action(((Player*)self->m_players->items[self->m_current_player])
-                           ->m_value,
-                       Dealer__up_card(self->m_dealer), self->m_strat_hard));
+  while (self->m_current_player < self->m_players->size) {
+    while (
+        !((Player*)self->m_players->items[self->m_current_player])->m_is_done) {
+      // check if player just split
+      if (((Player*)self->m_players->items[self->m_current_player])
+              ->m_hand->size == 1) {
+        Table__deal(self);
+        Player__evaluate(self->m_players->items[self->m_current_player]);
       }
-    } else {
-      Table__stand(self);
+
+      if (((Player*)self->m_players->items[self->m_current_player])
+                  ->m_hand->size < 5 &&
+          ((Player*)self->m_players->items[self->m_current_player])->m_value <
+              21) {
+        int split_card_val =
+            Player__can_split(self->m_players->items[self->m_current_player]);
+        int dealer_up_card = Dealer__up_card(self->m_dealer);
+        if (split_card_val == 11) {
+          Table__split_aces(self);
+        } else if (split_card_val != 0 && split_card_val != 5 &&
+                   split_card_val != 10) {
+          Table__action(self, get_action(split_card_val, dealer_up_card,
+                                         self->m_strat_split));
+        } else if (((Player*)self->m_players->items[self->m_current_player])
+                       ->m_is_soft) {
+          Table__action(
+              self,
+              get_action(((Player*)self->m_players->items[self->m_current_player])
+                             ->m_value,
+                         dealer_up_card, self->m_strat_soft));
+        } else {
+          Table__action(
+              self,
+              get_action(((Player*)self->m_players->items[self->m_current_player])
+                             ->m_value,
+                         dealer_up_card, self->m_strat_hard));
+        }
+      } else {
+        Table__stand(self);
+      }
     }
+    self->m_current_player++;
   }
-  Table__next_player(self);
+  self->m_current_player = 0;
+  Table__dealer_play(self);
 }
 
 void Table__action(Table* self, const char action) {
@@ -301,14 +305,6 @@ void Table__dealer_play(Table* self) {
     }
 
     Table__finish_round(self);
-  }
-}
-
-void Table__next_player(Table* self) {
-  if (++self->m_current_player < self->m_players->size) {
-    Table__auto_play(self);
-  } else {
-    Table__dealer_play(self);
   }
 }
 

@@ -207,55 +207,58 @@ export default class Table {
   }
 
   autoPlay() {
-    while (!this.mPlayers[this.mCurrentPlayer].mIsDone) {
-      if (this.mPlayers[this.mCurrentPlayer].mHand.length === 1) {
-        if (this.mVerbose) {
-          console.log(
-            `Player ${
-              this.mPlayers[this.mCurrentPlayer].mPlayerNum
-            } gets 2nd card after splitting`
-          );
+    while (this.mCurrentPlayer < this.mPlayers.length) {
+      while (!this.mPlayers[this.mCurrentPlayer].mIsDone) {
+        if (this.mPlayers[this.mCurrentPlayer].mHand.length === 1) {
+          if (this.mVerbose) {
+            console.log(
+              `Player ${
+                this.mPlayers[this.mCurrentPlayer].mPlayerNum
+              } gets 2nd card after splitting`
+            );
+          }
+          this.deal();
+          this.mPlayers[this.mCurrentPlayer].evaluate();
         }
-        this.deal();
-        this.mPlayers[this.mCurrentPlayer].evaluate();
-      }
-      if (
-        this.mPlayers[this.mCurrentPlayer].mHand.length < 5 &&
-        this.mPlayers[this.mCurrentPlayer].mValue < 21
-      ) {
-        const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
-        if (splitCardVal === 11) {
-          this.splitAces();
-        } else if (
-          splitCardVal !== 0 &&
-          splitCardVal !== 5 &&
-          splitCardVal !== 10
+        if (
+          this.mPlayers[this.mCurrentPlayer].mHand.length < 5 &&
+          this.mPlayers[this.mCurrentPlayer].mValue < 21
         ) {
-          this.action(
-            getAction(splitCardVal, this.mDealer.upCard(), this.mStratSplit)
-          );
-        } else if (this.mPlayers[this.mCurrentPlayer].mIsSoft) {
-          this.action(
-            getAction(
-              this.mPlayers[this.mCurrentPlayer].mValue,
-              this.mDealer.upCard(),
-              this.mStratSoft
-            )
-          );
+          const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
+          const dealerUp = this.mDealer.upCard();
+          if (splitCardVal === 11) {
+            this.splitAces();
+          } else if (
+            splitCardVal !== 0 &&
+            splitCardVal !== 5 &&
+            splitCardVal !== 10
+          ) {
+            this.action(getAction(splitCardVal, dealerUp, this.mStratSplit));
+          } else if (this.mPlayers[this.mCurrentPlayer].mIsSoft) {
+            this.action(
+              getAction(
+                this.mPlayers[this.mCurrentPlayer].mValue,
+                dealerUp,
+                this.mStratSoft
+              )
+            );
+          } else {
+            this.action(
+              getAction(
+                this.mPlayers[this.mCurrentPlayer].mValue,
+                dealerUp,
+                this.mStratHard
+              )
+            );
+          }
         } else {
-          this.action(
-            getAction(
-              this.mPlayers[this.mCurrentPlayer].mValue,
-              this.mDealer.upCard(),
-              this.mStratHard
-            )
-          );
+          this.stand();
         }
-      } else {
-        this.stand();
       }
+      this.mCurrentPlayer++;
     }
-    this.nextPlayer();
+    this.mCurrentPlayer = 0;
+    this.dealerPlay();
   }
 
   action(action) {
@@ -303,14 +306,6 @@ export default class Table {
         }
       }
       this.finishRound();
-    }
-  }
-
-  nextPlayer() {
-    if (++this.mCurrentPlayer < this.mPlayers.length) {
-      this.autoPlay();
-    } else {
-      this.dealerPlay();
     }
   }
 

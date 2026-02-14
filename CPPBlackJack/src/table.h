@@ -41,7 +41,6 @@ class Table {
   void auto_play();
   void action(const char action);
   void dealer_play();
-  void next_player();
   void check_player_natural();
   bool check_dealer_natural();
   void check_earnings();

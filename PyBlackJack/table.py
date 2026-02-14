@@ -178,51 +178,53 @@ class Table:
             self.hit()
 
     def auto_play(self):
-        # # temp strategy
-        # while(len(self.players[self.current_player].hand)
-        # < 5 and self.players[self.current_player].value < 17):
-        #     self.hit()
-
-        # Actual strategy
-        currplayer = self.players[self.current_player]
-        dealerupcard = self.dealer.up_card()
-
-        while not currplayer.is_done:
-            if len(currplayer.hand) == 1:
-                if self.verbose == 1:
-                    print(
-                        "Player "
-                        + str(currplayer.player_num)
-                        + " gets 2nd card after splitting"
-                    )
-                self.deal()
-                currplayer.evaluate()
-
-            if len(currplayer.hand) < 5 and currplayer.value < 21:
-                split_player_val = currplayer.can_split()
-                if split_player_val == 11:
-                    self.split_aces()
-                elif split_player_val != 0 and split_player_val not in (5, 10):
-                    self.do_(
-                        strategies.get_action(
-                            split_player_val, dealerupcard, self.strat_split
+        while self.current_player < len(self.players):
+            while not self.players[self.current_player].is_done:
+                if len(self.players[self.current_player].hand) == 1:
+                    if self.verbose == 1:
+                        print(
+                            "Player "
+                            + str(self.players[self.current_player].player_num)
+                            + " gets 2nd card after splitting"
                         )
-                    )
-                elif currplayer.is_soft:
-                    self.do_(
-                        strategies.get_action(
-                            currplayer.value, dealerupcard, self.strat_soft
+                    self.deal()
+                    self.players[self.current_player].evaluate()
+
+                if (
+                    len(self.players[self.current_player].hand) < 5
+                    and self.players[self.current_player].value < 21
+                ):
+                    split_player_val = self.players[self.current_player].can_split()
+                    dealerupcard = self.dealer.up_card()
+                    if split_player_val == 11:
+                        self.split_aces()
+                    elif split_player_val != 0 and split_player_val not in (5, 10):
+                        self.do_(
+                            strategies.get_action(
+                                split_player_val, dealerupcard, self.strat_split
+                            )
                         )
-                    )
+                    elif self.players[self.current_player].is_soft:
+                        self.do_(
+                            strategies.get_action(
+                                self.players[self.current_player].value,
+                                dealerupcard,
+                                self.strat_soft,
+                            )
+                        )
+                    else:
+                        self.do_(
+                            strategies.get_action(
+                                self.players[self.current_player].value,
+                                dealerupcard,
+                                self.strat_hard,
+                            )
+                        )
                 else:
-                    self.do_(
-                        strategies.get_action(
-                            currplayer.value, dealerupcard, self.strat_hard
-                        )
-                    )
-            else:
-                self.stand()
-        self.next_player()
+                    self.stand()
+            self.current_player += 1
+        self.current_player = 0
+        self.dealer_play()
 
     def do_(self, action):
         if action == "H":
@@ -265,13 +267,6 @@ class Table:
                 if self.verbose:
                     self.print()
             self.finish_round()
-
-    def next_player(self):
-        if self.current_player < len(self.players) - 1:
-            self.current_player += 1
-            self.auto_play()
-        else:
-            self.dealer_play()
 
     def check_player_natural(self):
         for player in self.players:

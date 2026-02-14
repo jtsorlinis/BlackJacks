@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-//Table class
+// Table class
 type Table struct {
 	MVerbose        bool
 	MBetSize        int32
@@ -206,32 +206,37 @@ func (t *Table) doubleBet() {
 }
 
 func (t *Table) autoPlay() {
-	for !t.MPlayers[t.mCurrentPlayer].MIsDone {
-		// check if player just split
-		if len(t.MPlayers[t.mCurrentPlayer].MHand) == 1 {
-			if t.MVerbose {
-				println("Player " + t.MPlayers[t.mCurrentPlayer].MPlayerNum + " gets 2nd card after splitting")
+	for t.mCurrentPlayer < int32(len(t.MPlayers)) {
+		for !t.MPlayers[t.mCurrentPlayer].MIsDone {
+			// check if player just split
+			if len(t.MPlayers[t.mCurrentPlayer].MHand) == 1 {
+				if t.MVerbose {
+					println("Player " + t.MPlayers[t.mCurrentPlayer].MPlayerNum + " gets 2nd card after splitting")
+				}
+				t.deal()
+				t.MPlayers[t.mCurrentPlayer].Evaluate()
 			}
-			t.deal()
-			t.MPlayers[t.mCurrentPlayer].Evaluate()
-		}
 
-		if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
-			splitCardVal := t.MPlayers[t.mCurrentPlayer].CanSplit()
-			if splitCardVal == 11 {
-				t.splitAces()
-			} else if splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10) {
-				t.action(getAction(splitCardVal, t.MDealer.UpCard(), &t.MStratSplit))
-			} else if t.MPlayers[t.mCurrentPlayer].MIsSoft {
-				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), &t.MStratSoft))
+			if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
+				splitCardVal := t.MPlayers[t.mCurrentPlayer].CanSplit()
+				dealerUp := t.MDealer.UpCard()
+				if splitCardVal == 11 {
+					t.splitAces()
+				} else if splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10) {
+					t.action(getAction(splitCardVal, dealerUp, &t.MStratSplit))
+				} else if t.MPlayers[t.mCurrentPlayer].MIsSoft {
+					t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, dealerUp, &t.MStratSoft))
+				} else {
+					t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, dealerUp, &t.MStratHard))
+				}
 			} else {
-				t.action(getAction(t.MPlayers[t.mCurrentPlayer].MValue, t.MDealer.UpCard(), &t.MStratHard))
+				t.stand()
 			}
-		} else {
-			t.stand()
 		}
+		t.mCurrentPlayer++
 	}
-	t.nextPlayer()
+	t.mCurrentPlayer = 0
+	t.dealerPlay()
 }
 
 func (t *Table) action(action byte) {
@@ -280,15 +285,6 @@ func (t *Table) dealerPlay() {
 			}
 		}
 		t.finishRound()
-	}
-}
-
-func (t *Table) nextPlayer() {
-	if t.mCurrentPlayer < int32(len(t.MPlayers)-1) {
-		t.mCurrentPlayer++
-		t.autoPlay()
-	} else {
-		t.dealerPlay()
 	}
 }
 

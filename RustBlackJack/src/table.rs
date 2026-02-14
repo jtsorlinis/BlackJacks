@@ -147,9 +147,9 @@ impl Table {
             } else {
                 self.m_players[player].reset_hand();
             }
-            self.m_dealer.reset_hand();
-            self.m_currentplayer = 0;
         }
+        self.m_dealer.reset_hand();
+        self.m_currentplayer = 0;
     }
 
     fn update_count(&mut self) {
@@ -249,49 +249,55 @@ impl Table {
     }
 
     fn autoplay(&mut self) {
-        while !self.m_players[self.m_currentplayer].m_isdone {
-            // check if player just split
-            if self.m_players[self.m_currentplayer].m_hand.len() == 1 {
-                if self.m_verbose {
-                    println!(
-                        "Player {} gets 2nd card after splitting",
-                        self.m_players[self.m_currentplayer].m_playernum
-                    );
+        while self.m_currentplayer < self.m_players.len() {
+            while !self.m_players[self.m_currentplayer].m_isdone {
+                // check if player just split
+                if self.m_players[self.m_currentplayer].m_hand.len() == 1 {
+                    if self.m_verbose {
+                        println!(
+                            "Player {} gets 2nd card after splitting",
+                            self.m_players[self.m_currentplayer].m_playernum
+                        );
+                    }
+                    self.deal();
+                    self.m_players[self.m_currentplayer].evaluate();
                 }
-                self.deal();
-                self.m_players[self.m_currentplayer].evaluate();
-            }
-            if self.m_players[self.m_currentplayer].m_hand.len() < 5
-                && self.m_players[self.m_currentplayer].m_value < 21
-            {
-                let split_player_val = self.m_players[self.m_currentplayer].can_split();
-                if split_player_val == 11 {
-                    self.split_aces();
-                } else if split_player_val != 0 && (split_player_val != 5 && split_player_val != 10)
+                if self.m_players[self.m_currentplayer].m_hand.len() < 5
+                    && self.m_players[self.m_currentplayer].m_value < 21
                 {
-                    self.action(strategies::get_action(
-                        split_player_val,
-                        self.m_dealer.up_card(),
-                        &strategies::MAP_SPLIT,
-                    ));
-                } else if self.m_players[self.m_currentplayer].m_issoft {
-                    self.action(strategies::get_action(
-                        self.m_players[self.m_currentplayer].m_value,
-                        self.m_dealer.up_card(),
-                        &strategies::MAP_SOFT,
-                    ));
+                    let split_player_val = self.m_players[self.m_currentplayer].can_split();
+                    let dealer_up = self.m_dealer.up_card();
+                    if split_player_val == 11 {
+                        self.split_aces();
+                    } else if split_player_val != 0
+                        && (split_player_val != 5 && split_player_val != 10)
+                    {
+                        self.action(strategies::get_action(
+                            split_player_val,
+                            dealer_up,
+                            &strategies::MAP_SPLIT,
+                        ));
+                    } else if self.m_players[self.m_currentplayer].m_issoft {
+                        self.action(strategies::get_action(
+                            self.m_players[self.m_currentplayer].m_value,
+                            dealer_up,
+                            &strategies::MAP_SOFT,
+                        ));
+                    } else {
+                        self.action(strategies::get_action(
+                            self.m_players[self.m_currentplayer].m_value,
+                            dealer_up,
+                            &strategies::MAP_HARD,
+                        ));
+                    }
                 } else {
-                    self.action(strategies::get_action(
-                        self.m_players[self.m_currentplayer].m_value,
-                        self.m_dealer.up_card(),
-                        &strategies::MAP_HARD,
-                    ));
+                    self.stand();
                 }
-            } else {
-                self.stand();
             }
+            self.m_currentplayer += 1;
         }
-        self.next_player();
+        self.m_currentplayer = 0;
+        self.dealer_play();
     }
 
     fn action(&mut self, action: char) {
@@ -339,15 +345,6 @@ impl Table {
             }
         }
         self.finish_round();
-    }
-
-    fn next_player(&mut self) {
-        if self.m_currentplayer < self.m_players.len() - 1 {
-            self.m_currentplayer += 1;
-            self.autoplay();
-        } else {
-            self.dealer_play();
-        }
     }
 
     fn check_player_natural(&mut self) {
