@@ -14,3 +14,4 @@ mimalloc = { version = "0.1.48", features = ["v3"] }
 lto = true
 codegen-units = 1
 panic = "abort"
+strip = true
