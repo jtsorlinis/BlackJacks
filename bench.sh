@@ -3,7 +3,7 @@
 ROUNDS='1000000'
 
 echo "Building CBlackJack"
-cd CBlackjack
+cd CBlackJack
 mkdir -p build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -11,7 +11,7 @@ make
 cd ../..
 
 echo "Building CPPBlackJack"
-cd CPPBlackjack
+cd CPPBlackJack
 mkdir -p build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -34,10 +34,23 @@ cd RustBlackJack
 cargo build --release
 cd ..
 
+echo "Building CrystalBlackJack"
+cd CrystalBlackJack
+mkdir -p bin
+crystal build --release src/main.cr -o bin/CrystalBlackJack
+cd ..
+
+echo "Building ZigBlackJack"
+cd ZigBlackJack
+zig build -Doptimize=ReleaseFast
+cd ..
+
 hyperfine --warmup 3 -L num_rounds $ROUNDS --export-markdown results.md --sort mean-time \
 -n C "CBlackJack/build/bin/CBlackJack {num_rounds}" \
 -n C++ "CPPBlackJack/build/bin/CPPBlackJack {num_rounds}" \
 -n Rust "RustBlackJack/target/release/rust_black_jack {num_rounds}" \
+-n Crystal "CrystalBlackJack/bin/CrystalBlackJack {num_rounds}" \
+-n Zig "ZigBlackJack/zig-out/bin/ZigBlackJack {num_rounds}" \
 -n C# "dotnet CSharpBlackJack/bin/Release/net10.0/CSharpBlackJack.dll {num_rounds}" \
 -n "C# (AOT)" "CSharpBlackJack/bin/Release/net10.0/osx-arm64/native/CSharpBlackJack {num_rounds}" \
 -n Go "GoBlackJack/GoBlackJack {num_rounds}" \

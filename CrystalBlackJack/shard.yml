@@ -1,0 +1,8 @@
+name: crystal_black_jack
+version: 0.1.0
+
+targets:
+  crystal_black_jack:
+    main: src/main.cr
+
+license: MIT
