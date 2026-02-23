@@ -8,6 +8,7 @@ typedef struct Dealer {
   int m_value;
   int m_aces;
   bool m_is_soft;
+  bool m_hide;
 } Dealer;
 
 Dealer* Dealer__new();

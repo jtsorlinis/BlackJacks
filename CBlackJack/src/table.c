@@ -72,7 +72,6 @@ void Table__select_bet(Table* self, Player* player) {
 
 void Table__deal_dealer(Table* self, bool face_down) {
   Card* card = Vector__last(self->m_card_pile->m_cards);
-  card->m_face_down = face_down;
   Vector__push(self->m_dealer->m_hand, card);
   if (!face_down) {
     self->m_running_count += card->m_count;
@@ -81,7 +80,6 @@ void Table__deal_dealer(Table* self, bool face_down) {
 }
 
 void Table__start_round(Table* self) {
-  Table__clear(self);
   Table__update_count(self);
   if (self->m_verbose) {
     printf("%d cards left\n", self->m_card_pile->m_cards->size);
@@ -282,7 +280,7 @@ void Table__dealer_play(Table* self) {
       break;
     }
   }
-  ((Card*)self->m_dealer->m_hand->items[1])->m_face_down = false;
+  self->m_dealer->m_hide = false;
   self->m_running_count += ((Card*)self->m_dealer->m_hand->items[1])->m_count;
   Dealer__evaluate(self->m_dealer);
   if (self->m_verbose) {
@@ -321,7 +319,7 @@ void Table__check_player_natural(Table* self) {
 bool Table__check_dealer_natural(Table* self) {
   Dealer__evaluate(self->m_dealer);
   if (self->m_dealer->m_value != 21) return false;
-  ((Card*)self->m_dealer->m_hand->items[1])->m_face_down = false;
+  self->m_dealer->m_hide = false;
   self->m_running_count += ((Card*)self->m_dealer->m_hand->items[1])->m_count;
   if (self->m_verbose) {
     Table__print(self);
@@ -358,6 +356,7 @@ void Table__finish_round(Table* self) {
       Player__lose(self->m_players->items[i]);
     }
   }
+  Table__clear(self);
 }
 
 void Table__print(Table* self) {

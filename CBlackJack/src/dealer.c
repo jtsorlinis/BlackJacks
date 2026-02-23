@@ -12,12 +12,14 @@ Dealer* Dealer__new() {
   d->m_value = 0;
   d->m_aces = 0;
   d->m_is_soft = 0;
+  d->m_hide = true;
   return d;
 }
 
 void Dealer__reset_hand(Dealer* self) {
   Vector__clear(self->m_hand);
   self->m_value = 0;
+  self->m_hide = true;
 }
 
 int Dealer__up_card(Dealer* self) {
@@ -49,7 +51,11 @@ void Dealer__evaluate(Dealer* self) {
 void Dealer__print(Dealer* self) {
   printf("Player %s: ", self->m_player_num);
   for (int i = 0; i < self->m_hand->size; i++) {
-    printf("%s ", Card__print(self->m_hand->items[i]));
+    if (i == 1 && self->m_hide) {
+      printf("X ");
+    } else {
+      printf("%s ", Card__print(self->m_hand->items[i]));
+    }
   }
   for (int i = self->m_hand->size; i < 5; i++) {
     printf("  ");

@@ -21,7 +21,7 @@ Player::Player(Table* table, Player* split) {
     m_initial_bet_ = m_table_->m_bet_size_;
     if (split != nullptr) {
       m_hand_.push_back(split->m_hand_[1]);
-      m_split_count_++;
+      m_split_count_ = split->m_split_count_ + 1;
       m_player_num_ = split->m_player_num_ + "S";
       m_initial_bet_ = split->m_initial_bet_;
       m_split_from_ = split;

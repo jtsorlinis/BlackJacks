@@ -60,7 +60,6 @@ void Table::select_bet(Player* player) const {
 }
 
 void Table::deal_dealer(const bool face_down) {
-  m_card_pile_.m_cards_.back()->m_face_down_ = face_down;
   m_dealer_.m_hand_.push_back(m_card_pile_.m_cards_.back());
   if (!face_down) {
     m_running_count_ += m_card_pile_.m_cards_.back()->m_count_;
@@ -69,7 +68,6 @@ void Table::deal_dealer(const bool face_down) {
 }
 
 void Table::start_round() {
-  clear();
   update_count();
   if (m_verbose_) {
     std::cout << m_card_pile_.m_cards_.size() << " cards left\n";
@@ -263,7 +261,7 @@ void Table::dealer_play() {
       break;
     }
   }
-  m_dealer_.m_hand_[1]->m_face_down_ = false;
+  m_dealer_.m_hide_second_ = false;
   m_running_count_ += m_dealer_.m_hand_[1]->m_count_;
   m_dealer_.evaluate();
   if (m_verbose_) {
@@ -299,7 +297,7 @@ void Table::check_player_natural() {
 
 bool Table::check_dealer_natural() {
   if (m_dealer_.evaluate() == 21) {
-    m_dealer_.m_hand_[1]->m_face_down_ = false;
+    m_dealer_.m_hide_second_ = false;
     m_running_count_ += m_dealer_.m_hand_[1]->m_count_;
     if (m_verbose_) {
       print();
@@ -375,6 +373,7 @@ void Table::finish_round() {
     }
     std::cout << "\n";
   }
+  clear();
 }
 
 void Table::print() {

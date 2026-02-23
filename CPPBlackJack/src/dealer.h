@@ -8,4 +8,5 @@ class Dealer : public Player {
   Dealer();
   void reset_hand();
   int up_card();
+  std::string print();
 };

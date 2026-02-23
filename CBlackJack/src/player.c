@@ -26,7 +26,7 @@ Player* Player__new(Table* table, Player* split) {
   if (split != NULL) {
     Vector__push(p->m_hand, split->m_hand->items[1]);
     Vector__delete(split->m_hand, 1);
-    p->m_split_count++;
+    p->m_split_count = split->m_split_count + 1;
     strcpy(p->m_player_num, split->m_player_num);
     strcat(p->m_player_num, "S");
     p->m_initial_bet = split->m_initial_bet;
