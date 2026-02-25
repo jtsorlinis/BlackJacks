@@ -28,7 +28,8 @@ static inline void Vector__resize(Vector* self, int capacity) {
 
 static inline void Vector__push(Vector* self, void* element) {
   if (self->size == self->capacity) {
-    Vector__resize(self, self->capacity + 2);
+    int new_capacity = self->capacity > 0 ? self->capacity * 2 : 2;
+    Vector__resize(self, new_capacity);
   }
   self->items[self->size++] = element;
 }
@@ -40,9 +41,13 @@ static inline void* Vector__last(Vector* self) {
 }
 
 static inline void Vector__copy(Vector* self, Vector* target) {
-  target->items = realloc(target->items, self->capacity * sizeof(void*));
+  if (target->capacity < self->size) {
+    void** temp = realloc(target->items, self->size * sizeof(void*));
+    if (!temp) return;
+    target->items = temp;
+    target->capacity = self->size;
+  }
   target->size = self->size;
-  target->capacity = self->capacity;
   memcpy(target->items, self->items, self->size * sizeof(void*));
 }
 
