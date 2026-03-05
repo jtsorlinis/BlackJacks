@@ -9,9 +9,7 @@ edition = "2018"
 [dependencies]
 mimalloc = { version = "0.1.48", features = ["v3"] }
 
-
 [profile.release]
-lto = true
+lto = "thin"
 codegen-units = 1
-panic = "abort"
 strip = true

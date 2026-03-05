@@ -1,5 +1,5 @@
 To run:
 
 ```
-cargo run --release
+cargo r -r
 ```

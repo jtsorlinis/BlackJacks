@@ -4,19 +4,13 @@ ROUNDS='1000000'
 
 echo "Building CBlackJack"
 cd CBlackjack
-mkdir -p build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-cd ../..
+xmake
+cd ..
 
 echo "Building CPPBlackJack"
 cd CPPBlackjack
-mkdir -p build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-cd ../..
+xmake
+cd ..
 
 echo "Building CSharpBlackJack"
 cd CSharpBlackJack
