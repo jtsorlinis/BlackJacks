@@ -86,7 +86,6 @@ func (t *Table) dealDealer(facedown bool) {
 
 // StartRound plays a round
 func (t *Table) StartRound() {
-	t.clear()
 	t.updateCount()
 	if t.MVerbose {
 		println(fmt.Sprint(len(t.MCardPile.MCards)) + " cards left")
@@ -362,6 +361,7 @@ func (t *Table) finishRound() {
 		}
 		println()
 	}
+	t.clear()
 }
 
 func (t *Table) print() {

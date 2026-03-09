@@ -75,7 +75,6 @@ export default class Table {
   }
 
   startRound() {
-    this.clear();
     this.updateCount();
     if (this.mVerbose) {
       console.log(`${this.mCardPile.mCards.length} cards left`);
@@ -394,6 +393,7 @@ export default class Table {
       }
       console.log();
     }
+    this.clear();
   }
 
   print() {

@@ -79,7 +79,6 @@ namespace CSharpBlackJack
 
     public void StartRound()
     {
-      Clear();
       UpdateCount();
       if (_verbose)
       {
@@ -374,12 +373,13 @@ namespace CSharpBlackJack
         }
       }
 
-      if (!_verbose) return;
+      if (_verbose)
       {
         foreach (var player in mPlayers.Where(player => player.mSplitFrom == null))
           Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
         Console.WriteLine();
       }
+      Clear();
     }
 
     private void Print()

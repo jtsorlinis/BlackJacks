@@ -51,7 +51,6 @@ class Table:
             self.running_count += card.count
 
     def start_round(self):
-        self.clear()
         self.update_count()
         if self.verbose:
             print(str(len(self.cardpile.cards)) + " cards left")
@@ -345,6 +344,7 @@ class Table:
                         + str(player.earnings)
                     )
             print("\n")
+        self.clear()
 
     def print(self):
         for player in self.players:
