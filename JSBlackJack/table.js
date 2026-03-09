@@ -314,7 +314,7 @@ export default class Table {
       if (
         this.mPlayers[i].mValue === 21 &&
         this.mPlayers[i].mHand.length === 2 &&
-        this.mPlayers[i].mSplitFrom == null
+        this.mPlayers[i].mSplitCount.count === 0
       ) {
         this.mPlayers[i].mHasNatural = true;
       }

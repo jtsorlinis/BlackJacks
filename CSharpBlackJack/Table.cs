@@ -307,7 +307,7 @@ namespace CSharpBlackJack
     private void CheckPlayerNatural()
     {
       for (var i = 0; i < mPlayers.Count; i++)
-        if (mPlayers[i].mValue == 21 && mPlayers[i].mHand.Count == 2 && mPlayers[i].mSplitFrom == null)
+        if (mPlayers[i].mValue == 21 && mPlayers[i].mHand.Count == 2 && !mPlayers[i].HasSplitHistory)
           mPlayers[i].mHasNatural = true;
     }
 

@@ -10,7 +10,7 @@ namespace CSharpBlackJack
       const int numOfPlayers = 5;
       const int numOfDecks = 8;
       const int betSize = 10;
-      const int minCards = 40;
+      const int minCards = 52;
 
       var rounds = 1000000;
       bool verbose = false;

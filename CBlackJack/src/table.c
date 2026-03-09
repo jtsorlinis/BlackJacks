@@ -310,7 +310,7 @@ void Table__check_player_natural(Table* self) {
   for (int i = 0; i < self->m_players->size; i++) {
     if (((Player*)self->m_players->items[i])->m_value == 21 &&
         ((Player*)self->m_players->items[i])->m_hand->size == 2 &&
-        ((Player*)self->m_players->items[i])->m_split_from == NULL) {
+        *(((Player*)self->m_players->items[i])->m_split_count) == 0) {
       ((Player*)self->m_players->items[i])->m_has_natural = true;
     }
   }

@@ -43,7 +43,7 @@ impl Table {
     fn fill(numplayers: i32, betsize: i32) -> Vec<Player> {
         let mut temp: Vec<Player> = Vec::with_capacity((numplayers * 3) as usize);
         for i in 0..numplayers {
-            temp.push(Player::new(&(i + 1).to_string(), betsize, 0));
+            temp.push(Player::new(&(i + 1).to_string(), betsize));
         }
         temp
     }
@@ -141,7 +141,7 @@ impl Table {
 
     pub fn clear(&mut self) {
         for player in (0..self.m_players.len()).rev() {
-            if self.m_players[player].m_splitcount > 0 {
+            if self.m_players[player].m_issplithand {
                 self.m_players[player - 1].m_earnings += self.m_players[player].m_earnings;
                 self.m_players.remove(player);
             } else {
@@ -181,11 +181,14 @@ impl Table {
     }
 
     fn split(&mut self) {
+        self.m_players[self.m_currentplayer].record_split();
         let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
-        let mut splitplayer = Player::new(
+        let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
+        let mut splitplayer = Player::new_split(
             &splitplayernum,
             self.m_players[self.m_currentplayer].m_initialbet,
-            self.m_players[self.m_currentplayer].m_splitcount + 1,
+            self.m_players[self.m_currentplayer].m_originalbet,
+            splitcount,
         );
         splitplayer
             .m_hand
@@ -208,11 +211,14 @@ impl Table {
                 self.m_players[self.m_currentplayer].m_playernum
             );
         }
+        self.m_players[self.m_currentplayer].record_split();
         let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
-        let mut splitplayer = Player::new(
+        let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
+        let mut splitplayer = Player::new_split(
             &splitplayernum,
             self.m_players[self.m_currentplayer].m_initialbet,
-            self.m_players[self.m_currentplayer].m_splitcount + 1,
+            self.m_players[self.m_currentplayer].m_originalbet,
+            splitcount,
         );
         splitplayer
             .m_hand
@@ -349,7 +355,7 @@ impl Table {
 
     fn check_player_natural(&mut self) {
         for player in self.m_players.iter_mut() {
-            if player.m_value == 21 && player.m_hand.len() == 2 && player.m_splitcount == 0 {
+            if player.m_value == 21 && player.m_hand.len() == 2 && !player.has_split() {
                 player.m_hasnatural = true;
             }
         }
@@ -434,7 +440,7 @@ impl Table {
         }
         if self.m_verbose {
             for player in self.m_players.iter() {
-                if player.m_splitcount == 0 {
+                if !player.m_issplithand {
                     println!(
                         "Player {} Earnings: {}",
                         player.m_playernum, player.m_earnings

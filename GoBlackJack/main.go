@@ -10,7 +10,7 @@ import (
 const numPlayers int32 = 5
 const numDecks int32 = 8
 const betSize int32 = 10
-const minCards int32 = 40
+const minCards int32 = 52
 
 var rounds = 1000000
 

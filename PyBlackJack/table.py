@@ -270,7 +270,7 @@ class Table:
 
     def check_player_natural(self):
         for player in self.players:
-            if player.value == 21 and len(player.hand) == 2 and not player.split_from:
+            if player.value == 21 and len(player.hand) == 2 and player.split_count[0] == 0:
                 player.has_natural = 1
 
     def check_dealer_natural(self):

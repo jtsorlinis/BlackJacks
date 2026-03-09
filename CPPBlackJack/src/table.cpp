@@ -289,7 +289,7 @@ void Table::dealer_play() {
 void Table::check_player_natural() {
   for (auto& player : m_players_) {
     if (player.m_value_ == 21 && player.m_hand_.size() == 2 &&
-        player.m_split_from_ == nullptr) {
+        *player.m_split_count_ == 0) {
       player.m_has_natural_ = true;
     }
   }

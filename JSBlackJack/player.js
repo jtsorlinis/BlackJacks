@@ -1,5 +1,5 @@
 let PlayerNumCount = 0;
-const MaxSplits = 10;
+const MaxHands = 4;
 
 export default class Player {
   constructor(table = null, split = null) {
@@ -8,7 +8,7 @@ export default class Player {
     this.mEarnings = 0;
     this.mAces = 0;
     this.mIsSoft = 0;
-    this.mSplitCount = 0;
+    this.mSplitCount = { count: 0 };
     this.mIsDone = false;
     this.mSplitFrom = null;
     this.mBetMult = 1;
@@ -18,8 +18,9 @@ export default class Player {
     if (table != null) {
       this.mInitialBet = this.mTable.mBetSize;
       if (split != null) {
+        this.mSplitCount = split.mSplitCount;
+        this.mSplitCount.count++;
         this.mHand.push(split.mHand.pop());
-        this.mSplitCount++;
         this.mPlayerNum = `${split.mPlayerNum}S`;
         this.mInitialBet = split.mInitialBet;
         this.mSplitFrom = split;
@@ -39,7 +40,7 @@ export default class Player {
     this.mValue = 0;
     this.mAces = 0;
     this.mIsSoft = false;
-    this.mSplitCount = 0;
+    this.mSplitCount.count = 0;
     this.mIsDone = false;
     this.mBetMult = 1;
     this.mHasNatural = false;
@@ -50,7 +51,7 @@ export default class Player {
     if (
       this.mHand.length === 2 &&
       this.mHand[0].mRank === this.mHand[1].mRank &&
-      this.mSplitCount < MaxSplits
+      this.mSplitCount.count < MaxHands - 1
     ) {
       return this.mHand[0].mValue;
     }

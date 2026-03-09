@@ -33,6 +33,7 @@ impl CardPile {
     }
 
     // From https://github.com/lemire/testingRNG
+    #[inline(always)]
     fn wyrand(&mut self) -> u64 {
         self.state = self.state.wrapping_add(0xa0761d6478bd642f);
         let t: u128 = (self.state as u128).wrapping_mul((self.state ^ 0xe7037ed1a0b428db) as u128);
@@ -40,7 +41,9 @@ impl CardPile {
     }
 
     // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
-    fn rand_range(&mut self, s: u64) -> u64 {
+    #[inline(always)]
+    fn rand_range(&mut self, s: usize) -> usize {
+        let s = s as u64;
         let mut x = self.wyrand();
         let mut m = x as u128 * s as u128;
         let mut l = m as u64;
@@ -52,7 +55,7 @@ impl CardPile {
                 l = m as u64;
             }
         }
-        (m >> 64) as u64
+        (m >> 64) as usize
     }
 
     // pub fn print(&self) -> String {
@@ -66,7 +69,7 @@ impl CardPile {
 
     pub fn shuffle(&mut self) {
         for i in (1..self.m_cards.len()).rev() {
-            let j = self.rand_range((i + 1) as u64) as usize;
+            let j = self.rand_range(i + 1);
             self.m_cards.swap(i, j);
         }
     }

@@ -290,7 +290,7 @@ func (t *Table) dealerPlay() {
 
 func (t *Table) checkPlayerNatural() {
 	for _, player := range t.MPlayers {
-		if player.MValue == 21 && len(player.MHand) == 2 && player.MSplitFrom == nil {
+		if player.MValue == 21 && len(player.MHand) == 2 && *player.MSplitCount == 0 {
 			player.MHasNatural = true
 		}
 	}

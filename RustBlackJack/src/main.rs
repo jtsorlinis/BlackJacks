@@ -20,7 +20,7 @@ fn main() {
     const NUM_PLAYERS: i32 = 5;
     const NUM_DECKS: i32 = 8;
     const BET_SIZE: i32 = 10;
-    const MIN_CARDS: usize = 40;
+    const MIN_CARDS: usize = 52;
 
     let mut rounds: i32 = 1000000;
     const VERBOSE: bool = false;

@@ -8,7 +8,7 @@ def main():
     players = 5
     decks = 8
     bet_size = 10
-    min_cards = 40
+    min_cards = 52
 
     rounds = 1000000
     verbose = False

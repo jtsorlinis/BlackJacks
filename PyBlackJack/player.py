@@ -1,7 +1,7 @@
 class Player:
 
     playerNumCount = 0
-    maxSplits = 10
+    maxHands = 4
 
     def __init__(self, table=None, split=None):
         self.hand = []
@@ -9,7 +9,7 @@ class Player:
         self.earnings = 0
         self.aces = 0
         self.is_soft = False
-        self.split_count = 0
+        self.split_count = [0]
         self.is_done = False
         self.split_from = split
         self.bet_mult = 1
@@ -20,8 +20,9 @@ class Player:
             self.initial_bet = self.table.betsize
 
         if split:
+            self.split_count = split.split_count
+            self.split_count[0] += 1
             self.hand.append(split.hand.pop())
-            self.split_count = split.split_count + 1
             self.player_num = str(split.player_num) + "S"
             self.initial_bet = split.initial_bet
         else:
@@ -36,7 +37,7 @@ class Player:
         self.value = 0
         self.aces = 0
         self.is_soft = False
-        self.split_count = 0
+        self.split_count[0] = 0
         self.is_done = False
         self.bet_mult = 1
         self.has_natural = 0
@@ -46,7 +47,7 @@ class Player:
         if (
                 len(self.hand) == 2
                 and (self.hand[0].rank == self.hand[1].rank)
-                and self.split_count < Player.maxSplits
+                and self.split_count[0] < Player.maxHands - 1
         ):
             return self.hand[0].value
         return 0

@@ -3,7 +3,7 @@ import Table from "./table.js";
 const NumOfPlayers = 5;
 const NumOfDecks = 8;
 const BetSize = 10;
-const MinCards = 40;
+const MinCards = 52;
 
 let Rounds = 1000000;
 const Verbose = false;

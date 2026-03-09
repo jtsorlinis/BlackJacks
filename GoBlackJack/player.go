@@ -5,7 +5,7 @@ import (
 )
 
 var playerNumCount int32
-var maxSplits int32 = 10
+var maxHands int32 = 4
 
 // Player class
 type Player struct {
@@ -15,7 +15,7 @@ type Player struct {
 	MEarnings   float32
 	MAces       int32
 	MIsSoft     bool
-	MSplitCount int32
+	MSplitCount *int32
 	MIsDone     bool
 	MSplitFrom  *Player
 	MBetMult    float32
@@ -31,9 +31,12 @@ func NewPlayer(table *Table, split *Player) *Player {
 	p.MInitialBet = p.MTable.MBetSize
 	p.MBetMult = 1
 	p.MHand = make([]*Card, 0, 5)
+	splitCount := int32(0)
+	p.MSplitCount = &splitCount
 	if split != nil {
+		p.MSplitCount = split.MSplitCount
+		*p.MSplitCount = *p.MSplitCount + 1
 		p.MHand = append(p.MHand, split.MHand[1])
-		p.MSplitCount++
 		p.MPlayerNum = split.MPlayerNum + "S"
 		p.MInitialBet = split.MInitialBet
 		p.MSplitFrom = split
@@ -55,7 +58,7 @@ func (p *Player) ResetHand() {
 	p.MValue = 0
 	p.MAces = 0
 	p.MIsSoft = false
-	p.MSplitCount = 0
+	*p.MSplitCount = 0
 	p.MIsDone = false
 	p.MBetMult = 1
 	p.MHasNatural = false
@@ -64,7 +67,7 @@ func (p *Player) ResetHand() {
 
 // CanSplit checks if the player can split
 func (p *Player) CanSplit() int32 {
-	if len(p.MHand) == 2 && p.MHand[0].MRank[0] == p.MHand[1].MRank[0] && p.MSplitCount < maxSplits {
+	if len(p.MHand) == 2 && p.MHand[0].MRank[0] == p.MHand[1].MRank[0] && *p.MSplitCount < maxHands-1 {
 		return p.MHand[0].MValue
 	}
 	return 0

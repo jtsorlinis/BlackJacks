@@ -9,24 +9,27 @@
 #include "table.h"
 #include "vector.h"
 
-const int max_splits = 10;
+const int max_hands = 4;
 int player_num_count = 0;
 
 Player* Player__new(Table* table, Player* split) {
   Player* p = malloc(sizeof(Player));
   p->m_hand = Vector__new(5);
+  p->m_split_count = malloc(sizeof(int));
+  *p->m_split_count = 0;
   p->m_table = table;
   p->m_bet_mult = 1;
   p->m_earnings = 0;
   p->m_has_natural = false;
   p->m_is_done = false;
-  p->m_split_count = 0;
   if (table == NULL) return p;
   p->m_initial_bet = table->m_bet_size;
   if (split != NULL) {
+    free(p->m_split_count);
+    p->m_split_count = split->m_split_count;
+    (*p->m_split_count)++;
     Vector__push(p->m_hand, split->m_hand->items[1]);
     Vector__delete(split->m_hand, 1);
-    p->m_split_count = split->m_split_count + 1;
     strcpy(p->m_player_num, split->m_player_num);
     strcat(p->m_player_num, "S");
     p->m_initial_bet = split->m_initial_bet;
@@ -47,7 +50,7 @@ void Player__reset_hand(Player* self) {
   self->m_value = 0;
   self->m_aces = 0;
   self->m_is_soft = false;
-  self->m_split_count = 0;
+  *self->m_split_count = 0;
   self->m_is_done = false;
   self->m_bet_mult = 1;
   self->m_has_natural = false;
@@ -58,7 +61,7 @@ int Player__can_split(Player* self) {
   if (self->m_hand->size == 2 &&
       ((Card*)self->m_hand->items[0])->m_rank[0] ==
           ((Card*)self->m_hand->items[1])->m_rank[0] &&
-      self->m_split_count < max_splits) {
+      *self->m_split_count < max_hands - 1) {
     return ((Card*)self->m_hand->items[0])->m_value;
   }
   return 0;
@@ -116,6 +119,7 @@ void Player__evaluate(Player* self) {
 }
 
 void Player__free(Player* self) {
+  if (self->m_split_from == NULL) free(self->m_split_count);
   Vector__free(self->m_hand);
   free(self);
 }

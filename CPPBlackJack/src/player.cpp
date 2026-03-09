@@ -10,7 +10,7 @@ Player::Player(Table* table, Player* split) {
   m_earnings_ = 0;
   m_aces_ = 0;
   m_is_soft_ = false;
-  m_split_count_ = 0;
+  m_split_count_ = std::make_shared<int>(0);
   m_is_done_ = false;
   m_split_from_ = nullptr;
   m_bet_mult_ = 1;
@@ -20,8 +20,9 @@ Player::Player(Table* table, Player* split) {
   if (m_table_ != nullptr) {
     m_initial_bet_ = m_table_->m_bet_size_;
     if (split != nullptr) {
+      m_split_count_ = split->m_split_count_;
+      ++(*m_split_count_);
       m_hand_.push_back(split->m_hand_[1]);
-      m_split_count_ = split->m_split_count_ + 1;
       m_player_num_ = split->m_player_num_ + "S";
       m_initial_bet_ = split->m_initial_bet_;
       m_split_from_ = split;
@@ -39,7 +40,7 @@ void Player::reset_hand() {
   m_value_ = 0;
   m_aces_ = 0;
   m_is_soft_ = false;
-  m_split_count_ = 0;
+  *m_split_count_ = 0;
   m_is_done_ = false;
   m_bet_mult_ = 1;
   m_has_natural_ = false;
@@ -48,7 +49,7 @@ void Player::reset_hand() {
 
 int Player::can_split() {
   if (m_hand_.size() == 2 && m_hand_[0]->m_rank_[0] == m_hand_[1]->m_rank_[0] &&
-      m_split_count_ < max_splits_) {
+      *m_split_count_ < max_hands_ - 1) {
     return m_hand_[0]->m_value_;
   }
   return 0;

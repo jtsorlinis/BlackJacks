@@ -4,13 +4,13 @@ namespace CSharpBlackJack
 {
   internal class Player
   {
-    private const int MaxSplits = 10;
+    private const int MaxHands = 4;
     private static int _playerNumCount;
+    private int[] _splitCount;
     private readonly Table _table;
     public readonly List<Card> mHand;
     public readonly Player mSplitFrom;
     private int _aces;
-    private int _splitCount;
     public float mBetMult = 1;
     public float mEarnings;
     public bool mHasNatural;
@@ -20,17 +20,20 @@ namespace CSharpBlackJack
 
     public string mPlayerNum;
     public int mValue;
+    public bool HasSplitHistory => _splitCount[0] > 0;
 
     public Player(Table table = null, Player split = null)
     {
       mHand = new(5);
+      _splitCount = new[] { 0 };
       _table = table;
       if (table == null) return;
       mInitialBet = _table.mBetSize;
       if (split != null)
       {
+        _splitCount = split._splitCount;
+        _splitCount[0]++;
         mHand.Add(split.mHand[1]);
-        _splitCount++;
         mPlayerNum = split.mPlayerNum + "S";
         mInitialBet = split.mInitialBet;
         mSplitFrom = split;
@@ -53,7 +56,7 @@ namespace CSharpBlackJack
       mValue = 0;
       _aces = 0;
       mIsSoft = false;
-      _splitCount = 0;
+      _splitCount[0] = 0;
       mIsDone = false;
       mBetMult = 1;
       mHasNatural = false;
@@ -62,7 +65,7 @@ namespace CSharpBlackJack
 
     public int CanSplit()
     {
-      if (mHand.Count == 2 && mHand[0].mRank[0] == mHand[1].mRank[0] && _splitCount < MaxSplits)
+      if (mHand.Count == 2 && mHand[0].mRank[0] == mHand[1].mRank[0] && _splitCount[0] < MaxHands - 1)
         return mHand[0].mValue;
       return 0;
     }

@@ -10,7 +10,7 @@
 const int num_players = 5;
 const int num_decks = 8;
 const int bet_size = 10;
-const int min_cards = 40;
+const int min_cards = 52;
 
 int rounds = 1000000;
 const bool verbose = false;
@@ -18,7 +18,7 @@ const bool verbose = false;
 int main(int argc, char const *argv[]) {
   if (argc == 2) rounds = atoi(argv[1]);
 
-  Table *t = Table__new(5, 8, 10, 40, verbose);
+  Table *t = Table__new(num_players, num_decks, bet_size, min_cards, verbose);
   CardPile__shuffle(t->m_card_pile);
 
   clock_t start = clock();

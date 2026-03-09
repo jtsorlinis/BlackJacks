@@ -8,7 +8,7 @@ typedef struct Player {
   Vector* m_hand;
   struct Player* m_split_from;
   int m_aces;
-  int m_split_count;
+  int* m_split_count;
   float m_bet_mult;
   float m_earnings;
   bool m_has_natural;

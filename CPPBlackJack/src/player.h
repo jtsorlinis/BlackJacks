@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -8,7 +9,7 @@ class Card;
 class Player {
  public:
   static int player_num_count_;
-  const static int max_splits_ = 10;
+  const static int max_hands_ = 4;
 
   std::string m_player_num_;
   std::vector<Card*> m_hand_;
@@ -16,7 +17,7 @@ class Player {
   float m_earnings_;
   int m_aces_;
   bool m_is_soft_;
-  int m_split_count_;
+  std::shared_ptr<int> m_split_count_;
   bool m_is_done_;
   Player* m_split_from_;
   float m_bet_mult_;

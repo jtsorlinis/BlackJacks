@@ -1,13 +1,16 @@
 use crate::card::Card;
+use std::cell::Cell;
+use std::rc::Rc;
 
-static MAXSPLITS: i32 = 10;
+static MAXHANDS: i32 = 4;
 
 pub struct Player {
     pub m_value: i32,
     pub m_earnings: f32,
     pub m_aces: i32,
     pub m_issoft: bool,
-    pub m_splitcount: i32,
+    pub m_splitcount: Rc<Cell<i32>>,
+    pub m_issplithand: bool,
     pub m_isdone: bool,
     pub m_betmult: f32,
     pub m_hasnatural: bool,
@@ -20,19 +23,44 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(playernum: &str, betsize: i32, splitcount: i32) -> Player {
+    pub fn new(playernum: &str, betsize: i32) -> Player {
         Player {
             m_value: 0,
             m_earnings: 0.0,
             m_aces: 0,
             m_issoft: false,
-            m_splitcount: splitcount,
+            m_splitcount: Rc::new(Cell::new(0)),
+            m_issplithand: false,
             m_isdone: false,
             m_betmult: 1.0,
             m_hasnatural: false,
             m_table: true,
             m_initialbet: betsize,
             m_originalbet: betsize,
+            m_hand: Vec::<*mut Card>::with_capacity(5),
+            m_playernum: playernum.to_owned(),
+        }
+    }
+
+    pub fn new_split(
+        playernum: &str,
+        initialbet: i32,
+        originalbet: i32,
+        splitcount: Rc<Cell<i32>>,
+    ) -> Player {
+        Player {
+            m_value: 0,
+            m_earnings: 0.0,
+            m_aces: 0,
+            m_issoft: false,
+            m_splitcount: splitcount,
+            m_issplithand: true,
+            m_isdone: false,
+            m_betmult: 1.0,
+            m_hasnatural: false,
+            m_table: true,
+            m_initialbet: initialbet,
+            m_originalbet: originalbet,
             m_hand: Vec::<*mut Card>::with_capacity(5),
             m_playernum: playernum.to_owned(),
         }
@@ -47,18 +75,26 @@ impl Player {
         self.m_value = 0;
         self.m_aces = 0;
         self.m_issoft = false;
-        self.m_splitcount = 0;
+        self.m_splitcount.set(0);
         self.m_isdone = false;
         self.m_betmult = 1.0;
         self.m_hasnatural = false;
         self.m_initialbet = self.m_originalbet
     }
 
+    pub fn record_split(&self) {
+        self.m_splitcount.set(self.m_splitcount.get() + 1);
+    }
+
+    pub fn has_split(&self) -> bool {
+        self.m_splitcount.get() > 0
+    }
+
     pub fn can_split(&self) -> i32 {
         unsafe {
             if self.m_hand.len() == 2
                 && (*self.m_hand[0]).m_rank == (*self.m_hand[1]).m_rank
-                && self.m_splitcount < MAXSPLITS
+                && self.m_splitcount.get() < MAXHANDS - 1
             {
                 (*self.m_hand[0]).m_value
             } else {

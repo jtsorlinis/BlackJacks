@@ -10,7 +10,7 @@ using namespace std::chrono;
 int num_of_players = 5;
 int num_of_decks = 8;
 int base_bet = 10;
-int min_cards = 40;
+int min_cards = 52;
 
 int rounds = 1000000;
 bool verbose = false;
