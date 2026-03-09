@@ -27,7 +27,7 @@ type Table struct {
 func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, verbose bool) *Table {
 	t := new(Table)
 	t.MVerbose = verbose
-	t.MBetSize = betSize
+	t.MBetSize = betsize
 	t.MNumOfDecks = numdecks
 	t.MCardPile = NewCardPile(numdecks)
 	t.MMinCards = mincards
