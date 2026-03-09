@@ -26,7 +26,6 @@ export default class CardPile {
   shuffle() {
     for (let i = this.mCards.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      // [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];
       const temp = this.mCards[i];
       this.mCards[i] = this.mCards[j];
       this.mCards[j] = temp;
