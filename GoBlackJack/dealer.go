@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 import "fmt"
 
 // Dealer class
@@ -26,20 +28,21 @@ func (d *Dealer) ResetHand() {
 
 // Print prints the dealers number and hand
 func (d *Dealer) Print() string {
-	output := "Player " + fmt.Sprint(d.MPlayerNum) + ": "
+	var output strings.Builder
+	output.WriteString("Player " + fmt.Sprint(d.MPlayerNum) + ": ")
 	for _, card := range d.MHand {
-		output += card.Print() + " "
+		output.WriteString(card.Print() + " ")
 	}
 	for i := len(d.MHand); i < 5; i++ {
-		output += "  "
+		output.WriteString("  ")
 	}
-	output += "\tScore: " + fmt.Sprint(d.MValue)
+	output.WriteString("\tScore: " + fmt.Sprint(d.MValue))
 	if d.MValue > 21 {
-		output += " (Bust) "
+		output.WriteString(" (Bust) ")
 	} else {
-		output += "        "
+		output.WriteString("        ")
 	}
-	return output
+	return output.String()
 }
 
 // Evaluate evaluates the player's hand
@@ -65,7 +68,7 @@ func (d *Dealer) Evaluate() {
 	}
 }
 
-//UpCard returns first card in dealer's hand
+// UpCard returns first card in dealer's hand
 func (d *Dealer) UpCard() int32 {
 	return d.MHand[0].MValue
 }

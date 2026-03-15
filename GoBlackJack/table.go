@@ -36,7 +36,7 @@ func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, v
 	t.MStratSoft = array2dToMap(stratSoft)
 	t.MStratSplit = array2dToMap(stratSplit)
 	t.MPlayers = make([]*Player, 0, numplayers*3)
-	for i := int32(0); i < numplayers; i++ {
+	for range numplayers {
 		t.MPlayers = append(t.MPlayers, NewPlayer(t, nil))
 	}
 

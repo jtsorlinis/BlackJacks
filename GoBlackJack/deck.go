@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"strings"
 )
 
 var suits = []string{"Clubs", "Hearts", "Spades", "Diamonds"}
@@ -26,11 +27,11 @@ func NewDeck() Deck {
 
 // Print the cards
 func (d *Deck) Print() string {
-	output := ""
+	var output strings.Builder
 	for _, card := range d.MCards {
-		output += card.Print()
+		output.WriteString(card.Print())
 	}
-	return output
+	return output.String()
 }
 
 // Shuffle the cards

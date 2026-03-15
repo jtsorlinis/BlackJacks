@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/bits"
+	"strings"
 	"time"
 )
 
@@ -37,7 +38,7 @@ type CardPile struct {
 // NewCardPile constructor
 func NewCardPile(numofdecks int32) CardPile {
 	var cp CardPile
-	for x := int32(0); x < numofdecks; x++ {
+	for range numofdecks {
 		temp := NewDeck()
 		cp.mOriginalCards = append(cp.mOriginalCards, temp.MCards...)
 	}
@@ -48,11 +49,11 @@ func NewCardPile(numofdecks int32) CardPile {
 
 // Print the cards
 func (c *CardPile) Print() string {
-	output := ""
+	var output strings.Builder
 	for _, card := range c.MCards {
-		output += card.Print()
+		output.WriteString(card.Print())
 	}
-	return output
+	return output.String()
 }
 
 // Shuffle the cards

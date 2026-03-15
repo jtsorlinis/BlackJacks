@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 var playerNumCount int32
@@ -90,22 +91,23 @@ func (p *Player) Lose() {
 
 // Print prints the players number and hand
 func (p *Player) Print() string {
-	output := "Player " + fmt.Sprint(p.MPlayerNum) + ": "
+	var output strings.Builder
+	output.WriteString("Player " + fmt.Sprint(p.MPlayerNum) + ": ")
 	for _, card := range p.MHand {
-		output += card.Print() + " "
+		output.WriteString(card.Print() + " ")
 	}
 	for i := len(p.MHand); i < 5; i++ {
-		output += "  "
+		output.WriteString("  ")
 	}
-	output += "\tScore: " + fmt.Sprint(p.MValue)
+	output.WriteString("\tScore: " + fmt.Sprint(p.MValue))
 	if p.MValue > 21 {
-		output += " (Bust) "
+		output.WriteString(" (Bust) ")
 	} else {
-		output += "       "
+		output.WriteString("       ")
 	}
-	output += "\tBet: "
-	output += fmt.Sprint(float32(p.MInitialBet) * p.MBetMult)
-	return output
+	output.WriteString("\tBet: ")
+	output.WriteString(fmt.Sprint(float32(p.MInitialBet) * p.MBetMult))
+	return output.String()
 }
 
 // Evaluate evaluates the player's hand
