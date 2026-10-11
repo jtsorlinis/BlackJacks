@@ -68,7 +68,7 @@ func (p *Player) ResetHand() {
 
 // CanSplit checks if the player can split
 func (p *Player) CanSplit() int32 {
-	if len(p.MHand) == 2 && p.MHand[0].MRank[0] == p.MHand[1].MRank[0] && *p.MSplitCount < maxHands-1 {
+	if len(p.MHand) == 2 && p.MHand[0].MRankID == p.MHand[1].MRankID && *p.MSplitCount < maxHands-1 {
 		return p.MHand[0].MValue
 	}
 	return 0
@@ -112,23 +112,21 @@ func (p *Player) Print() string {
 
 // Evaluate evaluates the player's hand
 func (p *Player) Evaluate() {
-	p.MAces = 0
-	p.MValue = 0
+	var value, aces int32
 	for _, card := range p.MHand {
-		p.MValue += card.MValue
+		value += card.MValue
 		// check for ace
 		if card.MIsAce {
-			p.MAces++
-			p.MIsSoft = true
+			aces++
 		}
 	}
 
-	for p.MValue > 21 && p.MAces > 0 {
-		p.MValue -= 10
-		p.MAces--
+	for value > 21 && aces > 0 {
+		value -= 10
+		aces--
 	}
 
-	if p.MAces == 0 {
-		p.MIsSoft = false
-	}
+	p.MValue = value
+	p.MAces = aces
+	p.MIsSoft = aces > 0
 }

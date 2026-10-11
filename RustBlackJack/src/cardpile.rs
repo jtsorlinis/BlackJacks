@@ -75,6 +75,6 @@ impl CardPile {
     }
 
     pub fn refresh(&mut self) {
-        self.m_cards = self.m_original_cards.clone();
+        self.m_cards.clone_from(&self.m_original_cards);
     }
 }

@@ -203,6 +203,7 @@ namespace CSharpBlackJack
 
     private void AutoPlay()
     {
+      var dealerUp = _dealer.UpCard();
       while (_currentPlayer < mPlayers.Count)
       {
         while (!mPlayers[_currentPlayer].mIsDone)
@@ -220,7 +221,6 @@ namespace CSharpBlackJack
           if (mPlayers[_currentPlayer].mHand.Count < 5 && mPlayers[_currentPlayer].mValue < 21)
           {
             var splitCardVal = mPlayers[_currentPlayer].CanSplit();
-            var dealerUp = _dealer.UpCard();
             if (splitCardVal == 11)
               SplitAces();
             else if (splitCardVal != 0 && splitCardVal != 5 && splitCardVal != 10)
@@ -276,7 +276,6 @@ namespace CSharpBlackJack
 
       _dealer.mHand[1].mFaceDown = false;
       _runningCount += _dealer.mHand[1].mCount;
-      _dealer.Evaluate();
       if (_verbose)
       {
         Console.WriteLine("Dealer's turn");

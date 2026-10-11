@@ -177,6 +177,7 @@ class Table:
             self.hit()
 
     def auto_play(self):
+        dealerupcard = self.dealer.up_card()
         while self.current_player < len(self.players):
             while not self.players[self.current_player].is_done:
                 if len(self.players[self.current_player].hand) == 1:
@@ -194,7 +195,6 @@ class Table:
                     and self.players[self.current_player].value < 21
                 ):
                     split_player_val = self.players[self.current_player].can_split()
-                    dealerupcard = self.dealer.up_card()
                     if split_player_val == 11:
                         self.split_aces()
                     elif split_player_val != 0 and split_player_val not in (5, 10):
@@ -249,7 +249,6 @@ class Table:
                 break
         self.dealer.hand[1].face_down = False
         self.running_count += self.dealer.hand[1].count
-        self.dealer.evaluate()
         if self.verbose:
             print("Dealer's turn")
             self.print()

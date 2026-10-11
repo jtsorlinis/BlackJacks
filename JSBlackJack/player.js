@@ -50,7 +50,7 @@ export default class Player {
   canSplit() {
     if (
       this.mHand.length === 2 &&
-      this.mHand[0].mRank === this.mHand[1].mRank &&
+      this.mHand[0].mRankId === this.mHand[1].mRankId &&
       this.mSplitCount.count < MaxHands - 1
     ) {
       return this.mHand[0].mValue;
@@ -91,23 +91,22 @@ export default class Player {
   }
 
   evaluate() {
-    this.mAces = 0;
-    this.mValue = 0;
+    let value = 0;
+    let aces = 0;
     for (let i = 0; i < this.mHand.length; i++) {
-      this.mValue += this.mHand[i].mValue;
+      value += this.mHand[i].mValue;
       if (this.mHand[i].mIsAce) {
-        this.mAces++;
-        this.mIsSoft = true;
+        aces++;
       }
     }
 
-    while (this.mValue > 21 && this.mAces > 0) {
-      this.mValue -= 10;
-      this.mAces--;
+    while (value > 21 && aces > 0) {
+      value -= 10;
+      aces--;
     }
 
-    if (this.mAces === 0) {
-      this.mIsSoft = false;
-    }
+    this.mValue = value;
+    this.mAces = aces;
+    this.mIsSoft = aces > 0;
   }
 }

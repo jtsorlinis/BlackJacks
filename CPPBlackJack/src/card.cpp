@@ -4,6 +4,7 @@
 
 Card::Card(std::string rank, std::string suit) {
   m_rank_ = std::move(rank);
+  m_rank_id_ = m_rank_[0];
   m_suit_ = std::move(suit);
   m_face_down_ = false;
   m_value_ = evaluate();

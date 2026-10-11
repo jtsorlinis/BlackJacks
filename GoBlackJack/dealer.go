@@ -47,25 +47,23 @@ func (d *Dealer) Print() string {
 
 // Evaluate evaluates the player's hand
 func (d *Dealer) Evaluate() {
-	d.MAces = 0
-	d.MValue = 0
+	var value, aces int32
 	for _, card := range d.MHand {
-		d.MValue += card.MValue
+		value += card.MValue
 		// check for ace
 		if card.MIsAce {
-			d.MAces++
-			d.MIsSoft = true
+			aces++
 		}
 	}
 
-	for d.MValue > 21 && d.MAces > 0 {
-		d.MValue -= 10
-		d.MAces--
+	for value > 21 && aces > 0 {
+		value -= 10
+		aces--
 	}
 
-	if d.MAces == 0 {
-		d.MIsSoft = false
-	}
+	d.MValue = value
+	d.MAces = aces
+	d.MIsSoft = aces > 0
 }
 
 // UpCard returns first card in dealer's hand

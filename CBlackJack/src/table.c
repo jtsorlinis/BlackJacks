@@ -205,6 +205,7 @@ void Table__double_bet(Table* self) {
 }
 
 void Table__auto_play(Table* self) {
+  int dealer_up_card = Dealer__up_card(self->m_dealer);
   while (self->m_current_player < self->m_players->size) {
     while (
         !((Player*)self->m_players->items[self->m_current_player])->m_is_done) {
@@ -221,7 +222,6 @@ void Table__auto_play(Table* self) {
               21) {
         int split_card_val =
             Player__can_split(self->m_players->items[self->m_current_player]);
-        int dealer_up_card = Dealer__up_card(self->m_dealer);
         if (split_card_val == 11) {
           Table__split_aces(self);
         } else if (split_card_val != 0 && split_card_val != 5 &&
@@ -282,7 +282,6 @@ void Table__dealer_play(Table* self) {
   }
   self->m_dealer->m_hide = false;
   self->m_running_count += ((Card*)self->m_dealer->m_hand->items[1])->m_count;
-  Dealer__evaluate(self->m_dealer);
   if (self->m_verbose) {
     printf("Dealer's turn\n");
     Table__print(self);

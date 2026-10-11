@@ -195,6 +195,7 @@ void Table::double_bet() {
 }
 
 void Table::auto_play() {
+  auto dealer_up_card = m_dealer_.up_card();
   while (m_current_player_ < static_cast<int>(m_players_.size())) {
     while (!m_players_[m_current_player_].m_is_done_) {
       // check if player just Split
@@ -210,7 +211,6 @@ void Table::auto_play() {
       if (m_players_[m_current_player_].m_hand_.size() < 5 &&
           m_players_[m_current_player_].m_value_ < 21) {
         auto split_card_val = m_players_[m_current_player_].can_split();
-        auto dealer_up_card = m_dealer_.up_card();
         if (split_card_val == 11) {
           split_aces();
         } else if (split_card_val != 0 &&
@@ -263,7 +263,6 @@ void Table::dealer_play() {
   }
   m_dealer_.m_hide_second_ = false;
   m_running_count_ += m_dealer_.m_hand_[1]->m_count_;
-  m_dealer_.evaluate();
   if (m_verbose_) {
     std::cout << "Dealer's turn\n";
     print();

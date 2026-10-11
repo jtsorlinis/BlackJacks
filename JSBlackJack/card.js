@@ -1,6 +1,7 @@
 export default class Card {
   constructor(rank, suit) {
     this.mRank = rank;
+    this.mRankId = rank.charCodeAt(0);
     this.mSuit = suit;
     this.mFaceDown = false;
     this.mValue = this.evaluate();

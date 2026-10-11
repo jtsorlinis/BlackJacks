@@ -48,7 +48,7 @@ void Player::reset_hand() {
 }
 
 int Player::can_split() {
-  if (m_hand_.size() == 2 && m_hand_[0]->m_rank_[0] == m_hand_[1]->m_rank_[0] &&
+  if (m_hand_.size() == 2 && m_hand_[0]->m_rank_id_ == m_hand_[1]->m_rank_id_ &&
       *m_split_count_ < max_hands_ - 1) {
     return m_hand_[0]->m_value_;
   }
@@ -89,25 +89,21 @@ std::string Player::print() {
 }
 
 int Player::evaluate() {
-  m_aces_ = 0;
-  m_value_ = 0;
+  auto value = 0;
+  auto aces = 0;
   for (auto& card : m_hand_) {
-    m_value_ += card->m_value_;
-    // Check for ace
-    if (card->m_is_ace_) {
-      m_aces_++;
-      m_is_soft_ = true;
-    }
+    value += card->m_value_;
+    aces += card->m_is_ace_;
   }
 
-  while (m_value_ > 21 && m_aces_ > 0) {
-    m_value_ -= 10;
-    m_aces_--;
+  while (value > 21 && aces > 0) {
+    value -= 10;
+    aces--;
   }
 
-  if (m_aces_ == 0) {
-    m_is_soft_ = false;
-  }
+  m_value_ = value;
+  m_aces_ = aces;
+  m_is_soft_ = aces > 0;
 
   return m_value_;
 }

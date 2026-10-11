@@ -15,6 +15,9 @@ pub struct Table {
     pub m_casinoearnings: f32,
     pub m_runningcount: i32,
     pub m_truecount: i32,
+    pub m_strat_hard: &'static [char],
+    pub m_strat_soft: &'static [char],
+    pub m_strat_split: &'static [char],
 }
 
 impl Table {
@@ -37,6 +40,9 @@ impl Table {
             m_casinoearnings: 0.0,
             m_runningcount: 0,
             m_truecount: 0,
+            m_strat_hard: &strategies::MAP_HARD,
+            m_strat_soft: &strategies::MAP_SOFT,
+            m_strat_split: &strategies::MAP_SPLIT,
         }
     }
 
@@ -139,6 +145,7 @@ impl Table {
         }
     }
 
+    #[inline(always)]
     pub fn clear(&mut self) {
         for player in (0..self.m_players.len()).rev() {
             if self.m_players[player].m_issplithand {
@@ -158,6 +165,7 @@ impl Table {
         }
     }
 
+    #[inline(always)]
     fn hit(&mut self) {
         self.deal();
         self.m_players[self.m_currentplayer].evaluate();
@@ -185,7 +193,7 @@ impl Table {
         let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
         let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
         let mut splitplayer = Player::new_split(
-            &splitplayernum,
+            splitplayernum,
             self.m_players[self.m_currentplayer].m_initialbet,
             self.m_players[self.m_currentplayer].m_originalbet,
             splitcount,
@@ -215,7 +223,7 @@ impl Table {
         let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
         let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
         let mut splitplayer = Player::new_split(
-            &splitplayernum,
+            splitplayernum,
             self.m_players[self.m_currentplayer].m_initialbet,
             self.m_players[self.m_currentplayer].m_originalbet,
             splitcount,
@@ -255,6 +263,7 @@ impl Table {
     }
 
     fn autoplay(&mut self) {
+        let dealer_up = self.m_dealer.up_card();
         while self.m_currentplayer < self.m_players.len() {
             while !self.m_players[self.m_currentplayer].m_isdone {
                 // check if player just split
@@ -272,7 +281,6 @@ impl Table {
                     && self.m_players[self.m_currentplayer].m_value < 21
                 {
                     let split_player_val = self.m_players[self.m_currentplayer].can_split();
-                    let dealer_up = self.m_dealer.up_card();
                     if split_player_val == 11 {
                         self.split_aces();
                     } else if split_player_val != 0
@@ -281,19 +289,19 @@ impl Table {
                         self.action(strategies::get_action(
                             split_player_val,
                             dealer_up,
-                            &strategies::MAP_SPLIT,
+                            self.m_strat_split,
                         ));
                     } else if self.m_players[self.m_currentplayer].m_issoft {
                         self.action(strategies::get_action(
                             self.m_players[self.m_currentplayer].m_value,
                             dealer_up,
-                            &strategies::MAP_SOFT,
+                            self.m_strat_soft,
                         ));
                     } else {
                         self.action(strategies::get_action(
                             self.m_players[self.m_currentplayer].m_value,
                             dealer_up,
-                            &strategies::MAP_HARD,
+                            self.m_strat_hard,
                         ));
                     }
                 } else {
@@ -331,7 +339,6 @@ impl Table {
         unsafe {
             self.m_runningcount += (*self.m_dealer.m_hand[1]).m_count;
         }
-        self.m_dealer.evaluate();
         if self.m_verbose {
             println!("Dealer's turn");
             self.print();

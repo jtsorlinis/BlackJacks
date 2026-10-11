@@ -7,6 +7,7 @@ import (
 // Card class
 type Card struct {
 	MRank     string
+	MRankID   byte
 	mSuit     string
 	mFaceDown bool
 	MValue    int32
@@ -18,6 +19,7 @@ type Card struct {
 func NewCard(rank string, suit string) *Card {
 	c := new(Card)
 	c.MRank = rank
+	c.MRankID = rank[0]
 	c.mSuit = suit
 	c.MValue = c.evaluate()
 	c.mCount = c.count()

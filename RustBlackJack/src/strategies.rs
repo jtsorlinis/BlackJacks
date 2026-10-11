@@ -57,7 +57,7 @@ static STRAT_SPLIT: LazyLock<Vec<Vec<&str>>> = LazyLock::new(|| {
     ]
 });
 
-pub fn get_action(player_val: i32, dealer_val: i32, strategy: &LazyLock<Vec<char>>) -> char {
+pub fn get_action(player_val: i32, dealer_val: i32, strategy: &[char]) -> char {
     let key = player_val * 12 + dealer_val;
     *strategy.get(key as usize).unwrap()
 }

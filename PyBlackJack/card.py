@@ -1,6 +1,7 @@
 class Card:
     def __init__(self, rank, suit):
         self.rank = rank
+        self.rank_id = ord(rank[0])
         self.suit = suit
         self.face_down = False
         self.is_ace = self.rank == "A"

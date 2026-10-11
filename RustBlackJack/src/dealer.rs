@@ -63,24 +63,21 @@ impl Dealer {
 
     pub fn evaluate(&mut self) {
         unsafe {
-            self.m_aces = 0;
-            self.m_value = 0;
+            let mut value = 0;
+            let mut aces = 0;
             for &card in self.m_hand.iter() {
-                self.m_value += (*card).m_value;
-                if (*card).m_isace {
-                    self.m_aces += 1;
-                    self.m_issoft = true;
-                }
+                value += (*card).m_value;
+                aces += (*card).m_isace as i32;
             }
 
-            while self.m_value > 21 && self.m_aces > 0 {
-                self.m_value -= 10;
-                self.m_aces -= 1;
+            while value > 21 && aces > 0 {
+                value -= 10;
+                aces -= 1;
             }
 
-            if self.m_aces == 0 {
-                self.m_issoft = false;
-            }
+            self.m_value = value;
+            self.m_aces = aces;
+            self.m_issoft = aces > 0;
         }
     }
 }

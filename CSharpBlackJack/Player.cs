@@ -65,7 +65,7 @@ namespace CSharpBlackJack
 
     public int CanSplit()
     {
-      if (mHand.Count == 2 && mHand[0].mRank[0] == mHand[1].mRank[0] && _splitCount[0] < MaxHands - 1)
+      if (mHand.Count == 2 && mHand[0].mRankId == mHand[1].mRankId && _splitCount[0] < MaxHands - 1)
         return mHand[0].mValue;
       return 0;
     }
@@ -100,24 +100,23 @@ namespace CSharpBlackJack
 
     public void Evaluate()
     {
-      _aces = 0;
-      mValue = 0;
+      var value = 0;
+      var aces = 0;
       for (var i = 0; i < mHand.Count; i++)
       {
-        mValue += mHand[i].mValue;
-        // check for ace
-        if (!mHand[i].mIsAce) continue;
-        _aces++;
-        mIsSoft = true;
+        value += mHand[i].mValue;
+        aces += mHand[i].mIsAce ? 1 : 0;
       }
 
-      while (mValue > 21 && _aces > 0)
+      while (value > 21 && aces > 0)
       {
-        mValue -= 10;
-        _aces--;
+        value -= 10;
+        aces--;
       }
 
-      if (_aces == 0) mIsSoft = false;
+      mValue = value;
+      _aces = aces;
+      mIsSoft = aces > 0;
     }
   }
 }

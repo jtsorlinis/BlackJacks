@@ -5,6 +5,7 @@ namespace CSharpBlackJack
     public readonly int mCount;
     public readonly bool mIsAce;
     public readonly string mRank;
+    public readonly char mRankId;
     public readonly int mValue;
     private readonly string _suit;
     public bool mFaceDown = false;
@@ -12,6 +13,7 @@ namespace CSharpBlackJack
     public Card(string rank, string suit)
     {
       mRank = rank;
+      mRankId = rank[0];
       _suit = suit;
       mValue = Evaluate();
       mCount = Count();

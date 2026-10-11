@@ -6,6 +6,7 @@ typedef struct {
   int m_count;
   bool m_is_ace;
   char* m_rank;
+  char m_rank_id;
   int m_value;
   char* m_suit;
   bool m_face_down;

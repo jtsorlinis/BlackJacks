@@ -6,6 +6,7 @@ pub struct Card {
     pub m_count: i32,
     pub m_value: i32,
     pub m_isace: bool,
+    pub m_rankid: u8,
 }
 
 impl Card {
@@ -17,6 +18,7 @@ impl Card {
             m_count: Card::count(rank),
             m_value: Card::evaluate(rank),
             m_isace: Card::isace(rank),
+            m_rankid: rank.as_bytes()[0],
         }
     }
 

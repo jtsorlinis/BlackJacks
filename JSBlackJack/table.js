@@ -206,6 +206,7 @@ export default class Table {
   }
 
   autoPlay() {
+    const dealerUp = this.mDealer.upCard();
     while (this.mCurrentPlayer < this.mPlayers.length) {
       while (!this.mPlayers[this.mCurrentPlayer].mIsDone) {
         if (this.mPlayers[this.mCurrentPlayer].mHand.length === 1) {
@@ -224,7 +225,6 @@ export default class Table {
           this.mPlayers[this.mCurrentPlayer].mValue < 21
         ) {
           const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
-          const dealerUp = this.mDealer.upCard();
           if (splitCardVal === 11) {
             this.splitAces();
           } else if (
@@ -285,7 +285,6 @@ export default class Table {
     }
     this.mDealer.mHand[1].mFaceDown = false;
     this.mRunningCount += this.mDealer.mHand[1].mCount;
-    this.mDealer.evaluate();
     if (this.mVerbose) {
       console.log("Dealer's turn");
       this.print();

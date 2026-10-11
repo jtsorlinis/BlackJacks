@@ -205,6 +205,7 @@ func (t *Table) doubleBet() {
 }
 
 func (t *Table) autoPlay() {
+	dealerUp := t.MDealer.UpCard()
 	for t.mCurrentPlayer < int32(len(t.MPlayers)) {
 		for !t.MPlayers[t.mCurrentPlayer].MIsDone {
 			// check if player just split
@@ -218,7 +219,6 @@ func (t *Table) autoPlay() {
 
 			if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
 				splitCardVal := t.MPlayers[t.mCurrentPlayer].CanSplit()
-				dealerUp := t.MDealer.UpCard()
 				if splitCardVal == 11 {
 					t.splitAces()
 				} else if splitCardVal != 0 && (splitCardVal != 5 && splitCardVal != 10) {
@@ -264,7 +264,6 @@ func (t *Table) dealerPlay() {
 	}
 	t.MDealer.MHand[1].mFaceDown = false
 	t.MRunningCount += t.MDealer.MHand[1].mCount
-	t.MDealer.Evaluate()
 	if t.MVerbose {
 		println("Dealer's turn")
 	}

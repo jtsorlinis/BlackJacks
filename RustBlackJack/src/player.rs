@@ -43,7 +43,7 @@ impl Player {
     }
 
     pub fn new_split(
-        playernum: &str,
+        playernum: String,
         initialbet: i32,
         originalbet: i32,
         splitcount: Rc<Cell<i32>>,
@@ -62,7 +62,7 @@ impl Player {
             m_initialbet: initialbet,
             m_originalbet: originalbet,
             m_hand: Vec::<*mut Card>::with_capacity(5),
-            m_playernum: playernum.to_owned(),
+            m_playernum: playernum,
         }
     }
 
@@ -93,7 +93,7 @@ impl Player {
     pub fn can_split(&self) -> i32 {
         unsafe {
             if self.m_hand.len() == 2
-                && (*self.m_hand[0]).m_rank == (*self.m_hand[1]).m_rank
+                && (*self.m_hand[0]).m_rankid == (*self.m_hand[1]).m_rankid
                 && self.m_splitcount.get() < MAXHANDS - 1
             {
                 (*self.m_hand[0]).m_value
@@ -142,24 +142,21 @@ impl Player {
 
     pub fn evaluate(&mut self) {
         unsafe {
-            self.m_aces = 0;
-            self.m_value = 0;
+            let mut value = 0;
+            let mut aces = 0;
             for &card in self.m_hand.iter() {
-                self.m_value += (*card).m_value;
-                if (*card).m_isace {
-                    self.m_aces += 1;
-                    self.m_issoft = true;
-                }
+                value += (*card).m_value;
+                aces += (*card).m_isace as i32;
             }
 
-            while self.m_value > 21 && self.m_aces > 0 {
-                self.m_value -= 10;
-                self.m_aces -= 1;
+            while value > 21 && aces > 0 {
+                value -= 10;
+                aces -= 1;
             }
 
-            if self.m_aces == 0 {
-                self.m_issoft = false;
-            }
+            self.m_value = value;
+            self.m_aces = aces;
+            self.m_issoft = aces > 0;
         }
     }
 }

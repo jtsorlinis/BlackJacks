@@ -27,25 +27,21 @@ int Dealer__up_card(Dealer* self) {
 }
 
 void Dealer__evaluate(Dealer* self) {
-  self->m_aces = 0;
-  self->m_value = 0;
+  int value = 0;
+  int aces = 0;
   for (int i = 0; i < self->m_hand->size; i++) {
-    self->m_value += ((Card*)self->m_hand->items[i])->m_value;
-    // Check for ace
-    if (((Card*)self->m_hand->items[i])->m_is_ace) {
-      self->m_aces++;
-      self->m_is_soft = true;
-    }
+    value += ((Card*)self->m_hand->items[i])->m_value;
+    aces += ((Card*)self->m_hand->items[i])->m_is_ace;
   }
 
-  while (self->m_value > 21 && self->m_aces > 0) {
-    self->m_value -= 10;
-    self->m_aces--;
+  while (value > 21 && aces > 0) {
+    value -= 10;
+    aces--;
   }
 
-  if (self->m_aces == 0) {
-    self->m_is_soft = false;
-  }
+  self->m_value = value;
+  self->m_aces = aces;
+  self->m_is_soft = aces > 0;
 }
 
 void Dealer__print(Dealer* self) {

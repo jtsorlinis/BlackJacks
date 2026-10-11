@@ -59,8 +59,8 @@ void Player__reset_hand(Player* self) {
 
 int Player__can_split(Player* self) {
   if (self->m_hand->size == 2 &&
-      ((Card*)self->m_hand->items[0])->m_rank[0] ==
-          ((Card*)self->m_hand->items[1])->m_rank[0] &&
+      ((Card*)self->m_hand->items[0])->m_rank_id ==
+          ((Card*)self->m_hand->items[1])->m_rank_id &&
       *self->m_split_count < max_hands - 1) {
     return ((Card*)self->m_hand->items[0])->m_value;
   }
@@ -97,25 +97,21 @@ void Player__print(Player* self) {
 }
 
 void Player__evaluate(Player* self) {
-  self->m_aces = 0;
-  self->m_value = 0;
+  int value = 0;
+  int aces = 0;
   for (int i = 0; i < self->m_hand->size; i++) {
-    self->m_value += ((Card*)self->m_hand->items[i])->m_value;
-    // Check for ace
-    if (((Card*)self->m_hand->items[i])->m_is_ace) {
-      self->m_aces++;
-      self->m_is_soft = true;
-    }
+    value += ((Card*)self->m_hand->items[i])->m_value;
+    aces += ((Card*)self->m_hand->items[i])->m_is_ace;
   }
 
-  while (self->m_value > 21 && self->m_aces > 0) {
-    self->m_value -= 10;
-    self->m_aces--;
+  while (value > 21 && aces > 0) {
+    value -= 10;
+    aces--;
   }
 
-  if (self->m_aces == 0) {
-    self->m_is_soft = false;
-  };
+  self->m_value = value;
+  self->m_aces = aces;
+  self->m_is_soft = aces > 0;
 }
 
 void Player__free(Player* self) {

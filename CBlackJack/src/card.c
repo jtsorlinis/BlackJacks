@@ -3,6 +3,7 @@
 Card* Card__new(char* rank, char* suit) {
   Card* c = malloc(sizeof(Card));
   c->m_rank = rank;
+  c->m_rank_id = rank[0];
   c->m_suit = suit;
   c->m_value = Card__evaluate(c);
   c->m_count = Card__count(c);

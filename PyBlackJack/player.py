@@ -46,7 +46,7 @@ class Player:
     def can_split(self):
         if (
                 len(self.hand) == 2
-                and (self.hand[0].rank == self.hand[1].rank)
+                and (self.hand[0].rank_id == self.hand[1].rank_id)
                 and self.split_count[0] < Player.maxHands - 1
         ):
             return self.hand[0].value
@@ -85,17 +85,13 @@ class Player:
             # Check for an ace
             if card.is_ace:
                 aces += 1
-                is_soft = True
 
         while value > 21 and aces > 0:
             value -= 10
             aces -= 1
 
-        if aces == 0:
-            is_soft = False
-
         self.value = value
         self.aces = aces
-        self.is_soft = is_soft
+        self.is_soft = aces > 0
 
         return self.value
