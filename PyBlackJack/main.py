@@ -20,31 +20,34 @@ def main():
     table1.cardpile.shuffle()
 
     start_time = time.perf_counter()
-    for _x in range(0, rounds):
+    for x in range(1, rounds + 1):
         if verbose:
-            print("Round " + str(_x + 1))
-        if not verbose and rounds > 1000 and _x % (rounds / 100) == 0:
-            print("\tProgress: " + str(int(_x * 100 / rounds)), end="%\r")
+            print("Round " + str(x))
+        if not verbose and rounds > 1000 and x % (rounds // 100) == 0:
+            print("\tProgress: " + str(x * 100 // rounds) + "%",
+                  end="\r", file=sys.stderr, flush=True)
         table1.start_round()
         table1.check_earnings()
 
+    table1.clear()
+
     for player in table1.players:
-        if not player.split_from:
-            print(
-                "Player "
-                + str(player.player_num)
-                + " earnings: "
-                + str(player.earnings)
-                + "\t\tWin percentage: "
-                + str(50 + (player.earnings / (rounds * bet_size) * 50))
-            )
-    print("Casino earnings: " + str(table1.casino_earnings))
+        print(
+            "Player "
+            + str(player.player_num)
+            + " earnings: "
+            + str(int(player.earnings))
+            + "\t\tWin Percentage: "
+            + format(50 + player.earnings / (rounds * bet_size) * 50, ".2f")
+            + "%"
+        )
+    print("Casino earnings: " + str(int(table1.casino_earnings)))
 
     print(
         "Played "
-        + str(_x + 1)
+        + str(rounds)
         + " rounds in "
-        + format(time.perf_counter() - start_time, ".2f")
+        + format(time.perf_counter() - start_time, ".3f")
         + " seconds"
     )
 

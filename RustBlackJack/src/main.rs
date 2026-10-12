@@ -39,7 +39,7 @@ fn main() {
             println!("Round {}", x);
         }
         if !VERBOSE && rounds > 1000 && x % (rounds / 100) == 0 {
-            eprint!("\rProgress: {:.0}%", x * 100 / rounds);
+            eprint!("\tProgress: {}%\r", x * 100 / rounds);
         }
 
         table1.start_round();
@@ -47,19 +47,18 @@ fn main() {
     }
 
     table1.clear();
-    print!("\r");
     for player in table1.m_players.iter() {
         println!(
-            "Player {} earnings: {}\t\tWin Percentage: {}%",
+            "Player {} earnings: {}\t\tWin Percentage: {:.2}%",
             player.m_playernum,
             player.m_earnings as i32,
-            50.0 + (player.m_earnings / (rounds as f32 * BET_SIZE as f32) * 50.0)
+            50.0 + f64::from(player.m_earnings) / (f64::from(rounds) * f64::from(BET_SIZE)) * 50.0
         );
     }
-    println!("Casino earnings: {}", table1.m_casinoearnings);
+    println!("Casino earnings: {}", table1.m_casinoearnings as i32);
     println!(
-        "Played {} rounds in {} seconds",
+        "Played {} rounds in {:.3} seconds",
         rounds,
-        start.elapsed().as_millis() as f32 / 1000.0
+        start.elapsed().as_secs_f64()
     );
 }

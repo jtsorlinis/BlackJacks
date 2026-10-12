@@ -31,10 +31,9 @@ func main() {
 	start := time.Now()
 
 	rounds32 := int32(rounds)
-	var x int32
-	for ; x < rounds32; x++ {
+	for x := int32(1); x <= rounds32; x++ {
 		if verbose {
-			println("Round " + fmt.Sprint(x+1))
+			println("Round " + fmt.Sprint(x))
 		}
 		if !verbose && rounds > 1000 && x%(rounds32/100) == 0 {
 			print("\tProgress: " + fmt.Sprint(x*100/rounds32) + "%\r")
@@ -46,8 +45,8 @@ func main() {
 	table1.clear()
 
 	for _, player := range table1.MPlayers {
-		println("Player " + fmt.Sprint(player.MPlayerNum) + " earnings: " + fmt.Sprint(player.MEarnings) + "\t\tWin Percentage: " + fmt.Sprint((50 + (player.MEarnings / float32((rounds32 * betSize)) * 50))) + "%")
+		fmt.Printf("Player %s earnings: %d\t\tWin Percentage: %.2f%%\n", player.MPlayerNum, int32(player.MEarnings), 50+float64(player.MEarnings)/(float64(rounds)*float64(betSize))*50)
 	}
-	println("Casino earnings: " + fmt.Sprintf("%.0f", table1.MCasinoEarnings))
+	fmt.Printf("Casino earnings: %d\n", int32(table1.MCasinoEarnings))
 	fmt.Printf("Played %d rounds in %.3f seconds\n", rounds, time.Since(start).Seconds())
 }

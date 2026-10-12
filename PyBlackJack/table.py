@@ -237,7 +237,7 @@ class Table:
         else:
             print("errored")
             print(action)
-            sys.exit()
+            sys.exit(1)
         if self.verbose:
             self.print()
 
@@ -287,7 +287,7 @@ class Table:
             check += player.earnings
         if check + self.casino_earnings != 0:
             print("NO MATCH")
-            sys.exit()
+            sys.exit(1)
 
     def finish_round(self):
         if self.verbose:

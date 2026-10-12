@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace CSharpBlackJack
 {
@@ -16,6 +17,7 @@ namespace CSharpBlackJack
       bool verbose = false;
 
       if (args.Length == 1) rounds = int.Parse(args[0]);
+      CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
       var table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards, verbose);
       table1.mCardPile.Shuffle();
@@ -28,7 +30,7 @@ namespace CSharpBlackJack
       {
         if (verbose) Console.WriteLine("Round " + x);
         if (!verbose && rounds > 1000 && x % (rounds / 100) == 0)
-          Console.Write("\tProgress: " + x * 100 / rounds + "%\r");
+          Console.Error.Write("\tProgress: " + x * 100 / rounds + "%\r");
 
         table1.StartRound();
         table1.CheckEarnings();
@@ -37,10 +39,11 @@ namespace CSharpBlackJack
       table1.Clear();
 
       foreach (var player in table1.mPlayers)
-        Console.WriteLine("Player " + player.mPlayerNum + " earnings: " + player.mEarnings +
-                          "\t\tWin Percentage: " + (50 + player.mEarnings / (rounds * betSize) * 50f) + "%");
-      Console.WriteLine("Casino earnings: " + table1.mCasinoEarnings);
-      Console.WriteLine("Played " + rounds + " rounds in " + timer.ElapsedMilliseconds / 1000f + " seconds");
+        Console.WriteLine("Player " + player.mPlayerNum + " earnings: " + (int)player.mEarnings +
+                          "\t\tWin Percentage: " +
+                          (50 + player.mEarnings / ((double)rounds * betSize) * 50).ToString("F2") + "%");
+      Console.WriteLine("Casino earnings: " + (int)table1.mCasinoEarnings);
+      Console.WriteLine("Played " + rounds + " rounds in " + timer.Elapsed.TotalSeconds.ToString("F3") + " seconds");
     }
   }
 }
