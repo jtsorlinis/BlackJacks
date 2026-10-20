@@ -82,8 +82,8 @@ std::string Player::print() {
     output += "        ";
   }
   if (m_player_num_ != "D") {
-    output += "\tBet: " +
-              std::to_string(static_cast<double>(m_initial_bet_) * m_bet_mult_);
+    output += "\tBet: " + std::to_string(static_cast<int>(
+                              static_cast<double>(m_initial_bet_) * m_bet_mult_));
   }
   return output;
 }

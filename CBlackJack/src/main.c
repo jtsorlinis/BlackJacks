@@ -21,7 +21,8 @@ int main(int argc, char const *argv[]) {
   Table *t = Table__new(num_players, num_decks, bet_size, min_cards, verbose);
   CardPile__shuffle(t->m_card_pile);
 
-  clock_t start = clock();
+  struct timespec start, end;
+  clock_gettime(CLOCK_MONOTONIC, &start);
 
   for (int x = 1; x <= rounds; x++) {
     if (verbose) printf("Round %d\n", x);
@@ -44,8 +45,9 @@ int main(int argc, char const *argv[]) {
   }
 
   printf("Casino earnings: %d\n", (int)t->m_casino_earnings);
+  clock_gettime(CLOCK_MONOTONIC, &end);
   printf("Played %d rounds in %.3f seconds\n", rounds,
-         (double)(clock() - start) / CLOCKS_PER_SEC);
+         (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9);
 
   return 0;
 }

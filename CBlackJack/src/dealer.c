@@ -59,6 +59,8 @@ void Dealer__print(Dealer* self) {
   printf("\tScore: %d", self->m_value);
   if (self->m_value > 21) {
     printf(" (Bust) ");
+  } else {
+    printf("        ");
   }
   printf("\n");
 }

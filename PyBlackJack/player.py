@@ -70,11 +70,11 @@ class Player:
             output += "  "
         output += "\tScore: " + str(self.value)
         if self.value > 21:
-            output += " (Bust)"
+            output += " (Bust) "
         else:
-            output += "       "
+            output += "        "
         if self.player_num != "D":
-            output += "\tBet: " + str(self.initial_bet * self.bet_mult)
+            output += "\tBet: " + str(int(self.initial_bet * self.bet_mult))
         return output
 
     def evaluate(self):

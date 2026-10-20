@@ -154,6 +154,7 @@ void Table__stand(Table* self) {
     printf("Player %s stands\n",
            ((Player*)self->m_players->items[self->m_current_player])
                ->m_player_num);
+    Table__print(self);
   }
   ((Player*)self->m_players->items[self->m_current_player])->m_is_done = true;
 }
@@ -217,6 +218,10 @@ void Table__auto_play(Table* self) {
       // check if player just split
       if (((Player*)self->m_players->items[self->m_current_player])
               ->m_hand->size == 1) {
+        if (self->m_verbose)
+          printf("Player %s gets 2nd card after splitting\n",
+                 ((Player*)self->m_players->items[self->m_current_player])
+                     ->m_player_num);
         Table__deal(self);
         Player__evaluate(self->m_players->items[self->m_current_player]);
       }
@@ -345,19 +350,41 @@ void Table__check_earnings(Table* self) {
 void Table__finish_round(Table* self) {
   if (self->m_verbose) printf("Scoring round\n");
   for (int i = 0; i < self->m_players->size; i++) {
-    if (((Player*)self->m_players->items[i])->m_has_natural) {
-      Player__win(self->m_players->items[i], 1.5);
-    } else if (((Player*)self->m_players->items[i])->m_value > 21) {
-      Player__lose(self->m_players->items[i]);
+    Player* player = self->m_players->items[i];
+    if (player->m_has_natural) {
+      Player__win(player, 1.5);
+      if (self->m_verbose)
+        printf("Player %s Wins %d with a natural 21\n", player->m_player_num,
+               (int)(1.5 * player->m_bet_mult * player->m_initial_bet));
+    } else if (player->m_value > 21) {
+      Player__lose(player);
+      if (self->m_verbose)
+        printf("Player %s Busts and Loses %d\n", player->m_player_num,
+               (int)(player->m_bet_mult * player->m_initial_bet));
     } else if (self->m_dealer->m_value > 21 ||
-               ((Player*)self->m_players->items[i])->m_value >
-                   self->m_dealer->m_value) {
-      Player__win(self->m_players->items[i], 1);
-    } else if (((Player*)self->m_players->items[i])->m_value ==
-               self->m_dealer->m_value) {
+               player->m_value > self->m_dealer->m_value) {
+      Player__win(player, 1);
+      if (self->m_verbose)
+        printf("Player %s Wins %d\n", player->m_player_num,
+               (int)(player->m_bet_mult * player->m_initial_bet));
+    } else if (player->m_value == self->m_dealer->m_value) {
+      if (self->m_verbose) printf("Player %s Draws\n", player->m_player_num);
     } else {
-      Player__lose(self->m_players->items[i]);
+      Player__lose(player);
+      if (self->m_verbose)
+        printf("Player %s Loses %d\n", player->m_player_num,
+               (int)(player->m_bet_mult * player->m_initial_bet));
     }
+  }
+  if (self->m_verbose) {
+    for (int i = 0; i < self->m_players->size; i++) {
+      Player* player = self->m_players->items[i];
+      if (player->m_split_from == NULL) {
+        printf("Player %s Earnings: %d\n", player->m_player_num,
+               (int)player->m_earnings);
+      }
+    }
+    printf("\n");
   }
   Table__clear(self);
 }

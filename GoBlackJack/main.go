@@ -33,7 +33,7 @@ func main() {
 	rounds32 := int32(rounds)
 	for x := int32(1); x <= rounds32; x++ {
 		if verbose {
-			println("Round " + fmt.Sprint(x))
+			fmt.Println("Round " + fmt.Sprint(x))
 		}
 		if !verbose && rounds > 1000 && x%(rounds32/100) == 0 {
 			print("\tProgress: " + fmt.Sprint(x*100/rounds32) + "%\r")

@@ -93,7 +93,7 @@ void Player__print(Player* self) {
   } else {
     printf("        ");
   }
-  printf("\tBet: %f\n", self->m_initial_bet * self->m_bet_mult);
+  printf("\tBet: %d\n", (int)(self->m_initial_bet * self->m_bet_mult));
 }
 
 void Player__evaluate(Player* self) {

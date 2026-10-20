@@ -40,8 +40,8 @@ class Table:
 
     # check count and bet accordingly
     def select_bet(self, player):
-        if int(self.true_count) >= 2:
-            player.initial_bet = self.betsize * int(self.true_count - 1)
+        if self.true_count >= 2:
+            player.initial_bet = self.betsize * (self.true_count - 1)
 
     def deal_dealer(self, face_down=False):
         card = self.cardpile.cards.pop()
@@ -58,7 +58,7 @@ class Table:
                 "Running count is: "
                 + str(self.running_count)
                 + "\tTrue count is: "
-                + str(int(self.true_count))
+                + str(self.true_count)
             )
         self.get_new_cards()
         self.pre_deal()
@@ -86,7 +86,7 @@ class Table:
                 print(
                     "Got "
                     + str(self.numofdecks)
-                    + " new decks as number of cards is below "
+                    + " new decks as number of cards left is below "
                     + str(self.mincards)
                 )
 
@@ -107,8 +107,10 @@ class Table:
 
     def update_count(self):
         if len(self.cardpile.cards) > 51:
-            self.true_count = self.running_count / \
-                int(len(self.cardpile.cards) / 52)
+            # int() truncates toward zero like the other ports; // would floor
+            self.true_count = int(
+                self.running_count / (len(self.cardpile.cards) // 52)
+            )
 
     def hit(self):
         if self.verbose == 1:
@@ -127,6 +129,7 @@ class Table:
                     + str(self.players[self.current_player].player_num)
                     + " stands"
                 )
+                self.print()
         self.players[self.current_player].is_done = True
 
     def split(self):
@@ -240,8 +243,6 @@ class Table:
             print("errored")
             print(action)
             sys.exit(1)
-        if self.verbose:
-            self.print()
 
     def dealer_play(self):
         all_settled = True
@@ -279,7 +280,7 @@ class Table:
             self.running_count += self.dealer.hand[1].count
             if self.verbose:
                 self.print()
-                print("Dealer has a natural 21\n")
+                print("Dealer has a natural 21")
             return True
         return False
 
@@ -301,8 +302,8 @@ class Table:
                     print(
                         "Player "
                         + str(player.player_num)
-                        + " wins "
-                        + str(1.5 * player.bet_mult * player.initial_bet)
+                        + " Wins "
+                        + str(int(1.5 * player.bet_mult * player.initial_bet))
                         + " with a natural 21"
                     )
             elif player.value > 21:
@@ -311,8 +312,8 @@ class Table:
                     print(
                         "Player "
                         + str(player.player_num)
-                        + " Busts and loses "
-                        + str(player.bet_mult * player.initial_bet)
+                        + " Busts and Loses "
+                        + str(int(player.bet_mult * player.initial_bet))
                     )
             elif self.dealer.value > 21 or player.value > self.dealer.value:
                 player.win()
@@ -321,7 +322,7 @@ class Table:
                         "Player "
                         + str(player.player_num)
                         + " Wins "
-                        + str(player.bet_mult * player.initial_bet)
+                        + str(int(player.bet_mult * player.initial_bet))
                     )
             elif player.value == self.dealer.value:
                 if self.verbose:
@@ -333,7 +334,7 @@ class Table:
                         "Player "
                         + str(player.player_num)
                         + " Loses "
-                        + str(player.bet_mult * player.initial_bet)
+                        + str(int(player.bet_mult * player.initial_bet))
                     )
         if self.verbose:
             for player in self.players:
@@ -342,9 +343,9 @@ class Table:
                         "Player "
                         + str(player.player_num)
                         + " Earnings: "
-                        + str(player.earnings)
+                        + str(int(player.earnings))
                     )
-            print("\n")
+            print()
         self.clear()
 
     def print(self):

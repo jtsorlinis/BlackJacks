@@ -85,7 +85,7 @@ export default class Player {
       output += "        ";
     }
     if (this.mPlayerNum !== "D") {
-      output += `\tBet: ${this.mInitialBet * this.mBetMult}`;
+      output += `\tBet: ${Math.trunc(this.mInitialBet * this.mBetMult)}`;
     }
     return output;
   }

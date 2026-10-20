@@ -94,7 +94,7 @@ namespace CSharpBlackJack
         output += " (Bust) ";
       else
         output += "        ";
-      if (mPlayerNum != "D") output += "\tBet: " + mInitialBet * mBetMult;
+      if (mPlayerNum != "D") output += "\tBet: " + (int)(mInitialBet * mBetMult);
       return output;
     }
 

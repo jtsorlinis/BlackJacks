@@ -172,7 +172,7 @@ namespace CSharpBlackJack
 
     private void SplitAces()
     {
-      if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits Aces");
+      if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits aces");
       var splitPlayer = new Player(this, mPlayers[_currentPlayer]);
       mPlayers[_currentPlayer].mHand.RemoveAt(mPlayers[_currentPlayer].mHand.Count - 1);
       mPlayers.Insert(_currentPlayer + 1, splitPlayer);
@@ -347,21 +347,21 @@ namespace CSharpBlackJack
           mPlayers[i].Win(1.5);
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
-                              1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet + " with a natural 21");
+                              (int)(1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet) + " with a natural 21");
         }
         else if (mPlayers[i].mValue > 21)
         {
           mPlayers[i].Lose();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Busts and Loses " +
-                              mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
+                              (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
         }
         else if (_dealer.mValue > 21 || mPlayers[i].mValue > _dealer.mValue)
         {
           mPlayers[i].Win();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
-                              mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
+                              (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
         }
         else if (mPlayers[i].mValue == _dealer.mValue)
         {
@@ -372,14 +372,14 @@ namespace CSharpBlackJack
           mPlayers[i].Lose();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Loses " +
-                              mPlayers[i].mBetMult * mPlayers[i].mInitialBet);
+                              (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
         }
       }
 
       if (_verbose)
       {
         foreach (var player in mPlayers.Where(player => player.mSplitFrom == null))
-          Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + player.mEarnings);
+          Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + (int)player.mEarnings);
         Console.WriteLine();
       }
       Clear();

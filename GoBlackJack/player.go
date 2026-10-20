@@ -103,10 +103,10 @@ func (p *Player) Print() string {
 	if p.MValue > 21 {
 		output.WriteString(" (Bust) ")
 	} else {
-		output.WriteString("       ")
+		output.WriteString("        ")
 	}
 	output.WriteString("\tBet: ")
-	output.WriteString(fmt.Sprint(float64(p.MInitialBet) * p.MBetMult))
+	output.WriteString(fmt.Sprint(int32(float64(p.MInitialBet) * p.MBetMult)))
 	return output.String()
 }
 

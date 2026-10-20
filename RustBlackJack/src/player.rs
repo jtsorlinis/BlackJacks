@@ -135,7 +135,7 @@ impl Player {
                 output += "        ";
             }
             output += "\tBet: ";
-            output += &(self.m_initialbet as f64 * self.m_betmult).to_string();
+            output += &((self.m_initialbet as f64 * self.m_betmult) as i32).to_string();
             output
         }
     }

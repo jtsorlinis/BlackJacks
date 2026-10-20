@@ -61,7 +61,7 @@ export default class Table {
 
   selectBet(player) {
     if (this.mTrueCount >= 2) {
-      player.mInitialBet = this.mBetSize * Math.floor(this.mTrueCount - 1);
+      player.mInitialBet = this.mBetSize * (this.mTrueCount - 1);
     }
   }
 
@@ -130,8 +130,11 @@ export default class Table {
 
   updateCount() {
     if (this.mCardPile.mCards.length > 51) {
+      // | 0 truncates toward zero like the other ports' integer division;
+      // Math.trunc can return -0, which kept Bun from treating it as an int
       this.mTrueCount =
-        this.mRunningCount / Math.floor(this.mCardPile.mCards.length / 52);
+        (this.mRunningCount / Math.floor(this.mCardPile.mCards.length / 52)) |
+        0;
     }
   }
 
@@ -170,7 +173,7 @@ export default class Table {
   splitAces() {
     if (this.mVerbose) {
       console.log(
-        `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits Aces`
+        `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits aces`
       );
     }
     const splitPlayer = new Player(this, this.mPlayers[this.mCurrentPlayer]);
@@ -328,7 +331,7 @@ export default class Table {
       this.mRunningCount += this.mDealer.mHand[1].mCount;
       if (this.mVerbose) {
         this.print();
-        console.log("Dealer has natural 21");
+        console.log("Dealer has a natural 21");
       }
       return true;
     }
@@ -351,36 +354,49 @@ export default class Table {
       console.log("Scoring round");
     }
     for (let i = 0; i < this.mPlayers.length; i++) {
-      if (this.mPlayers[i].mHasNatural) {
-        this.mPlayers[i].win(1.5);
+      const player = this.mPlayers[i];
+      if (player.mHasNatural) {
+        player.win(1.5);
         if (this.mVerbose) {
           console.log(
-            `Player ${this.mPlayers[i].mPlayerNum} Wins with a natural 21`
+            `Player ${player.mPlayerNum} Wins ${Math.trunc(
+              1.5 * player.mBetMult * player.mInitialBet
+            )} with a natural 21`
           );
         }
-      } else if (this.mPlayers[i].mValue > 21) {
-        this.mPlayers[i].lose();
+      } else if (player.mValue > 21) {
+        player.lose();
         if (this.mVerbose) {
-          console.log(`Player ${this.mPlayers[i].mPlayerNum} Busts and Loses`);
+          console.log(
+            `Player ${player.mPlayerNum} Busts and Loses ${Math.trunc(
+              player.mBetMult * player.mInitialBet
+            )}`
+          );
         }
-      } else if (this.mDealer.mValue > 21) {
-        this.mPlayers[i].win();
+      } else if (
+        this.mDealer.mValue > 21 ||
+        player.mValue > this.mDealer.mValue
+      ) {
+        player.win();
         if (this.mVerbose) {
-          console.log(`Player ${this.mPlayers[i].mPlayerNum} Wins`);
+          console.log(
+            `Player ${player.mPlayerNum} Wins ${Math.trunc(
+              player.mBetMult * player.mInitialBet
+            )}`
+          );
         }
-      } else if (this.mPlayers[i].mValue > this.mDealer.mValue) {
-        this.mPlayers[i].win();
+      } else if (player.mValue === this.mDealer.mValue) {
         if (this.mVerbose) {
-          console.log(`Player ${this.mPlayers[i].mPlayerNum} Wins`);
-        }
-      } else if (this.mPlayers[i].mValue === this.mDealer.mValue) {
-        if (this.mVerbose) {
-          console.log(`Player ${this.mPlayers[i].mPlayerNum} Draws`);
+          console.log(`Player ${player.mPlayerNum} Draws`);
         }
       } else {
-        this.mPlayers[i].lose();
+        player.lose();
         if (this.mVerbose) {
-          console.log(`Player ${this.mPlayers[i].mPlayerNum} Loses`);
+          console.log(
+            `Player ${player.mPlayerNum} Loses ${Math.trunc(
+              player.mBetMult * player.mInitialBet
+            )}`
+          );
         }
       }
     }
@@ -388,7 +404,9 @@ export default class Table {
       for (let i = 0; i < this.mPlayers.length; i++) {
         if (this.mPlayers[i].mSplitFrom == null) {
           console.log(
-            `Player ${this.mPlayers[i].mPlayerNum} Earnings: ${this.mPlayers[i].mEarnings}`
+            `Player ${this.mPlayers[i].mPlayerNum} Earnings: ${Math.trunc(
+              this.mPlayers[i].mEarnings
+            )}`
           );
         }
       }

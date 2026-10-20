@@ -411,7 +411,7 @@ impl Table {
                     println!(
                         "Player {} Wins {} with a natural 21",
                         player.m_playernum,
-                        1.5 * player.m_betmult * player.m_initialbet as f64
+                        (1.5 * player.m_betmult * player.m_initialbet as f64) as i32
                     );
                 }
             } else if player.m_value > 21 {
@@ -420,7 +420,7 @@ impl Table {
                     println!(
                         "Player {} Busts and Loses {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f64
+                        (player.m_betmult * player.m_initialbet as f64) as i32
                     );
                 }
             } else if self.m_dealer.m_value > 21 || player.m_value > self.m_dealer.m_value {
@@ -429,7 +429,7 @@ impl Table {
                     println!(
                         "Player {} Wins {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f64
+                        (player.m_betmult * player.m_initialbet as f64) as i32
                     )
                 }
             } else if player.m_value == self.m_dealer.m_value {
@@ -442,7 +442,7 @@ impl Table {
                     println!(
                         "Player {} Loses {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f64
+                        (player.m_betmult * player.m_initialbet as f64) as i32
                     )
                 }
             }
@@ -452,7 +452,7 @@ impl Table {
                 if !player.m_issplithand {
                     println!(
                         "Player {} Earnings: {}",
-                        player.m_playernum, player.m_earnings
+                        player.m_playernum, player.m_earnings as i32
                     );
                 }
             }
