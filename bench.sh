@@ -3,12 +3,12 @@
 ROUNDS='1000000'
 
 echo "Building CBlackJack"
-cd CBlackjack
+cd CBlackJack
 xmake
 cd ..
 
 echo "Building CPPBlackJack"
-cd CPPBlackjack
+cd CPPBlackJack
 xmake
 cd ..
 

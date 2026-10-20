@@ -47,9 +47,7 @@ export const stratSplit = [
   ["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
 ];
 
-export const getAction = (playerval, dealerval, strategy) => {
-  const playerVal = parseInt(playerval, 10);
-  const dealerVal = parseInt(dealerval, 10);
+export const getAction = (playerVal, dealerVal, strategy) => {
   const key = playerVal * 12 + dealerVal;
   return strategy[key];
 };

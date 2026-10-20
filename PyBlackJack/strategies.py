@@ -50,7 +50,7 @@ STRAT_SPLIT = [
 
 def get_action(playerval, dealerval, strategy):
     key = playerval * 12 + dealerval
-    return strategy[int(key)]
+    return strategy[key]
 
 
 # def readArray(file):
