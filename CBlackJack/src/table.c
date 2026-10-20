@@ -332,7 +332,7 @@ bool Table__check_dealer_natural(Table* self) {
 }
 
 void Table__check_earnings(Table* self) {
-  float check = 0;
+  double check = 0;
   for (int i = 0; i < self->m_players->size; i++) {
     check += ((Player*)self->m_players->items[i])->m_earnings;
   }

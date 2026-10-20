@@ -52,7 +52,7 @@ fn main() {
             "Player {} earnings: {}\t\tWin Percentage: {:.2}%",
             player.m_playernum,
             player.m_earnings as i32,
-            50.0 + f64::from(player.m_earnings) / (f64::from(rounds) * f64::from(BET_SIZE)) * 50.0
+            50.0 + player.m_earnings / (f64::from(rounds) * f64::from(BET_SIZE)) * 50.0
         );
     }
     println!("Casino earnings: {}", table1.m_casinoearnings as i32);

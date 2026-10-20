@@ -12,7 +12,7 @@ pub struct Table {
     pub m_mincards: usize,
     pub m_dealer: Dealer,
     pub m_currentplayer: usize,
-    pub m_casinoearnings: f32,
+    pub m_casinoearnings: f64,
     pub m_runningcount: i32,
     pub m_truecount: i32,
     pub m_strat_hard: &'static [char],
@@ -411,7 +411,7 @@ impl Table {
                     println!(
                         "Player {} Wins {} with a natural 21",
                         player.m_playernum,
-                        1.5 * player.m_betmult * player.m_initialbet as f32
+                        1.5 * player.m_betmult * player.m_initialbet as f64
                     );
                 }
             } else if player.m_value > 21 {
@@ -420,7 +420,7 @@ impl Table {
                     println!(
                         "Player {} Busts and Loses {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f32
+                        player.m_betmult * player.m_initialbet as f64
                     );
                 }
             } else if self.m_dealer.m_value > 21 || player.m_value > self.m_dealer.m_value {
@@ -429,7 +429,7 @@ impl Table {
                     println!(
                         "Player {} Wins {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f32
+                        player.m_betmult * player.m_initialbet as f64
                     )
                 }
             } else if player.m_value == self.m_dealer.m_value {
@@ -442,7 +442,7 @@ impl Table {
                     println!(
                         "Player {} Loses {}",
                         player.m_playernum,
-                        player.m_betmult * player.m_initialbet as f32
+                        player.m_betmult * player.m_initialbet as f64
                     )
                 }
             }

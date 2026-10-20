@@ -6,13 +6,13 @@ static MAXHANDS: i32 = 4;
 
 pub struct Player {
     pub m_value: i32,
-    pub m_earnings: f32,
+    pub m_earnings: f64,
     pub m_aces: i32,
     pub m_issoft: bool,
     pub m_splitcount: Rc<Cell<i32>>,
     pub m_issplithand: bool,
     pub m_isdone: bool,
-    pub m_betmult: f32,
+    pub m_betmult: f64,
     pub m_hasnatural: bool,
     #[allow(dead_code)]
     pub m_table: bool,
@@ -103,14 +103,14 @@ impl Player {
         }
     }
 
-    pub fn win(&mut self, mult: f32) -> f32 {
-        let x = self.m_initialbet as f32 * self.m_betmult * mult;
+    pub fn win(&mut self, mult: f64) -> f64 {
+        let x = self.m_initialbet as f64 * self.m_betmult * mult;
         self.m_earnings += x;
         -x
     }
 
-    pub fn lose(&mut self) -> f32 {
-        let x = self.m_initialbet as f32 * self.m_betmult;
+    pub fn lose(&mut self) -> f64 {
+        let x = self.m_initialbet as f64 * self.m_betmult;
         self.m_earnings -= x;
         x
     }
@@ -135,7 +135,7 @@ impl Player {
                 output += "        ";
             }
             output += "\tBet: ";
-            output += &(self.m_initialbet as f32 * self.m_betmult).to_string();
+            output += &(self.m_initialbet as f64 * self.m_betmult).to_string();
             output
         }
     }

@@ -45,7 +45,7 @@ func main() {
 	table1.clear()
 
 	for _, player := range table1.MPlayers {
-		fmt.Printf("Player %s earnings: %d\t\tWin Percentage: %.2f%%\n", player.MPlayerNum, int32(player.MEarnings), 50+float64(player.MEarnings)/(float64(rounds)*float64(betSize))*50)
+		fmt.Printf("Player %s earnings: %d\t\tWin Percentage: %.2f%%\n", player.MPlayerNum, int32(player.MEarnings), 50+player.MEarnings/(float64(rounds)*float64(betSize))*50)
 	}
 	fmt.Printf("Casino earnings: %d\n", int32(table1.MCasinoEarnings))
 	fmt.Printf("Played %d rounds in %.3f seconds\n", rounds, time.Since(start).Seconds())

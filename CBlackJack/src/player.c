@@ -67,14 +67,14 @@ int Player__can_split(Player* self) {
   return 0;
 }
 
-void Player__win(Player* self, float mult) {
-  float x = self->m_initial_bet * self->m_bet_mult * mult;
+void Player__win(Player* self, double mult) {
+  double x = self->m_initial_bet * self->m_bet_mult * mult;
   self->m_earnings += x;
   self->m_table->m_casino_earnings -= x;
 }
 
 void Player__lose(Player* self) {
-  float x = self->m_initial_bet * self->m_bet_mult;
+  double x = self->m_initial_bet * self->m_bet_mult;
   self->m_earnings -= x;
   self->m_table->m_casino_earnings += x;
 }

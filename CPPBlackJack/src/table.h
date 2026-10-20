@@ -14,7 +14,7 @@ class Table {
   int m_min_cards_;
   Dealer m_dealer_;
   int m_current_player_;
-  float m_casino_earnings_;
+  double m_casino_earnings_;
   int m_running_count_;
   int m_true_count_;
   std::vector<char> m_strat_hard_;

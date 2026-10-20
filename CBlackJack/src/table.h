@@ -16,7 +16,7 @@ typedef struct Table {
   int m_current_player;
   int m_running_count;
   int m_true_count;
-  float m_casino_earnings;
+  double m_casino_earnings;
 
   char* m_strat_hard;
   char* m_strat_soft;

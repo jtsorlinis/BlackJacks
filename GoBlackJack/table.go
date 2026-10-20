@@ -15,7 +15,7 @@ type Table struct {
 	MMinCards       int32
 	MDealer         *Dealer
 	mCurrentPlayer  int32
-	MCasinoEarnings float32
+	MCasinoEarnings float64
 	MRunningCount   int32
 	MTrueCount      int32
 	MStratHard      []byte
@@ -312,7 +312,7 @@ func (t *Table) checkDealerNatural() bool {
 
 // CheckEarnings check that players earnings match the casinos losses or vice versa
 func (t *Table) CheckEarnings() {
-	var check float32
+	var check float64
 	for _, player := range t.MPlayers {
 		check += player.MEarnings
 	}
@@ -330,18 +330,18 @@ func (t *Table) finishRound() {
 		if player.MHasNatural {
 			player.Win(1.5)
 			if t.MVerbose {
-				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(1.5*player.MBetMult*float32(player.MInitialBet)) + " with a natural 21")
+				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(1.5*player.MBetMult*float64(player.MInitialBet)) + " with a natural 21")
 			}
 		} else if player.MValue > 21 {
 			player.Lose()
 			if t.MVerbose {
-				println("Player " + player.MPlayerNum + " Busts and Loses " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
+				println("Player " + player.MPlayerNum + " Busts and Loses " + fmt.Sprint(player.MBetMult*float64(player.MInitialBet)))
 			}
 
 		} else if t.MDealer.MValue > 21 || player.MValue > t.MDealer.MValue {
 			player.Win(1)
 			if t.MVerbose {
-				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
+				println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(player.MBetMult*float64(player.MInitialBet)))
 			}
 		} else if player.MValue == t.MDealer.MValue {
 			if t.MVerbose {
@@ -350,7 +350,7 @@ func (t *Table) finishRound() {
 		} else {
 			player.Lose()
 			if t.MVerbose {
-				println("Player " + player.MPlayerNum + " Loses " + fmt.Sprint(player.MBetMult*float32(player.MInitialBet)))
+				println("Player " + player.MPlayerNum + " Loses " + fmt.Sprint(player.MBetMult*float64(player.MInitialBet)))
 			}
 		}
 	}

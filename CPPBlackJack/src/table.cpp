@@ -310,7 +310,7 @@ bool Table::check_dealer_natural() {
 }
 
 void Table::check_earnings() {
-  float check = 0;
+  double check = 0;
   for (auto& player : m_players_) {
     check += player.m_earnings_;
   }
@@ -338,7 +338,7 @@ void Table::finish_round() {
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Busts and Loses "
                   << player.m_bet_mult_ *
-                         static_cast<float>(player.m_initial_bet_)
+                         static_cast<double>(player.m_initial_bet_)
                   << "\n";
       }
 
@@ -348,7 +348,7 @@ void Table::finish_round() {
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Wins "
                   << player.m_bet_mult_ *
-                         static_cast<float>(player.m_initial_bet_)
+                         static_cast<double>(player.m_initial_bet_)
                   << "\n";
       }
     } else if (player.m_value_ == m_dealer_.m_value_) {
@@ -360,7 +360,7 @@ void Table::finish_round() {
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Loses "
                   << player.m_bet_mult_ *
-                         static_cast<float>(player.m_initial_bet_)
+                         static_cast<double>(player.m_initial_bet_)
                   << "\n";
       }
     }

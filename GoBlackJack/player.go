@@ -13,13 +13,13 @@ type Player struct {
 	MPlayerNum  string
 	MHand       []*Card
 	MValue      int32
-	MEarnings   float32
+	MEarnings   float64
 	MAces       int32
 	MIsSoft     bool
 	MSplitCount *int32
 	MIsDone     bool
 	MSplitFrom  *Player
-	MBetMult    float32
+	MBetMult    float64
 	MHasNatural bool
 	MTable      *Table
 	MInitialBet int32
@@ -75,8 +75,8 @@ func (p *Player) CanSplit() int32 {
 }
 
 // Win increases player earnings
-func (p *Player) Win(mult float32) {
-	x := float32(p.MInitialBet) * p.MBetMult * mult
+func (p *Player) Win(mult float64) {
+	x := float64(p.MInitialBet) * p.MBetMult * mult
 	p.MEarnings += x
 	p.MTable.MCasinoEarnings -= x
 
@@ -84,7 +84,7 @@ func (p *Player) Win(mult float32) {
 
 // Lose decreases player earnings
 func (p *Player) Lose() {
-	x := float32(p.MInitialBet) * p.MBetMult
+	x := float64(p.MInitialBet) * p.MBetMult
 	p.MEarnings -= x
 	p.MTable.MCasinoEarnings += x
 }
@@ -106,7 +106,7 @@ func (p *Player) Print() string {
 		output.WriteString("       ")
 	}
 	output.WriteString("\tBet: ")
-	output.WriteString(fmt.Sprint(float32(p.MInitialBet) * p.MBetMult))
+	output.WriteString(fmt.Sprint(float64(p.MInitialBet) * p.MBetMult))
 	return output.String()
 }
 

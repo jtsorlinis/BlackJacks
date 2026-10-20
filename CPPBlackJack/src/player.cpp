@@ -55,14 +55,14 @@ int Player::can_split() {
   return 0;
 }
 
-void Player::win(const float mult) {
-  float x = static_cast<float>(m_initial_bet_) * m_bet_mult_ * mult;
+void Player::win(const double mult) {
+  double x = static_cast<double>(m_initial_bet_) * m_bet_mult_ * mult;
   m_earnings_ += x;
   m_table_->m_casino_earnings_ -= x;
 }
 
 void Player::lose() {
-  float x = static_cast<float>(m_initial_bet_) * m_bet_mult_;
+  double x = static_cast<double>(m_initial_bet_) * m_bet_mult_;
   m_earnings_ -= x;
   m_table_->m_casino_earnings_ += x;
 }
@@ -83,7 +83,7 @@ std::string Player::print() {
   }
   if (m_player_num_ != "D") {
     output += "\tBet: " +
-              std::to_string(static_cast<float>(m_initial_bet_) * m_bet_mult_);
+              std::to_string(static_cast<double>(m_initial_bet_) * m_bet_mult_);
   }
   return output;
 }

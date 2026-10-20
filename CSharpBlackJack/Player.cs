@@ -11,8 +11,8 @@ namespace CSharpBlackJack
     public readonly List<Card> mHand;
     public readonly Player mSplitFrom;
     private int _aces;
-    public float mBetMult = 1;
-    public float mEarnings;
+    public double mBetMult = 1;
+    public double mEarnings;
     public bool mHasNatural;
     public int mInitialBet;
     public bool mIsDone;
@@ -70,7 +70,7 @@ namespace CSharpBlackJack
       return 0;
     }
 
-    public void Win(float mult = 1)
+    public void Win(double mult = 1)
     {
       var x = mInitialBet * mBetMult * mult; ;
       mEarnings += x;

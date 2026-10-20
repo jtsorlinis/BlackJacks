@@ -19,7 +19,7 @@ namespace CSharpBlackJack
     private int _currentPlayer;
     private int _runningCount;
     private int _trueCount;
-    public float mCasinoEarnings = 0;
+    public double mCasinoEarnings = 0;
 
     public Table(int numPlayers, int numDecks, int betSize, int minCards, bool verbose)
     {
@@ -328,7 +328,7 @@ namespace CSharpBlackJack
 
     public void CheckEarnings()
     {
-      float check = 0;
+      double check = 0;
       for (var i = 0; i < mPlayers.Count; i++) check += mPlayers[i].mEarnings;
       if (check + mCasinoEarnings != 0)
       {
@@ -344,7 +344,7 @@ namespace CSharpBlackJack
       {
         if (mPlayers[i].mHasNatural)
         {
-          mPlayers[i].Win(1.5f);
+          mPlayers[i].Win(1.5);
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
                               1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet + " with a natural 21");
