@@ -28,10 +28,14 @@ Table::Table(const int num_players, const int num_of_decks, const int bet_size,
 }
 
 void Table::deal_round() {
-  for (int i = 0; i < m_players_.size(); i++) {
-    deal();
-    m_current_player_++;
+  auto& cards = m_card_pile_.m_cards_;
+  auto running_count = m_running_count_;
+  for (auto& player : m_players_) {
+    running_count += cards.back()->m_count_;
+    player.m_hand_.push_back(cards.back());
+    cards.pop_back();
   }
+  m_running_count_ = running_count;
   m_current_player_ = 0;
 }
 
@@ -67,7 +71,7 @@ void Table::deal_dealer(const bool face_down) {
   m_card_pile_.m_cards_.pop_back();
 }
 
-void Table::start_round() {
+[[gnu::always_inline]] void Table::start_round() {
   update_count();
   if (m_verbose_) {
     std::cout << m_card_pile_.m_cards_.size() << " cards left\n";
@@ -107,7 +111,7 @@ void Table::get_new_cards() {
   }
 }
 
-void Table::clear() {
+[[gnu::always_inline]] void Table::clear() {
   for (int i = m_players_.size() - 1; i >= 0; i--) {
     if (m_players_[i].m_split_from_ != nullptr) {
       m_players_[i - 1].m_earnings_ += m_players_[i].m_earnings_;
@@ -127,7 +131,7 @@ void Table::update_count() {
   }
 }
 
-void Table::hit() {
+[[gnu::always_inline]] void Table::hit() {
   deal();
   m_players_[m_current_player_].evaluate();
   if (m_verbose_) {
@@ -136,7 +140,7 @@ void Table::hit() {
   }
 }
 
-void Table::stand() {
+[[gnu::always_inline]] void Table::stand() {
   if (m_verbose_ && m_players_[m_current_player_].m_value_ <= 21) {
     std::cout << "Player " << m_players_[m_current_player_].m_player_num_
               << " stands\n";
@@ -179,7 +183,7 @@ void Table::split_aces() {
   }
 }
 
-void Table::double_bet() {
+[[gnu::always_inline]] void Table::double_bet() {
   if (m_players_[m_current_player_].m_bet_mult_ < 1.1 &&
       m_players_[m_current_player_].m_hand_.size() == 2) {
     m_players_[m_current_player_].double_bet();
@@ -197,7 +201,7 @@ void Table::double_bet() {
   }
 }
 
-void Table::auto_play() {
+[[gnu::always_inline]] void Table::auto_play() {
   auto dealer_up_card = m_dealer_.up_card();
   while (m_current_player_ < static_cast<int>(m_players_.size())) {
     while (!m_players_[m_current_player_].m_is_done_) {
@@ -235,7 +239,7 @@ void Table::auto_play() {
   dealer_play();
 }
 
-void Table::action(char action) {
+[[gnu::always_inline]] void Table::action(char action) {
   switch (action) {
     case 'H':
       hit();
@@ -321,13 +325,14 @@ void Table::check_earnings() {
   }
 }
 
-void Table::finish_round() {
+[[gnu::always_inline]] void Table::finish_round() {
   if (m_verbose_) {
     std::cout << "Scoring round\n";
   }
+  auto casino_earnings = m_casino_earnings_;
   for (auto& player : m_players_) {
     if (player.m_has_natural_) {
-      player.win(1.5);
+      casino_earnings += player.win(1.5);
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Wins "
                   << static_cast<int>(1.5 * player.m_bet_mult_ *
@@ -335,7 +340,7 @@ void Table::finish_round() {
                   << " with a natural 21\n";
       }
     } else if (player.m_value_ > 21) {
-      player.lose();
+      casino_earnings += player.lose();
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Busts and Loses "
                   << static_cast<int>(player.m_bet_mult_ *
@@ -345,7 +350,7 @@ void Table::finish_round() {
 
     } else if (m_dealer_.m_value_ > 21 ||
                player.m_value_ > m_dealer_.m_value_) {
-      player.win();
+      casino_earnings += player.win();
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Wins "
                   << static_cast<int>(player.m_bet_mult_ *
@@ -357,7 +362,7 @@ void Table::finish_round() {
         std::cout << "Player " << player.m_player_num_ << " Draws\n";
       }
     } else {
-      player.lose();
+      casino_earnings += player.lose();
       if (m_verbose_) {
         std::cout << "Player " << player.m_player_num_ << " Loses "
                   << static_cast<int>(player.m_bet_mult_ *
@@ -366,6 +371,7 @@ void Table::finish_round() {
       }
     }
   }
+  m_casino_earnings_ = casino_earnings;
   if (m_verbose_) {
     for (auto& player : m_players_) {
       if (player.m_split_from_ == nullptr) {

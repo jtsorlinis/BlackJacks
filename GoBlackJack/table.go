@@ -44,10 +44,14 @@ func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, v
 }
 
 func (t *Table) dealRound() {
-	for range t.MPlayers {
-		t.deal()
-		t.mCurrentPlayer++
+	runningCount := t.MRunningCount
+	for _, player := range t.MPlayers {
+		card := t.MCardPile.MCards[len(t.MCardPile.MCards)-1]
+		player.MHand = append(player.MHand, card)
+		runningCount += card.mCount
+		t.MCardPile.MCards = t.MCardPile.MCards[:len(t.MCardPile.MCards)-1]
 	}
+	t.MRunningCount = runningCount
 	t.mCurrentPlayer = 0
 }
 
@@ -326,20 +330,21 @@ func (t *Table) finishRound() {
 	if t.MVerbose {
 		fmt.Println("Scoring round")
 	}
+	casinoEarnings := t.MCasinoEarnings
 	for _, player := range t.MPlayers {
 		if player.MHasNatural {
-			player.Win(1.5)
+			casinoEarnings += player.Win(1.5)
 			if t.MVerbose {
 				fmt.Println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(int32(1.5*player.MBetMult*float64(player.MInitialBet))) + " with a natural 21")
 			}
 		} else if player.MValue > 21 {
-			player.Lose()
+			casinoEarnings += player.Lose()
 			if t.MVerbose {
 				fmt.Println("Player " + player.MPlayerNum + " Busts and Loses " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
 
 		} else if t.MDealer.MValue > 21 || player.MValue > t.MDealer.MValue {
-			player.Win(1)
+			casinoEarnings += player.Win(1)
 			if t.MVerbose {
 				fmt.Println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
@@ -348,12 +353,13 @@ func (t *Table) finishRound() {
 				fmt.Println("Player " + player.MPlayerNum + " Draws")
 			}
 		} else {
-			player.Lose()
+			casinoEarnings += player.Lose()
 			if t.MVerbose {
 				fmt.Println("Player " + player.MPlayerNum + " Loses " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
 		}
 	}
+	t.MCasinoEarnings = casinoEarnings
 	if t.MVerbose {
 		for _, player := range t.MPlayers {
 			if player.MSplitFrom == nil {

@@ -34,11 +34,15 @@ namespace CSharpBlackJack
 
     private void DealRound()
     {
+      var runningCount = _runningCount;
       for (var i = 0; i < mPlayers.Count; i++)
       {
-        Deal();
-        _currentPlayer++;
+        var card = mCardPile.mCards[^1];
+        mPlayers[i].mHand.Add(card);
+        runningCount += card.mCount;
+        mCardPile.mCards.RemoveAt(mCardPile.mCards.Count - 1);
       }
+      _runningCount = runningCount;
       _currentPlayer = 0;
     }
 
@@ -340,25 +344,26 @@ namespace CSharpBlackJack
     private void FinishRound()
     {
       if (_verbose) Console.WriteLine("Scoring round");
+      var casinoEarnings = mCasinoEarnings;
       for (var i = 0; i < mPlayers.Count; i++)
       {
         if (mPlayers[i].mHasNatural)
         {
-          mPlayers[i].Win(1.5);
+          casinoEarnings += mPlayers[i].Win(1.5);
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
                               (int)(1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet) + " with a natural 21");
         }
         else if (mPlayers[i].mValue > 21)
         {
-          mPlayers[i].Lose();
+          casinoEarnings += mPlayers[i].Lose();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Busts and Loses " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
         }
         else if (_dealer.mValue > 21 || mPlayers[i].mValue > _dealer.mValue)
         {
-          mPlayers[i].Win();
+          casinoEarnings += mPlayers[i].Win();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
@@ -369,12 +374,13 @@ namespace CSharpBlackJack
         }
         else
         {
-          mPlayers[i].Lose();
+          casinoEarnings += mPlayers[i].Lose();
           if (_verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Loses " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
         }
       }
+      mCasinoEarnings = casinoEarnings;
 
       if (_verbose)
       {

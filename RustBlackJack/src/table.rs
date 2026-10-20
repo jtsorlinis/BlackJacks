@@ -55,10 +55,15 @@ impl Table {
     }
 
     fn deal_round(&mut self) {
-        for _ in 0..self.m_players.len() {
-            self.deal();
-            self.m_currentplayer += 1;
+        let mut running_count = self.m_runningcount;
+        for player in self.m_players.iter_mut() {
+            let card = self.m_cardpile.m_cards.pop().unwrap();
+            unsafe {
+                running_count += (*card).m_count;
+            }
+            player.m_hand.push(card);
         }
+        self.m_runningcount = running_count;
         self.m_currentplayer = 0;
     }
 
@@ -404,9 +409,10 @@ impl Table {
         if self.m_verbose {
             println!("Scoring round");
         }
+        let mut casino_earnings = self.m_casinoearnings;
         for player in self.m_players.iter_mut() {
             if player.m_hasnatural {
-                self.m_casinoearnings += player.win(1.5);
+                casino_earnings += player.win(1.5);
                 if self.m_verbose {
                     println!(
                         "Player {} Wins {} with a natural 21",
@@ -415,7 +421,7 @@ impl Table {
                     );
                 }
             } else if player.m_value > 21 {
-                self.m_casinoearnings += player.lose();
+                casino_earnings += player.lose();
                 if self.m_verbose {
                     println!(
                         "Player {} Busts and Loses {}",
@@ -424,7 +430,7 @@ impl Table {
                     );
                 }
             } else if self.m_dealer.m_value > 21 || player.m_value > self.m_dealer.m_value {
-                self.m_casinoearnings += player.win(1.0);
+                casino_earnings += player.win(1.0);
                 if self.m_verbose {
                     println!(
                         "Player {} Wins {}",
@@ -437,7 +443,7 @@ impl Table {
                     println!("Player {} Draws", player.m_playernum)
                 }
             } else {
-                self.m_casinoearnings += player.lose();
+                casino_earnings += player.lose();
                 if self.m_verbose {
                     println!(
                         "Player {} Loses {}",
@@ -447,6 +453,7 @@ impl Table {
                 }
             }
         }
+        self.m_casinoearnings = casino_earnings;
         if self.m_verbose {
             for player in self.m_players.iter() {
                 if !player.m_issplithand {

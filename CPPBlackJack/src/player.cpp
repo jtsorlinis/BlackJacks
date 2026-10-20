@@ -4,23 +4,24 @@
 
 int Player::player_num_count_ = 0;
 
-Player::Player(Table* table, Player* split) {
+Player::Player(Table* table, Player* split)
+    : m_split_count_(split != nullptr ? split->m_split_count_
+                                      : std::make_shared<int>(0)) {
   m_hand_.reserve(5);
   m_value_ = 0;
   m_earnings_ = 0;
   m_aces_ = 0;
   m_is_soft_ = false;
-  m_split_count_ = std::make_shared<int>(0);
   m_is_done_ = false;
   m_split_from_ = nullptr;
   m_bet_mult_ = 1;
   m_has_natural_ = false;
-  m_table_ = table;
   m_initial_bet_ = 0;
-  if (m_table_ != nullptr) {
-    m_initial_bet_ = m_table_->m_bet_size_;
+  m_original_bet_ = 0;
+  if (table != nullptr) {
+    m_initial_bet_ = table->m_bet_size_;
+    m_original_bet_ = table->m_bet_size_;
     if (split != nullptr) {
-      m_split_count_ = split->m_split_count_;
       ++(*m_split_count_);
       m_hand_.push_back(split->m_hand_[1]);
       m_player_num_ = split->m_player_num_ + "S";
@@ -44,7 +45,7 @@ void Player::reset_hand() {
   m_is_done_ = false;
   m_bet_mult_ = 1;
   m_has_natural_ = false;
-  m_initial_bet_ = m_table_->m_bet_size_;
+  m_initial_bet_ = m_original_bet_;
 }
 
 int Player::can_split() {
@@ -55,16 +56,16 @@ int Player::can_split() {
   return 0;
 }
 
-void Player::win(const double mult) {
+double Player::win(const double mult) {
   double x = static_cast<double>(m_initial_bet_) * m_bet_mult_ * mult;
   m_earnings_ += x;
-  m_table_->m_casino_earnings_ -= x;
+  return -x;
 }
 
-void Player::lose() {
+double Player::lose() {
   double x = static_cast<double>(m_initial_bet_) * m_bet_mult_;
   m_earnings_ -= x;
-  m_table_->m_casino_earnings_ += x;
+  return x;
 }
 
 std::string Player::print() {

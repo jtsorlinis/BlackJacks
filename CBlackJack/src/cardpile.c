@@ -37,38 +37,37 @@ uint64_t rand_range(uint64_t s) {
   return m >> 64;
 }
 
-CardPile* CardPile__new(int numdecks) {
+void CardPile__init(CardPile* cp, int numdecks) {
   state = time(NULL);
-  CardPile* cp = malloc(sizeof(CardPile));
-  cp->m_original_cards = Vector__new(52 * numdecks);
-  cp->m_cards = Vector__new(52 * numdecks);
+  Vector__init(&cp->m_original_cards, 52 * numdecks);
+  Vector__init(&cp->m_cards, 52 * numdecks);
   for (int i = 0; i < numdecks; i++) {
     for (int suit = 0; suit < 4; suit++) {
       for (int rank = 0; rank < 13; rank++) {
-        Vector__push(cp->m_original_cards, Card__new(ranks[rank], suits[suit]));
+        Vector__push(&cp->m_original_cards,
+                     Card__new(ranks[rank], suits[suit]));
       }
     }
   }
   CardPile__refresh(cp);
-  return cp;
 }
 
 void CardPile__refresh(CardPile* self) {
-  Vector__copy(self->m_original_cards, self->m_cards);
+  Vector__copy(&self->m_original_cards, &self->m_cards);
 }
 
 void CardPile__print(CardPile* self) {
-  for (int i = 0; i < self->m_cards->size; i++) {
-    printf("%s", ((Card*)self->m_cards->items[i])->m_rank);
+  for (int i = 0; i < self->m_cards.size; i++) {
+    printf("%s", ((Card*)self->m_cards.items[i])->m_rank);
   }
   printf("\n");
 }
 
 void CardPile__shuffle(CardPile* self) {
-  for (int i = self->m_cards->size - 1; i > 0; i--) {
+  for (int i = self->m_cards.size - 1; i > 0; i--) {
     int j = rand_range(i + 1);
-    Card* temp = self->m_cards->items[i];
-    self->m_cards->items[i] = self->m_cards->items[j];
-    self->m_cards->items[j] = temp;
+    Card* temp = self->m_cards.items[i];
+    self->m_cards.items[i] = self->m_cards.items[j];
+    self->m_cards.items[j] = temp;
   }
 }

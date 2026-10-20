@@ -1,18 +1,21 @@
+#ifndef TABLE_H
+#define TABLE_H
+
 #include <stdbool.h>
 
-typedef struct CardPile CardPile;
-typedef struct Dealer Dealer;
-typedef struct Player Player;
-typedef struct Vector Vector;
+#include "cardpile.h"
+#include "dealer.h"
+#include "player.h"
+#include "vector.h"
 
 typedef struct Table {
-  Dealer* m_dealer;
+  Dealer m_dealer;
   int m_min_cards;
   int m_num_decks;
   int m_verbose;
   int m_bet_size;
-  CardPile* m_card_pile;
-  Vector* m_players;
+  CardPile m_card_pile;
+  PlayerVector m_players;
   int m_current_player;
   int m_running_count;
   int m_true_count;
@@ -48,3 +51,5 @@ bool Table__check_dealer_natural(Table* self);
 void Table__check_earnings(Table* self);
 void Table__finish_round(Table* self);
 void Table__print(Table* self);
+
+#endif

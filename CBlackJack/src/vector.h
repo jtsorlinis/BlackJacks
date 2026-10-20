@@ -10,12 +10,10 @@ typedef struct Vector {
   int capacity;
 } Vector;
 
-static inline Vector* Vector__new(size_t initial_capacity) {
-  Vector* ca = malloc(sizeof(Vector));
-  ca->items = malloc(initial_capacity * sizeof(void*));
-  ca->size = 0;
-  ca->capacity = (int)initial_capacity;
-  return ca;
+static inline void Vector__init(Vector* self, size_t initial_capacity) {
+  self->items = malloc(initial_capacity * sizeof(void*));
+  self->size = 0;
+  self->capacity = (int)initial_capacity;
 }
 
 static inline void Vector__resize(Vector* self, int capacity) {
@@ -71,9 +69,6 @@ static inline void Vector__insert(Vector* self, void* element, int index) {
 
 static inline void Vector__clear(Vector* self) { self->size = 0; }
 
-static inline void Vector__free(Vector* self) {
-  free(self->items);
-  free(self);
-}
+static inline void Vector__destroy(Vector* self) { free(self->items); }
 
 #endif

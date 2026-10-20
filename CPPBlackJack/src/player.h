@@ -22,15 +22,15 @@ class Player {
   Player* m_split_from_;
   double m_bet_mult_;
   bool m_has_natural_;
-  Table* m_table_;
   int m_initial_bet_;
+  int m_original_bet_;
 
   explicit Player(Table* table = nullptr, Player* split = nullptr);
   void double_bet();
   void reset_hand();
   int can_split();
-  void win(double mult = 1);
-  void lose();
+  double win(double mult = 1);
+  double lose();
   std::string print();
   int evaluate();
 };

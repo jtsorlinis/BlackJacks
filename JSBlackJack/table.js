@@ -34,10 +34,13 @@ export default class Table {
   }
 
   dealRound() {
+    let runningCount = this.mRunningCount;
     for (let i = 0; i < this.mPlayers.length; i++) {
-      this.deal();
-      this.mCurrentPlayer++;
+      const card = this.mCardPile.mCards.pop();
+      this.mPlayers[i].mHand.push(card);
+      runningCount += card.mCount;
     }
+    this.mRunningCount = runningCount;
     this.mCurrentPlayer = 0;
   }
 
@@ -353,10 +356,11 @@ export default class Table {
     if (this.mVerbose) {
       console.log("Scoring round");
     }
+    let casinoEarnings = this.mCasinoEarnings;
     for (let i = 0; i < this.mPlayers.length; i++) {
       const player = this.mPlayers[i];
       if (player.mHasNatural) {
-        player.win(1.5);
+        casinoEarnings += player.win(1.5);
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
@@ -365,7 +369,7 @@ export default class Table {
           );
         }
       } else if (player.mValue > 21) {
-        player.lose();
+        casinoEarnings += player.lose();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Busts and Loses ${Math.trunc(
@@ -377,7 +381,7 @@ export default class Table {
         this.mDealer.mValue > 21 ||
         player.mValue > this.mDealer.mValue
       ) {
-        player.win();
+        casinoEarnings += player.win();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
@@ -390,7 +394,7 @@ export default class Table {
           console.log(`Player ${player.mPlayerNum} Draws`);
         }
       } else {
-        player.lose();
+        casinoEarnings += player.lose();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Loses ${Math.trunc(
@@ -400,6 +404,7 @@ export default class Table {
         }
       }
     }
+    this.mCasinoEarnings = casinoEarnings;
     if (this.mVerbose) {
       for (let i = 0; i < this.mPlayers.length; i++) {
         if (this.mPlayers[i].mSplitFrom == null) {

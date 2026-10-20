@@ -75,18 +75,17 @@ func (p *Player) CanSplit() int32 {
 }
 
 // Win increases player earnings
-func (p *Player) Win(mult float64) {
+func (p *Player) Win(mult float64) float64 {
 	x := float64(p.MInitialBet) * p.MBetMult * mult
 	p.MEarnings += x
-	p.MTable.MCasinoEarnings -= x
-
+	return -x
 }
 
 // Lose decreases player earnings
-func (p *Player) Lose() {
+func (p *Player) Lose() float64 {
 	x := float64(p.MInitialBet) * p.MBetMult
 	p.MEarnings -= x
-	p.MTable.MCasinoEarnings += x
+	return x
 }
 
 // Print prints the players number and hand

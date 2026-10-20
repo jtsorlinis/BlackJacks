@@ -55,12 +55,12 @@ class Player:
     def win(self, mult=1):
         x = self.initial_bet * self.bet_mult * mult
         self.earnings += x
-        self.table.casino_earnings -= x
+        return -x
 
     def lose(self):
         x = self.initial_bet * self.bet_mult
         self.earnings -= x
-        self.table.casino_earnings += x
+        return x
 
     def print(self):
         output = "Player " + str(self.player_num) + ": "

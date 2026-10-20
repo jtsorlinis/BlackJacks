@@ -25,9 +25,12 @@ class Table:
         self.strat_split = strategies.array_to_dict(strategies.STRAT_SPLIT)
 
     def deal_round(self):
-        for _ in self.players:
-            self.deal()
-            self.current_player += 1
+        running_count = self.running_count
+        for player in self.players:
+            card = self.cardpile.cards.pop()
+            player.hand.append(card)
+            running_count += card.count
+        self.running_count = running_count
         self.current_player = 0
 
     def evaluate_all(self):
@@ -295,9 +298,10 @@ class Table:
     def finish_round(self):
         if self.verbose:
             print("Scoring round")
+        casino_earnings = self.casino_earnings
         for player in self.players:
             if player.has_natural:
-                player.win(1.5)
+                casino_earnings += player.win(1.5)
                 if self.verbose:
                     print(
                         "Player "
@@ -307,7 +311,7 @@ class Table:
                         + " with a natural 21"
                     )
             elif player.value > 21:
-                player.lose()
+                casino_earnings += player.lose()
                 if self.verbose:
                     print(
                         "Player "
@@ -316,7 +320,7 @@ class Table:
                         + str(int(player.bet_mult * player.initial_bet))
                     )
             elif self.dealer.value > 21 or player.value > self.dealer.value:
-                player.win()
+                casino_earnings += player.win()
                 if self.verbose:
                     print(
                         "Player "
@@ -328,7 +332,7 @@ class Table:
                 if self.verbose:
                     print("Player " + str(player.player_num) + " Draws")
             else:
-                player.lose()
+                casino_earnings += player.lose()
                 if self.verbose:
                     print(
                         "Player "
@@ -336,6 +340,7 @@ class Table:
                         + " Loses "
                         + str(int(player.bet_mult * player.initial_bet))
                     )
+        self.casino_earnings = casino_earnings
         if self.verbose:
             for player in self.players:
                 if not player.split_from:

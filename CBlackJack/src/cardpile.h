@@ -1,13 +1,16 @@
-// #include "Vector.h"
+#ifndef CARDPILE_H
+#define CARDPILE_H
 
-typedef struct Vector Vector;
+#include "vector.h"
 
 typedef struct CardPile {
-  Vector* m_cards;
-  Vector* m_original_cards;
+  Vector m_cards;
+  Vector m_original_cards;
 } CardPile;
 
-CardPile* CardPile__new(int numdecks);
+void CardPile__init(CardPile* self, int numdecks);
 void CardPile__refresh(CardPile* self);
 void CardPile__print(CardPile* self);
 void CardPile__shuffle(CardPile* self);
+
+#endif

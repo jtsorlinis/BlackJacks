@@ -62,13 +62,13 @@ export default class Player {
   win(mult = 1) {
     const x = this.mInitialBet * this.mBetMult * mult;
     this.mEarnings += x;
-    this.mTable.mCasinoEarnings -= x;
+    return -x;
   }
 
   lose() {
     const x = this.mInitialBet * this.mBetMult;
     this.mEarnings -= x;
-    this.mTable.mCasinoEarnings += x;
+    return x;
   }
 
   print() {

@@ -1,9 +1,12 @@
+#ifndef DEALER_H
+#define DEALER_H
+
 #include <stdbool.h>
 
-typedef struct Vector Vector;
+#include "vector.h"
 
 typedef struct Dealer {
-  Vector* m_hand;
+  Vector m_hand;
   char* m_player_num;
   int m_value;
   int m_aces;
@@ -11,8 +14,10 @@ typedef struct Dealer {
   bool m_hide;
 } Dealer;
 
-Dealer* Dealer__new();
+void Dealer__init(Dealer* self);
 void Dealer__reset_hand(Dealer* self);
 int Dealer__up_card(Dealer* self);
 void Dealer__evaluate(Dealer* self);
 void Dealer__print(Dealer* self);
+
+#endif

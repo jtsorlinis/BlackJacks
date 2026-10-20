@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
   if (argc == 2) rounds = atoi(argv[1]);
 
   Table *t = Table__new(num_players, num_decks, bet_size, min_cards, verbose);
-  CardPile__shuffle(t->m_card_pile);
+  CardPile__shuffle(&t->m_card_pile);
 
   struct timespec start, end;
   clock_gettime(CLOCK_MONOTONIC, &start);
@@ -36,11 +36,11 @@ int main(int argc, char const *argv[]) {
 
   Table__clear(t);
 
-  for (int i = 0; i < t->m_players->size; i++) {
+  for (int i = 0; i < t->m_players.size; i++) {
     printf("Player %s earnings: %d\t\tWin Percentage: %.2f%%\n",
-           ((Player *)t->m_players->items[i])->m_player_num,
-           (int)((Player *)t->m_players->items[i])->m_earnings,
-           50 + ((Player *)t->m_players->items[i])->m_earnings /
+           t->m_players.items[i].m_player_num,
+           (int)t->m_players.items[i].m_earnings,
+           50 + t->m_players.items[i].m_earnings /
                     ((double)rounds * bet_size) * 50);
   }
 
