@@ -199,6 +199,8 @@ func (t *Table) doubleBet() {
 		}
 		t.hit()
 		t.stand()
+	} else if t.MPlayers[t.mCurrentPlayer].MIsSoft && t.MPlayers[t.mCurrentPlayer].MValue == 18 {
+		t.stand()
 	} else {
 		t.hit()
 	}
@@ -217,7 +219,7 @@ func (t *Table) autoPlay() {
 				t.MPlayers[t.mCurrentPlayer].Evaluate()
 			}
 
-			if len(t.MPlayers[t.mCurrentPlayer].MHand) < 5 && t.MPlayers[t.mCurrentPlayer].MValue < 21 {
+			if t.MPlayers[t.mCurrentPlayer].MValue < 21 {
 				splitCardVal := t.MPlayers[t.mCurrentPlayer].CanSplit()
 				if splitCardVal == 11 {
 					t.splitAces()
@@ -255,10 +257,10 @@ func (t *Table) action(action byte) {
 }
 
 func (t *Table) dealerPlay() {
-	allBusted := true
+	allSettled := true
 	for _, player := range t.MPlayers {
-		if player.MValue < 22 {
-			allBusted = false
+		if player.MValue < 22 && !player.MHasNatural {
+			allSettled = false
 			break
 		}
 	}
@@ -267,14 +269,14 @@ func (t *Table) dealerPlay() {
 	if t.MVerbose {
 		println("Dealer's turn")
 	}
-	if allBusted {
+	if allSettled {
 		if t.MVerbose {
-			println("Dealer automatically wins cause all players busted")
+			println("Dealer does not draw because all player hands are settled")
 			t.print()
 		}
 		t.finishRound()
 	} else {
-		for t.MDealer.MValue < 17 && len(t.MDealer.MHand) < 5 {
+		for t.MDealer.MValue < 17 {
 			t.dealDealer(false)
 			t.MDealer.Evaluate()
 			if t.MVerbose {

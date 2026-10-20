@@ -200,6 +200,11 @@ export default class Table {
       }
       this.hit();
       this.stand();
+    } else if (
+      this.mPlayers[this.mCurrentPlayer].mIsSoft &&
+      this.mPlayers[this.mCurrentPlayer].mValue === 18
+    ) {
+      this.stand();
     } else {
       this.hit();
     }
@@ -220,10 +225,7 @@ export default class Table {
           this.deal();
           this.mPlayers[this.mCurrentPlayer].evaluate();
         }
-        if (
-          this.mPlayers[this.mCurrentPlayer].mHand.length < 5 &&
-          this.mPlayers[this.mCurrentPlayer].mValue < 21
-        ) {
+        if (this.mPlayers[this.mCurrentPlayer].mValue < 21) {
           const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
           if (splitCardVal === 11) {
             this.splitAces();
@@ -276,10 +278,10 @@ export default class Table {
   }
 
   dealerPlay() {
-    let allBusted = true;
+    let allSettled = true;
     for (let i = 0; i < this.mPlayers.length; i++) {
-      if (this.mPlayers[i].mValue < 22) {
-        allBusted = false;
+      if (this.mPlayers[i].mValue < 22 && !this.mPlayers[i].mHasNatural) {
+        allSettled = false;
         break;
       }
     }
@@ -289,13 +291,13 @@ export default class Table {
       console.log("Dealer's turn");
       this.print();
     }
-    if (allBusted) {
+    if (allSettled) {
       if (this.mVerbose) {
-        console.log("Dealer automatically wins cause all players busted");
+        console.log("Dealer does not draw because all player hands are settled");
       }
       this.finishRound();
     } else {
-      while (this.mDealer.mValue < 17 && this.mDealer.mHand.length < 5) {
+      while (this.mDealer.mValue < 17) {
         this.dealDealer();
         this.mDealer.evaluate();
         if (this.mVerbose) {

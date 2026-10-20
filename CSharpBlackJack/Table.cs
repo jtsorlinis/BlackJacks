@@ -195,6 +195,10 @@ namespace CSharpBlackJack
         Hit();
         Stand();
       }
+      else if (mPlayers[_currentPlayer].mIsSoft && mPlayers[_currentPlayer].mValue == 18)
+      {
+        Stand();
+      }
       else
       {
         Hit();
@@ -218,7 +222,7 @@ namespace CSharpBlackJack
             mPlayers[_currentPlayer].Evaluate();
           }
 
-          if (mPlayers[_currentPlayer].mHand.Count < 5 && mPlayers[_currentPlayer].mValue < 21)
+          if (mPlayers[_currentPlayer].mValue < 21)
           {
             var splitCardVal = mPlayers[_currentPlayer].CanSplit();
             if (splitCardVal == 11)
@@ -266,11 +270,11 @@ namespace CSharpBlackJack
 
     private void DealerPlay()
     {
-      var allBusted = true;
+      var allSettled = true;
       for (var i = 0; i < mPlayers.Count; i++)
-        if (mPlayers[i].mValue < 22)
+        if (mPlayers[i].mValue < 22 && !mPlayers[i].mHasNatural)
         {
-          allBusted = false;
+          allSettled = false;
           break;
         }
 
@@ -282,14 +286,14 @@ namespace CSharpBlackJack
         Print();
       }
 
-      if (allBusted)
+      if (allSettled)
       {
-        if (_verbose) Console.WriteLine("Dealer automatically wins cause all players busted");
+        if (_verbose) Console.WriteLine("Dealer does not draw because all player hands are settled");
         FinishRound();
       }
       else
       {
-        while (_dealer.mValue < 17 && _dealer.mHand.Count < 5)
+        while (_dealer.mValue < 17)
         {
           DealDealer();
           _dealer.Evaluate();

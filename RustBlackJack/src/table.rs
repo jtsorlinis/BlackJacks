@@ -257,6 +257,10 @@ impl Table {
             }
             self.hit();
             self.stand();
+        } else if self.m_players[self.m_currentplayer].m_issoft
+            && self.m_players[self.m_currentplayer].m_value == 18
+        {
+            self.stand();
         } else {
             self.hit();
         }
@@ -277,9 +281,7 @@ impl Table {
                     self.deal();
                     self.m_players[self.m_currentplayer].evaluate();
                 }
-                if self.m_players[self.m_currentplayer].m_hand.len() < 5
-                    && self.m_players[self.m_currentplayer].m_value < 21
-                {
+                if self.m_players[self.m_currentplayer].m_value < 21 {
                     let split_player_val = self.m_players[self.m_currentplayer].can_split();
                     if split_player_val == 11 {
                         self.split_aces();
@@ -328,10 +330,10 @@ impl Table {
     }
 
     fn dealer_play(&mut self) {
-        let mut allbusted = true;
+        let mut all_settled = true;
         for player in self.m_players.iter() {
-            if player.m_value < 22 {
-                allbusted = false;
+            if player.m_value < 22 && !player.m_hasnatural {
+                all_settled = false;
                 break;
             }
         }
@@ -343,12 +345,12 @@ impl Table {
             println!("Dealer's turn");
             self.print();
         }
-        if allbusted {
+        if all_settled {
             if self.m_verbose {
-                println!("Dealer automatically wins cause all players busted");
+                println!("Dealer does not draw because all player hands are settled");
             }
         } else {
-            while self.m_dealer.m_value < 17 && self.m_dealer.m_hand.len() < 5 {
+            while self.m_dealer.m_value < 17 {
                 self.deal_dealer(false);
                 self.m_dealer.evaluate();
                 if self.m_verbose {

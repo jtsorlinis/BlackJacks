@@ -173,6 +173,11 @@ class Table:
                 )
             self.hit()
             self.stand()
+        elif (
+            self.players[self.current_player].is_soft
+            and self.players[self.current_player].value == 18
+        ):
+            self.stand()
         else:
             self.hit()
 
@@ -190,10 +195,7 @@ class Table:
                     self.deal()
                     self.players[self.current_player].evaluate()
 
-                if (
-                    len(self.players[self.current_player].hand) < 5
-                    and self.players[self.current_player].value < 21
-                ):
+                if self.players[self.current_player].value < 21:
                     split_player_val = self.players[self.current_player].can_split()
                     if split_player_val == 11:
                         self.split_aces()
@@ -242,22 +244,22 @@ class Table:
             self.print()
 
     def dealer_play(self):
-        all_busted = True
+        all_settled = True
         for player in self.players:
-            if player.value < 22:
-                all_busted = False
+            if player.value < 22 and not player.has_natural:
+                all_settled = False
                 break
         self.dealer.hand[1].face_down = False
         self.running_count += self.dealer.hand[1].count
         if self.verbose:
             print("Dealer's turn")
             self.print()
-        if all_busted:
+        if all_settled:
             if self.verbose:
-                print("Dealer automatically wins cause all players busted")
+                print("Dealer does not draw because all player hands are settled")
             self.finish_round()
         else:
-            while self.dealer.value < 17 and len(self.dealer.hand) < 5:
+            while self.dealer.value < 17:
                 if self.verbose:
                     print("Dealer hits")
                 self.deal_dealer()

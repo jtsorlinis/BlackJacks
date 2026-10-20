@@ -200,6 +200,10 @@ void Table__double_bet(Table* self) {
                  ->m_player_num);
     Table__hit(self);
     Table__stand(self);
+  } else if (((Player*)self->m_players->items[self->m_current_player])->m_is_soft &&
+             ((Player*)self->m_players->items[self->m_current_player])->m_value ==
+                 18) {
+    Table__stand(self);
   } else {
     Table__hit(self);
   }
@@ -217,10 +221,8 @@ void Table__auto_play(Table* self) {
         Player__evaluate(self->m_players->items[self->m_current_player]);
       }
 
-      if (((Player*)self->m_players->items[self->m_current_player])
-                  ->m_hand->size < 5 &&
-          ((Player*)self->m_players->items[self->m_current_player])->m_value <
-              21) {
+      if (((Player*)self->m_players->items[self->m_current_player])->m_value <
+          21) {
         int split_card_val =
             Player__can_split(self->m_players->items[self->m_current_player]);
         if (split_card_val == 11) {
@@ -274,10 +276,11 @@ void Table__action(Table* self, const char action) {
 }
 
 void Table__dealer_play(Table* self) {
-  bool all_busted = true;
+  bool all_settled = true;
   for (int i = 0; i < self->m_players->size; i++) {
-    if (((Player*)self->m_players->items[i])->m_value < 22) {
-      all_busted = false;
+    if (((Player*)self->m_players->items[i])->m_value < 22 &&
+        !((Player*)self->m_players->items[i])->m_has_natural) {
+      all_settled = false;
       break;
     }
   }
@@ -288,12 +291,12 @@ void Table__dealer_play(Table* self) {
     Table__print(self);
   }
 
-  if (all_busted) {
+  if (all_settled) {
     if (self->m_verbose)
-      printf("Dealer automatically wins cause all players busted\n");
+      printf("Dealer does not draw because all player hands are settled\n");
     Table__finish_round(self);
   } else {
-    while (self->m_dealer->m_value < 17 && self->m_dealer->m_hand->size < 5) {
+    while (self->m_dealer->m_value < 17) {
       Table__deal_dealer(self, false);
       Dealer__evaluate(self->m_dealer);
       if (self->m_verbose) {

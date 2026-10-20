@@ -189,6 +189,9 @@ void Table::double_bet() {
     }
     hit();
     stand();
+  } else if (m_players_[m_current_player_].m_is_soft_ &&
+             m_players_[m_current_player_].m_value_ == 18) {
+    stand();
   } else {
     hit();
   }
@@ -208,8 +211,7 @@ void Table::auto_play() {
         m_players_[m_current_player_].evaluate();
       }
 
-      if (m_players_[m_current_player_].m_hand_.size() < 5 &&
-          m_players_[m_current_player_].m_value_ < 21) {
+      if (m_players_[m_current_player_].m_value_ < 21) {
         auto split_card_val = m_players_[m_current_player_].can_split();
         if (split_card_val == 11) {
           split_aces();
@@ -254,10 +256,10 @@ void Table::action(char action) {
 }
 
 void Table::dealer_play() {
-  auto all_busted = true;
+  auto all_settled = true;
   for (auto& player : m_players_) {
-    if (player.m_value_ < 22) {
-      all_busted = false;
+    if (player.m_value_ < 22 && !player.m_has_natural_) {
+      all_settled = false;
       break;
     }
   }
@@ -267,13 +269,13 @@ void Table::dealer_play() {
     std::cout << "Dealer's turn\n";
     print();
   }
-  if (all_busted) {
+  if (all_settled) {
     if (m_verbose_) {
-      std::cout << "Dealer automatically wins cause all players busted\n";
+      std::cout << "Dealer does not draw because all player hands are settled\n";
     }
     finish_round();
   } else {
-    while (m_dealer_.m_value_ < 17 && m_dealer_.m_hand_.size() < 5) {
+    while (m_dealer_.m_value_ < 17) {
       deal_dealer();
       m_dealer_.evaluate();
       if (m_verbose_) {
