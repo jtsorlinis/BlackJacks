@@ -14,6 +14,8 @@ use table::Table;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
+pub const VERBOSE: bool = false;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -23,13 +25,12 @@ fn main() {
     const MIN_CARDS: usize = 52;
 
     let mut rounds: i32 = 1000000;
-    const VERBOSE: bool = false;
 
     if args.len() == 2 {
         rounds = args[1].parse::<i32>().unwrap();
     }
 
-    let mut table1 = Table::new(NUM_PLAYERS, NUM_DECKS, BET_SIZE, MIN_CARDS, VERBOSE);
+    let mut table1 = Table::new(NUM_PLAYERS, NUM_DECKS, BET_SIZE, MIN_CARDS);
     table1.m_cardpile.shuffle();
 
     let start = Instant::now();

@@ -65,16 +65,10 @@ int Player__can_split(Player* self) {
   return 0;
 }
 
-double Player__win(Player* self, double mult) {
+double Player__settle(Player* self, double mult) {
   double x = self->m_initial_bet * self->m_bet_mult * mult;
   self->m_earnings += x;
   return -x;
-}
-
-double Player__lose(Player* self) {
-  double x = self->m_initial_bet * self->m_bet_mult;
-  self->m_earnings -= x;
-  return x;
 }
 
 void Player__print(Player* self) {

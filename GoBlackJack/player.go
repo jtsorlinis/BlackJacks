@@ -74,18 +74,11 @@ func (p *Player) CanSplit() int32 {
 	return 0
 }
 
-// Win increases player earnings
-func (p *Player) Win(mult float64) float64 {
+// Settle pays out the bet times mult and returns the casino's side of it
+func (p *Player) Settle(mult float64) float64 {
 	x := float64(p.MInitialBet) * p.MBetMult * mult
 	p.MEarnings += x
 	return -x
-}
-
-// Lose decreases player earnings
-func (p *Player) Lose() float64 {
-	x := float64(p.MInitialBet) * p.MBetMult
-	p.MEarnings -= x
-	return x
 }
 
 // Print prints the players number and hand

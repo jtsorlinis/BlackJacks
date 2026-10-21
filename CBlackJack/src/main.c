@@ -13,12 +13,11 @@ const int bet_size = 10;
 const int min_cards = 52;
 
 int rounds = 1000000;
-const bool verbose = false;
 
 int main(int argc, char const *argv[]) {
   if (argc == 2) rounds = atoi(argv[1]);
 
-  Table *t = Table__new(num_players, num_decks, bet_size, min_cards, verbose);
+  Table *t = Table__new(num_players, num_decks, bet_size, min_cards);
   CardPile__shuffle(&t->m_card_pile);
 
   struct timespec start, end;

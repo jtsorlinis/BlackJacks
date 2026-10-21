@@ -2,9 +2,9 @@ use crate::cardpile::CardPile;
 use crate::dealer::Dealer;
 use crate::player::Player;
 use crate::strategies;
+use crate::VERBOSE;
 
 pub struct Table {
-    pub m_verbose: bool,
     pub m_betsize: i32,
     pub m_players: Vec<Player>,
     pub m_numofdecks: i32,
@@ -26,10 +26,8 @@ impl Table {
         numdecks: i32,
         betsize: i32,
         mincards: usize,
-        verbose: bool,
     ) -> Table {
         Table {
-            m_verbose: verbose,
             m_betsize: betsize,
             m_players: Table::fill(numplayers, betsize),
             m_numofdecks: numdecks,
@@ -75,7 +73,7 @@ impl Table {
 
     pub fn start_round(&mut self) {
         self.update_count();
-        if self.m_verbose {
+        if VERBOSE {
             println!("{} cards left", self.m_cardpile.m_cards.len());
             println!(
                 "Running count is: {}\tTrue count is: {}",
@@ -94,7 +92,7 @@ impl Table {
             self.finish_round();
         } else {
             self.check_player_natural();
-            if self.m_verbose {
+            if VERBOSE {
                 self.print();
             }
             self.autoplay();
@@ -141,7 +139,7 @@ impl Table {
             self.m_cardpile.shuffle();
             self.m_truecount = 0;
             self.m_runningcount = 0;
-            if self.m_verbose {
+            if VERBOSE {
                 println!(
                     "Got {} new decks as number of cards left is below {}",
                     self.m_numofdecks, self.m_mincards
@@ -174,7 +172,7 @@ impl Table {
     fn hit(&mut self) {
         self.deal();
         self.m_players[self.m_currentplayer].evaluate();
-        if self.m_verbose {
+        if VERBOSE {
             println!(
                 "Player {} hits",
                 self.m_players[self.m_currentplayer].m_playernum
@@ -183,7 +181,7 @@ impl Table {
     }
 
     fn stand(&mut self) {
-        if self.m_verbose && self.m_players[self.m_currentplayer].m_value <= 21 {
+        if VERBOSE && self.m_players[self.m_currentplayer].m_value <= 21 {
             println!(
                 "Player {} stands",
                 self.m_players[self.m_currentplayer].m_playernum
@@ -209,7 +207,7 @@ impl Table {
         self.m_players.insert(self.m_currentplayer + 1, splitplayer);
         self.m_players[self.m_currentplayer].evaluate();
         self.m_players[self.m_currentplayer + 1].evaluate();
-        if self.m_verbose {
+        if VERBOSE {
             println!(
                 "Player {} splits",
                 self.m_players[self.m_currentplayer].m_playernum
@@ -218,7 +216,7 @@ impl Table {
     }
 
     fn split_aces(&mut self) {
-        if self.m_verbose {
+        if VERBOSE {
             println!(
                 "Player {} splits aces",
                 self.m_players[self.m_currentplayer].m_playernum
@@ -244,7 +242,7 @@ impl Table {
         self.deal();
         self.m_players[self.m_currentplayer].evaluate();
         self.stand();
-        if self.m_verbose {
+        if VERBOSE {
             self.print();
         }
     }
@@ -254,7 +252,7 @@ impl Table {
             && self.m_players[self.m_currentplayer].m_hand.len() == 2
         {
             self.m_players[self.m_currentplayer].double_bet();
-            if self.m_verbose {
+            if VERBOSE {
                 println!(
                     "Player {} doubles",
                     self.m_players[self.m_currentplayer].m_playernum
@@ -277,7 +275,7 @@ impl Table {
             while !self.m_players[self.m_currentplayer].m_isdone {
                 // check if player just split
                 if self.m_players[self.m_currentplayer].m_hand.len() == 1 {
-                    if self.m_verbose {
+                    if VERBOSE {
                         println!(
                             "Player {} gets 2nd card after splitting",
                             self.m_players[self.m_currentplayer].m_playernum
@@ -346,19 +344,19 @@ impl Table {
         unsafe {
             self.m_runningcount += (*self.m_dealer.m_hand[1]).m_count;
         }
-        if self.m_verbose {
+        if VERBOSE {
             println!("Dealer's turn");
             self.print();
         }
         if all_settled {
-            if self.m_verbose {
+            if VERBOSE {
                 println!("Dealer does not draw because all player hands are settled");
             }
         } else {
             while self.m_dealer.m_value < 17 {
                 self.deal_dealer(false);
                 self.m_dealer.evaluate();
-                if self.m_verbose {
+                if VERBOSE {
                     println!("Dealer hits");
                     self.print();
                 }
@@ -382,7 +380,7 @@ impl Table {
             unsafe {
                 self.m_runningcount += (*self.m_dealer.m_hand[1]).m_count;
             }
-            if self.m_verbose {
+            if VERBOSE {
                 self.print();
                 println!("Dealer has a natural 21");
             }
@@ -406,55 +404,57 @@ impl Table {
     }
 
     fn finish_round(&mut self) {
-        if self.m_verbose {
+        if VERBOSE {
             println!("Scoring round");
         }
         let mut casino_earnings = self.m_casinoearnings;
         for player in self.m_players.iter_mut() {
-            if player.m_hasnatural {
-                casino_earnings += player.win(1.5);
-                if self.m_verbose {
+            let mult = if player.m_hasnatural {
+                if VERBOSE {
                     println!(
                         "Player {} Wins {} with a natural 21",
                         player.m_playernum,
                         (1.5 * player.m_betmult * player.m_initialbet as f64) as i32
                     );
                 }
+                1.5
             } else if player.m_value > 21 {
-                casino_earnings += player.lose();
-                if self.m_verbose {
+                if VERBOSE {
                     println!(
                         "Player {} Busts and Loses {}",
                         player.m_playernum,
                         (player.m_betmult * player.m_initialbet as f64) as i32
                     );
                 }
+                -1.0
             } else if self.m_dealer.m_value > 21 || player.m_value > self.m_dealer.m_value {
-                casino_earnings += player.win(1.0);
-                if self.m_verbose {
+                if VERBOSE {
                     println!(
                         "Player {} Wins {}",
                         player.m_playernum,
                         (player.m_betmult * player.m_initialbet as f64) as i32
                     )
                 }
+                1.0
             } else if player.m_value == self.m_dealer.m_value {
-                if self.m_verbose {
+                if VERBOSE {
                     println!("Player {} Draws", player.m_playernum)
                 }
+                0.0
             } else {
-                casino_earnings += player.lose();
-                if self.m_verbose {
+                if VERBOSE {
                     println!(
                         "Player {} Loses {}",
                         player.m_playernum,
                         (player.m_betmult * player.m_initialbet as f64) as i32
                     )
                 }
-            }
+                -1.0
+            };
+            casino_earnings += player.settle(mult);
         }
         self.m_casinoearnings = casino_earnings;
-        if self.m_verbose {
+        if VERBOSE {
             for player in self.m_players.iter() {
                 if !player.m_issplithand {
                     println!(

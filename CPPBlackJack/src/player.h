@@ -29,8 +29,7 @@ class Player {
   void double_bet();
   void reset_hand();
   int can_split();
-  double win(double mult = 1);
-  double lose();
+  double settle(double mult);
   std::string print();
   int evaluate();
 };

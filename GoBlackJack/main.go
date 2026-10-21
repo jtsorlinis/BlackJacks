@@ -25,7 +25,7 @@ func main() {
 		rounds, _ = strconv.Atoi(os.Args[1])
 	}
 
-	table1 := NewTable(numPlayers, numDecks, betSize, minCards, verbose)
+	table1 := NewTable(numPlayers, numDecks, betSize, minCards)
 	table1.MCardPile.Shuffle()
 
 	start := time.Now()

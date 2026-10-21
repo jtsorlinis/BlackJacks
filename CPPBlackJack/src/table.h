@@ -4,9 +4,10 @@
 #include "cardpile.h"
 #include "dealer.h"
 
+constexpr bool verbose = false;
+
 class Table {
  public:
-  bool m_verbose_;
   int m_bet_size_;
   std::vector<Player> m_players_;
   int m_num_of_decks_;
@@ -21,8 +22,7 @@ class Table {
   std::vector<char> m_strat_soft_;
   std::vector<char> m_strat_split_;
 
-  Table(int num_players, int num_of_decks, int bet_size, int min_cards,
-        bool verbose);
+  Table(int num_players, int num_of_decks, int bet_size, int min_cards);
   void deal_round();
   void evaluate_all();
   void deal();

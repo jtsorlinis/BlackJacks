@@ -1,6 +1,6 @@
 import time
 import sys
-from table import Table
+from table import Table, VERBOSE
 
 
 def main():
@@ -11,19 +11,18 @@ def main():
     min_cards = 52
 
     rounds = 1000000
-    verbose = False
 
     if len(sys.argv) == 2:
         rounds = int(sys.argv[1])
 
-    table1 = Table(players, decks, bet_size, min_cards, verbose)
+    table1 = Table(players, decks, bet_size, min_cards)
     table1.cardpile.shuffle()
 
     start_time = time.perf_counter()
     for x in range(1, rounds + 1):
-        if verbose:
+        if VERBOSE:
             print("Round " + str(x))
-        if not verbose and rounds > 1000 and x % (rounds // 100) == 0:
+        if not VERBOSE and rounds > 1000 and x % (rounds // 100) == 0:
             print("\tProgress: " + str(x * 100 // rounds) + "%",
                   end="\r", file=sys.stderr, flush=True)
         table1.start_round()

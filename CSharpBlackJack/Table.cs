@@ -12,7 +12,6 @@ namespace CSharpBlackJack
     private readonly char[] _stratHard = Strategies.Array2dToMap(Strategies.StratHard);
     private readonly char[] _stratSoft = Strategies.Array2dToMap(Strategies.StratSoft);
     private readonly char[] _stratSplit = Strategies.Array2dToMap(Strategies.StratSplit);
-    private readonly bool _verbose;
     public readonly int mBetSize;
     public readonly CardPile mCardPile;
     public readonly List<Player> mPlayers;
@@ -21,10 +20,9 @@ namespace CSharpBlackJack
     private int _trueCount;
     public double mCasinoEarnings = 0;
 
-    public Table(int numPlayers, int numDecks, int betSize, int minCards, bool verbose)
+    public Table(int numPlayers, int numDecks, int betSize, int minCards)
     {
       mCardPile = new CardPile(numDecks);
-      _verbose = verbose;
       mBetSize = betSize;
       _numOfDecks = numDecks;
       _minCards = minCards;
@@ -84,7 +82,7 @@ namespace CSharpBlackJack
     public void StartRound()
     {
       UpdateCount();
-      if (_verbose)
+      if (Program.Verbose)
       {
         Console.WriteLine(mCardPile.mCards.Count + " cards left");
         Console.WriteLine("Running count is: " + _runningCount + "\tTrue count is: " + _trueCount);
@@ -105,7 +103,7 @@ namespace CSharpBlackJack
       else
       {
         CheckPlayerNatural();
-        if (_verbose) Print();
+        if (Program.Verbose) Print();
         AutoPlay();
       }
     }
@@ -117,7 +115,7 @@ namespace CSharpBlackJack
       mCardPile.Shuffle();
       _trueCount = 0;
       _runningCount = 0;
-      if (_verbose)
+      if (Program.Verbose)
         Console.WriteLine("Got " + _numOfDecks + " new decks as number of cards left is below " +
                           _minCards);
     }
@@ -150,12 +148,12 @@ namespace CSharpBlackJack
     {
       Deal();
       mPlayers[_currentPlayer].Evaluate();
-      if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " hits");
+      if (Program.Verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " hits");
     }
 
     private void Stand()
     {
-      if (_verbose && mPlayers[_currentPlayer].mValue <= 21)
+      if (Program.Verbose && mPlayers[_currentPlayer].mValue <= 21)
       {
         Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " stands");
         Print();
@@ -171,12 +169,12 @@ namespace CSharpBlackJack
       mPlayers.Insert(_currentPlayer + 1, splitPlayer);
       mPlayers[_currentPlayer].Evaluate();
       mPlayers[_currentPlayer + 1].Evaluate();
-      if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits");
+      if (Program.Verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits");
     }
 
     private void SplitAces()
     {
-      if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits aces");
+      if (Program.Verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " splits aces");
       var splitPlayer = new Player(this, mPlayers[_currentPlayer]);
       mPlayers[_currentPlayer].mHand.RemoveAt(mPlayers[_currentPlayer].mHand.Count - 1);
       mPlayers.Insert(_currentPlayer + 1, splitPlayer);
@@ -187,7 +185,7 @@ namespace CSharpBlackJack
       Deal();
       mPlayers[_currentPlayer].Evaluate();
       Stand();
-      if (_verbose) Print();
+      if (Program.Verbose) Print();
     }
 
     private void DoubleBet()
@@ -195,7 +193,7 @@ namespace CSharpBlackJack
       if (mPlayers[_currentPlayer].mBetMult < 1.1 && mPlayers[_currentPlayer].mHand.Count == 2)
       {
         mPlayers[_currentPlayer].DoubleBet();
-        if (_verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " doubles");
+        if (Program.Verbose) Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum + " doubles");
         Hit();
         Stand();
       }
@@ -219,7 +217,7 @@ namespace CSharpBlackJack
           // check if player just split
           if (mPlayers[_currentPlayer].mHand.Count == 1)
           {
-            if (_verbose)
+            if (Program.Verbose)
               Console.WriteLine("Player " + mPlayers[_currentPlayer].mPlayerNum +
                                 " gets 2nd card after splitting");
             Deal();
@@ -284,7 +282,7 @@ namespace CSharpBlackJack
 
       _dealer.mHand[1].mFaceDown = false;
       _runningCount += _dealer.mHand[1].mCount;
-      if (_verbose)
+      if (Program.Verbose)
       {
         Console.WriteLine("Dealer's turn");
         Print();
@@ -292,7 +290,7 @@ namespace CSharpBlackJack
 
       if (allSettled)
       {
-        if (_verbose) Console.WriteLine("Dealer does not draw because all player hands are settled");
+        if (Program.Verbose) Console.WriteLine("Dealer does not draw because all player hands are settled");
         FinishRound();
       }
       else
@@ -301,7 +299,7 @@ namespace CSharpBlackJack
         {
           DealDealer();
           _dealer.Evaluate();
-          if (!_verbose) continue;
+          if (!Program.Verbose) continue;
           Console.WriteLine("Dealer hits");
           Print();
         }
@@ -323,7 +321,7 @@ namespace CSharpBlackJack
       if (_dealer.mValue != 21) return false;
       _dealer.mHand[1].mFaceDown = false;
       _runningCount += _dealer.mHand[1].mCount;
-      if (!_verbose) return true;
+      if (!Program.Verbose) return true;
       Print();
       Console.WriteLine("Dealer has a natural 21");
 
@@ -343,46 +341,50 @@ namespace CSharpBlackJack
 
     private void FinishRound()
     {
-      if (_verbose) Console.WriteLine("Scoring round");
+      if (Program.Verbose) Console.WriteLine("Scoring round");
       var casinoEarnings = mCasinoEarnings;
       for (var i = 0; i < mPlayers.Count; i++)
       {
+        double mult;
         if (mPlayers[i].mHasNatural)
         {
-          casinoEarnings += mPlayers[i].Win(1.5);
-          if (_verbose)
+          if (Program.Verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
                               (int)(1.5 * mPlayers[i].mBetMult * mPlayers[i].mInitialBet) + " with a natural 21");
+          mult = 1.5;
         }
         else if (mPlayers[i].mValue > 21)
         {
-          casinoEarnings += mPlayers[i].Lose();
-          if (_verbose)
+          if (Program.Verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Busts and Loses " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
+          mult = -1;
         }
         else if (_dealer.mValue > 21 || mPlayers[i].mValue > _dealer.mValue)
         {
-          casinoEarnings += mPlayers[i].Win();
-          if (_verbose)
+          if (Program.Verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Wins " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
+          mult = 1;
         }
         else if (mPlayers[i].mValue == _dealer.mValue)
         {
-          if (_verbose) Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Draws");
+          if (Program.Verbose) Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Draws");
+          mult = 0;
         }
         else
         {
-          casinoEarnings += mPlayers[i].Lose();
-          if (_verbose)
+          if (Program.Verbose)
             Console.WriteLine("Player " + mPlayers[i].mPlayerNum + " Loses " +
                               (int)(mPlayers[i].mBetMult * mPlayers[i].mInitialBet));
+          mult = -1;
         }
+
+        casinoEarnings += mPlayers[i].Settle(mult);
       }
       mCasinoEarnings = casinoEarnings;
 
-      if (_verbose)
+      if (Program.Verbose)
       {
         foreach (var player in mPlayers.Where(player => player.mSplitFrom == null))
           Console.WriteLine("Player " + player.mPlayerNum + " Earnings: " + (int)player.mEarnings);

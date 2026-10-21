@@ -56,16 +56,10 @@ int Player::can_split() {
   return 0;
 }
 
-double Player::win(const double mult) {
+double Player::settle(const double mult) {
   double x = static_cast<double>(m_initial_bet_) * m_bet_mult_ * mult;
   m_earnings_ += x;
   return -x;
-}
-
-double Player::lose() {
-  double x = static_cast<double>(m_initial_bet_) * m_bet_mult_;
-  m_earnings_ -= x;
-  return x;
 }
 
 std::string Player::print() {

@@ -7,7 +7,6 @@ import (
 
 // Table class
 type Table struct {
-	MVerbose        bool
 	MBetSize        int32
 	MPlayers        []*Player
 	MNumOfDecks     int32
@@ -24,9 +23,8 @@ type Table struct {
 }
 
 // NewTable constructor
-func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32, verbose bool) *Table {
+func NewTable(numplayers int32, numdecks int32, betsize int32, mincards int32) *Table {
 	t := new(Table)
-	t.MVerbose = verbose
 	t.MBetSize = betsize
 	t.MNumOfDecks = numdecks
 	t.MCardPile = NewCardPile(numdecks)
@@ -91,7 +89,7 @@ func (t *Table) dealDealer(facedown bool) {
 // StartRound plays a round
 func (t *Table) StartRound() {
 	t.updateCount()
-	if t.MVerbose {
+	if verbose {
 		fmt.Println(fmt.Sprint(len(t.MCardPile.MCards)) + " cards left")
 		fmt.Println("Running count is: " + fmt.Sprint(t.MRunningCount) + "\tTrue count is: " + fmt.Sprint(t.MTrueCount))
 	}
@@ -107,7 +105,7 @@ func (t *Table) StartRound() {
 		t.finishRound()
 	} else {
 		t.checkPlayerNatural()
-		if t.MVerbose {
+		if verbose {
 			t.print()
 		}
 		t.autoPlay()
@@ -120,7 +118,7 @@ func (t *Table) getNewCards() {
 		t.MCardPile.Shuffle()
 		t.MTrueCount = 0
 		t.MRunningCount = 0
-		if t.MVerbose {
+		if verbose {
 			fmt.Println("Got " + fmt.Sprint(t.MNumOfDecks) + " new decks as number of cards left is below " + fmt.Sprint(t.MMinCards))
 		}
 	}
@@ -148,13 +146,13 @@ func (t *Table) updateCount() {
 func (t *Table) hit() {
 	t.deal()
 	t.MPlayers[t.mCurrentPlayer].Evaluate()
-	if t.MVerbose {
+	if verbose {
 		fmt.Println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " hits")
 	}
 }
 
 func (t *Table) stand() {
-	if t.MVerbose && t.MPlayers[t.mCurrentPlayer].MValue <= 21 {
+	if verbose && t.MPlayers[t.mCurrentPlayer].MValue <= 21 {
 		fmt.Println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " stands")
 		t.print()
 	}
@@ -169,13 +167,13 @@ func (t *Table) split() {
 	t.MPlayers[t.mCurrentPlayer+1] = splitPlayer
 	t.MPlayers[t.mCurrentPlayer].Evaluate()
 	t.MPlayers[t.mCurrentPlayer+1].Evaluate()
-	if t.MVerbose {
+	if verbose {
 		fmt.Println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " splits")
 	}
 }
 
 func (t *Table) splitAces() {
-	if t.MVerbose {
+	if verbose {
 		fmt.Println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " splits aces")
 	}
 	splitPlayer := NewPlayer(t, t.MPlayers[t.mCurrentPlayer])
@@ -190,7 +188,7 @@ func (t *Table) splitAces() {
 	t.deal()
 	t.MPlayers[t.mCurrentPlayer].Evaluate()
 	t.stand()
-	if t.MVerbose {
+	if verbose {
 		t.print()
 	}
 }
@@ -198,7 +196,7 @@ func (t *Table) splitAces() {
 func (t *Table) doubleBet() {
 	if t.MPlayers[t.mCurrentPlayer].MBetMult < 1.1 && len(t.MPlayers[t.mCurrentPlayer].MHand) == 2 {
 		t.MPlayers[t.mCurrentPlayer].DoubleBet()
-		if t.MVerbose {
+		if verbose {
 			fmt.Println("Player " + fmt.Sprint(t.MPlayers[t.mCurrentPlayer].MPlayerNum) + " doubles")
 		}
 		t.hit()
@@ -216,7 +214,7 @@ func (t *Table) autoPlay() {
 		for !t.MPlayers[t.mCurrentPlayer].MIsDone {
 			// check if player just split
 			if len(t.MPlayers[t.mCurrentPlayer].MHand) == 1 {
-				if t.MVerbose {
+				if verbose {
 					fmt.Println("Player " + t.MPlayers[t.mCurrentPlayer].MPlayerNum + " gets 2nd card after splitting")
 				}
 				t.deal()
@@ -270,12 +268,12 @@ func (t *Table) dealerPlay() {
 	}
 	t.MDealer.MHand[1].mFaceDown = false
 	t.MRunningCount += t.MDealer.MHand[1].mCount
-	if t.MVerbose {
+	if verbose {
 		fmt.Println("Dealer's turn")
 		t.print()
 	}
 	if allSettled {
-		if t.MVerbose {
+		if verbose {
 			fmt.Println("Dealer does not draw because all player hands are settled")
 		}
 		t.finishRound()
@@ -283,7 +281,7 @@ func (t *Table) dealerPlay() {
 		for t.MDealer.MValue < 17 {
 			t.dealDealer(false)
 			t.MDealer.Evaluate()
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Dealer hits")
 				t.print()
 			}
@@ -305,7 +303,7 @@ func (t *Table) checkDealerNatural() bool {
 	if t.MDealer.MValue == 21 {
 		t.MDealer.MHand[1].mFaceDown = false
 		t.MRunningCount += t.MDealer.MHand[1].mCount
-		if t.MVerbose {
+		if verbose {
 			t.print()
 			fmt.Println("Dealer has a natural 21")
 		}
@@ -327,40 +325,42 @@ func (t *Table) CheckEarnings() {
 }
 
 func (t *Table) finishRound() {
-	if t.MVerbose {
+	if verbose {
 		fmt.Println("Scoring round")
 	}
 	casinoEarnings := t.MCasinoEarnings
 	for _, player := range t.MPlayers {
+		var mult float64
 		if player.MHasNatural {
-			casinoEarnings += player.Win(1.5)
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(int32(1.5*player.MBetMult*float64(player.MInitialBet))) + " with a natural 21")
 			}
+			mult = 1.5
 		} else if player.MValue > 21 {
-			casinoEarnings += player.Lose()
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Player " + player.MPlayerNum + " Busts and Loses " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
-
+			mult = -1
 		} else if t.MDealer.MValue > 21 || player.MValue > t.MDealer.MValue {
-			casinoEarnings += player.Win(1)
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Player " + player.MPlayerNum + " Wins " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
+			mult = 1
 		} else if player.MValue == t.MDealer.MValue {
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Player " + player.MPlayerNum + " Draws")
 			}
+			mult = 0
 		} else {
-			casinoEarnings += player.Lose()
-			if t.MVerbose {
+			if verbose {
 				fmt.Println("Player " + player.MPlayerNum + " Loses " + fmt.Sprint(int32(player.MBetMult*float64(player.MInitialBet))))
 			}
+			mult = -1
 		}
+		casinoEarnings += player.Settle(mult)
 	}
 	t.MCasinoEarnings = casinoEarnings
-	if t.MVerbose {
+	if verbose {
 		for _, player := range t.MPlayers {
 			if player.MSplitFrom == nil {
 				fmt.Println("Player " + player.MPlayerNum + " Earnings: " + fmt.Sprint(int32(player.MEarnings)))

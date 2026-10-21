@@ -359,8 +359,8 @@ export default class Table {
     let casinoEarnings = this.mCasinoEarnings;
     for (let i = 0; i < this.mPlayers.length; i++) {
       const player = this.mPlayers[i];
+      let mult;
       if (player.mHasNatural) {
-        casinoEarnings += player.win(1.5);
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
@@ -368,8 +368,8 @@ export default class Table {
             )} with a natural 21`
           );
         }
+        mult = 1.5;
       } else if (player.mValue > 21) {
-        casinoEarnings += player.lose();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Busts and Loses ${Math.trunc(
@@ -377,11 +377,11 @@ export default class Table {
             )}`
           );
         }
+        mult = -1;
       } else if (
         this.mDealer.mValue > 21 ||
         player.mValue > this.mDealer.mValue
       ) {
-        casinoEarnings += player.win();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
@@ -389,12 +389,13 @@ export default class Table {
             )}`
           );
         }
+        mult = 1;
       } else if (player.mValue === this.mDealer.mValue) {
         if (this.mVerbose) {
           console.log(`Player ${player.mPlayerNum} Draws`);
         }
+        mult = 0;
       } else {
-        casinoEarnings += player.lose();
         if (this.mVerbose) {
           console.log(
             `Player ${player.mPlayerNum} Loses ${Math.trunc(
@@ -402,7 +403,9 @@ export default class Table {
             )}`
           );
         }
+        mult = -1;
       }
+      casinoEarnings += player.settle(mult);
     }
     this.mCasinoEarnings = casinoEarnings;
     if (this.mVerbose) {

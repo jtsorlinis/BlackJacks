@@ -52,15 +52,10 @@ class Player:
             return self.hand[0].value
         return 0
 
-    def win(self, mult=1):
+    def settle(self, mult):
         x = self.initial_bet * self.bet_mult * mult
         self.earnings += x
         return -x
-
-    def lose(self):
-        x = self.initial_bet * self.bet_mult
-        self.earnings -= x
-        return x
 
     def print(self):
         output = "Player " + str(self.player_num) + ": "

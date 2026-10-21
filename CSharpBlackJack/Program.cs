@@ -6,6 +6,8 @@ namespace CSharpBlackJack
 {
   internal static class Program
   {
+    public const bool Verbose = false;
+
     private static void Main(string[] args)
     {
       const int numOfPlayers = 5;
@@ -14,12 +16,11 @@ namespace CSharpBlackJack
       const int minCards = 52;
 
       var rounds = 1000000;
-      bool verbose = false;
 
       if (args.Length == 1) rounds = int.Parse(args[0]);
       CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-      var table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards, verbose);
+      var table1 = new Table(numOfPlayers, numOfDecks, betSize, minCards);
       table1.mCardPile.Shuffle();
 
       var timer = new Stopwatch();
@@ -28,8 +29,8 @@ namespace CSharpBlackJack
       var x = 0;
       while (x++ < rounds)
       {
-        if (verbose) Console.WriteLine("Round " + x);
-        if (!verbose && rounds > 1000 && x % (rounds / 100) == 0)
+        if (Verbose) Console.WriteLine("Round " + x);
+        if (!Verbose && rounds > 1000 && x % (rounds / 100) == 0)
           Console.Error.Write("\tProgress: " + x * 100 / rounds + "%\r");
 
         table1.StartRound();

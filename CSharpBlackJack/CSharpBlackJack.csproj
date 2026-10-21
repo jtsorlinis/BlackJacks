@@ -6,6 +6,7 @@
     <TieredPGO>true</TieredPGO>
     <StripSymbols>false</StripSymbols>
     <TargetFramework>net10.0</TargetFramework>
+    <NoWarn>$(NoWarn);CS0162</NoWarn>
   </PropertyGroup>
 
 </Project>

@@ -103,16 +103,10 @@ impl Player {
         }
     }
 
-    pub fn win(&mut self, mult: f64) -> f64 {
+    pub fn settle(&mut self, mult: f64) -> f64 {
         let x = self.m_initialbet as f64 * self.m_betmult * mult;
         self.m_earnings += x;
         -x
-    }
-
-    pub fn lose(&mut self) -> f64 {
-        let x = self.m_initialbet as f64 * self.m_betmult;
-        self.m_earnings -= x;
-        x
     }
 
     pub fn print(&self) -> String {

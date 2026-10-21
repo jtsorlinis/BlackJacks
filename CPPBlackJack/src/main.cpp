@@ -13,14 +13,13 @@ int base_bet = 10;
 int min_cards = 52;
 
 int rounds = 1000000;
-bool verbose = false;
 
 int main(const int argc, char* argv[]) {
   if (argc == 2) {
     rounds = strtol(argv[1], nullptr, 10);
   }
 
-  Table table1(num_of_players, num_of_decks, base_bet, min_cards, verbose);
+  Table table1(num_of_players, num_of_decks, base_bet, min_cards);
   table1.m_card_pile_.shuffle();
   std::cout << std::fixed << std::setprecision(2);
   const auto start = high_resolution_clock::now();

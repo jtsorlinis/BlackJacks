@@ -70,18 +70,11 @@ namespace CSharpBlackJack
       return 0;
     }
 
-    public double Win(double mult = 1)
+    public double Settle(double mult)
     {
       var x = mInitialBet * mBetMult * mult;
       mEarnings += x;
       return -x;
-    }
-
-    public double Lose()
-    {
-      var x = mInitialBet * mBetMult;
-      mEarnings -= x;
-      return x;
     }
 
     public string Print()

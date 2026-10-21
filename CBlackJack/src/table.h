@@ -8,11 +8,12 @@
 #include "player.h"
 #include "vector.h"
 
+static const bool verbose = false;
+
 typedef struct Table {
   Dealer m_dealer;
   int m_min_cards;
   int m_num_decks;
-  int m_verbose;
   int m_bet_size;
   CardPile m_card_pile;
   PlayerVector m_players;
@@ -26,8 +27,7 @@ typedef struct Table {
   char* m_strat_split;
 } Table;
 
-Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards,
-                  int verbose);
+Table* Table__new(int num_players, int num_decks, int bet_size, int min_cards);
 void Table__deal_round(Table* self);
 void Table__evaluate_all(Table* self);
 void Table__deal(Table* self);
