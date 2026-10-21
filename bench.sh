@@ -5,11 +5,13 @@ ROUNDS='1000000'
 echo "Building CBlackJack"
 cd CBlackJack
 xmake
+xmake build CBlackJack-gcc
 cd ..
 
 echo "Building CPPBlackJack"
 cd CPPBlackJack
 xmake
+xmake build CPPBlackJack-gcc
 cd ..
 
 echo "Building CSharpBlackJack"
@@ -30,7 +32,9 @@ cd ..
 
 hyperfine --warmup 3 -L num_rounds $ROUNDS --export-json results.json \
 -n C "CBlackJack/build/bin/CBlackJack {num_rounds}" \
+-n "C (GCC)" "CBlackJack/build/bin/CBlackJack-gcc {num_rounds}" \
 -n C++ "CPPBlackJack/build/bin/CPPBlackJack {num_rounds}" \
+-n "C++ (GCC)" "CPPBlackJack/build/bin/CPPBlackJack-gcc {num_rounds}" \
 -n Rust "RustBlackJack/target/release/rust_black_jack {num_rounds}" \
 -n C# "dotnet CSharpBlackJack/bin/Release/net10.0/CSharpBlackJack.dll {num_rounds}" \
 -n "C# (AOT)" "CSharpBlackJack/bin/Release/net10.0/osx-arm64/native/CSharpBlackJack {num_rounds}" \
