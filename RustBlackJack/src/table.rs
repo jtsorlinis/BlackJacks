@@ -193,7 +193,7 @@ impl Table {
 
     fn split(&mut self) {
         self.m_players[self.m_currentplayer].record_split();
-        let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
+        let splitplayernum = [self.m_players[self.m_currentplayer].m_playernum.as_str(), "S"].concat();
         let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
         let mut splitplayer = Player::new_split(
             splitplayernum,
@@ -223,7 +223,7 @@ impl Table {
             );
         }
         self.m_players[self.m_currentplayer].record_split();
-        let splitplayernum = (self.m_players[self.m_currentplayer].m_playernum).to_string() + "S";
+        let splitplayernum = [self.m_players[self.m_currentplayer].m_playernum.as_str(), "S"].concat();
         let splitcount = self.m_players[self.m_currentplayer].m_splitcount.clone();
         let mut splitplayer = Player::new_split(
             splitplayernum,
