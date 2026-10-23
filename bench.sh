@@ -4,14 +4,14 @@ ROUNDS='1000000'
 
 echo "Building CBlackJack"
 cd CBlackJack
-xmake
-xmake build CBlackJack-gcc
+xmake -y
+xmake build -y CBlackJack-gcc
 cd ..
 
 echo "Building CPPBlackJack"
 cd CPPBlackJack
-xmake
-xmake build CPPBlackJack-gcc
+xmake -y
+xmake build -y CPPBlackJack-gcc
 cd ..
 
 echo "Building CSharpBlackJack"

@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+#include <mimalloc-new-delete.h>
 
 #include "player.h"
 #include "table.h"
