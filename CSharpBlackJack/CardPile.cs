@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System;
 
@@ -11,6 +12,7 @@ namespace CSharpBlackJack
     private ulong state = (UInt64)DateTime.Now.Ticks;
 
     // From https://github.com/lemire/testingRNG
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private ulong wyRand()
     {
       state += 0xa0761d6478bd642f;
@@ -19,6 +21,7 @@ namespace CSharpBlackJack
     }
 
     // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private ulong randRange(ulong s)
     {
       var x = wyRand();

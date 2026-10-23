@@ -9,4 +9,8 @@
     <NoWarn>$(NoWarn);CS0162</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Runtime.TieredCompilation.CallCountingDelayMs" Value="0" />
+  </ItemGroup>
+
 </Project>
