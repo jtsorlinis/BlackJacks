@@ -17,6 +17,7 @@ add_files("src/*.cpp")
 set_targetdir("./build/bin")
 set_toolchains("gcc-16")
 add_packages("mimalloc")
+add_ldflags("-static-libstdc++", "-Wl,-no_exported_symbols")
 
 set_optimize("fastest")
 set_policy("build.optimization.lto", true)

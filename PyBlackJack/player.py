@@ -6,7 +6,7 @@ class Player:
     def __init__(self, table=None, split=None):
         self.hand = []
         self.value = 0
-        self.earnings = 0
+        self.earnings = 0.0
         self.aces = 0
         self.is_soft = False
         self.split_count = [0]

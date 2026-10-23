@@ -3,7 +3,7 @@ const MaxHands = 4;
 
 export default class Player {
   constructor(table = null, split = null) {
-    this.mHand = [];
+    this.mHand = new Array();
     this.mValue = 0;
     this.mEarnings = 0;
     this.mAces = 0;
@@ -37,7 +37,7 @@ export default class Player {
 
   resetHand() {
     // a fresh array beats clearing in place (length = 0): +17% Node, +4% Bun
-    this.mHand = [];
+    this.mHand = new Array();
     this.mValue = 0;
     this.mAces = 0;
     this.mIsSoft = false;

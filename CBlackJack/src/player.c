@@ -27,8 +27,7 @@ void Player__init(Player* p, int bet_size, Player* split) {
     (*p->m_split_count)++;
     Vector__push(&p->m_hand, split->m_hand.items[1]);
     Vector__delete(&split->m_hand, 1);
-    strcpy(p->m_player_num, split->m_player_num);
-    strcat(p->m_player_num, "S");
+    strcpy(stpcpy(p->m_player_num, split->m_player_num), "S");
     p->m_initial_bet = split->m_initial_bet;
     p->m_is_split_hand = true;
 

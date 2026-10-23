@@ -8,7 +8,7 @@ export default class Dealer extends Player {
   }
 
   resetHand() {
-    this.mHand = [];
+    this.mHand = new Array();
     this.mValue = 0;
   }
 

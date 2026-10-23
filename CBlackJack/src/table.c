@@ -160,7 +160,7 @@ __attribute__((always_inline)) void Table__stand(Table* self) {
   self->m_players.items[self->m_current_player].m_is_done = true;
 }
 
-void Table__split(Table* self) {
+__attribute__((always_inline)) void Table__split(Table* self) {
   Player split_player;
   Player__init(&split_player, self->m_bet_size,
                &self->m_players.items[self->m_current_player]);

@@ -17,13 +17,11 @@ func wyrand() uint64 {
 
 // use nearly divisionless technique found here https://github.com/lemire/FastShuffleExperiments
 func rand_range(s uint64) uint64 {
-	x := wyrand()
-	mhi, mlo := bits.Mul64(x, s)
+	mhi, mlo := bits.Mul64(wyrand(), s)
 	if mlo < s {
 		t := -s % s
 		for mlo < t {
-			x = wyrand()
-			mhi, mlo = bits.Mul64(x, s)
+			mhi, mlo = bits.Mul64(wyrand(), s)
 		}
 	}
 	return mhi

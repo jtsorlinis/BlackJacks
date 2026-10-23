@@ -18,7 +18,7 @@ class Table:
             self.players.append(Player(self))
         self.dealer = Dealer()
         self.current_player = 0
-        self.casino_earnings = 0
+        self.casino_earnings = 0.0
         self.running_count = 0
         self.true_count = 0
         self.strat_hard = strategies.array_to_dict(strategies.STRAT_HARD)
@@ -192,18 +192,19 @@ class Table:
         dealerupcard = self.dealer.up_card()
         while self.current_player < len(self.players):
             while not self.players[self.current_player].is_done:
-                if len(self.players[self.current_player].hand) == 1:
+                player = self.players[self.current_player]
+                if len(player.hand) == 1:
                     if VERBOSE:
                         print(
                             "Player "
-                            + str(self.players[self.current_player].player_num)
+                            + str(player.player_num)
                             + " gets 2nd card after splitting"
                         )
                     self.deal()
-                    self.players[self.current_player].evaluate()
+                    player.evaluate()
 
-                if self.players[self.current_player].value < 21:
-                    split_player_val = self.players[self.current_player].can_split()
+                if player.value < 21:
+                    split_player_val = player.can_split()
                     if split_player_val == 11:
                         self.split_aces()
                     elif split_player_val != 0 and split_player_val not in (5, 10):
@@ -212,10 +213,10 @@ class Table:
                                 split_player_val, dealerupcard, self.strat_split
                             )
                         )
-                    elif self.players[self.current_player].is_soft:
+                    elif player.is_soft:
                         self.do_(
                             strategies.get_action(
-                                self.players[self.current_player].value,
+                                player.value,
                                 dealerupcard,
                                 self.strat_soft,
                             )
@@ -223,7 +224,7 @@ class Table:
                     else:
                         self.do_(
                             strategies.get_action(
-                                self.players[self.current_player].value,
+                                player.value,
                                 dealerupcard,
                                 self.strat_hard,
                             )

@@ -23,3 +23,4 @@ add_forceincludes("mimalloc-override.h")
 
 set_optimize("fastest")
 set_policy("build.optimization.lto", true)
+add_ldflags("-fwhole-program")
