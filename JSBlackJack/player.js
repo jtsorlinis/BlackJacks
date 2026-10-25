@@ -7,7 +7,7 @@ export default class Player {
     this.mValue = 0;
     this.mEarnings = 0;
     this.mAces = 0;
-    this.mIsSoft = 0;
+    this.mIsSoft = false;
     this.mSplitCount = { count: 0 };
     this.mIsDone = false;
     this.mSplitFrom = null;
