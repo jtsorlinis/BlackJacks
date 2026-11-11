@@ -5,8 +5,13 @@
   "description": "TypeScript version of PyBlackJack",
   "main": "main.ts",
   "scripts": {
+    "build": "scriptc build main.ts --optimization speed -o build/TSBlackJack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jason Tsorlinis",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@scriptc/types": "0.4.11",
+    "scriptc": "0.4.11"
+  }
 }

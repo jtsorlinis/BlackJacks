@@ -1,4 +1,4 @@
-import { exit } from "process";
+import type { Int32 } from "@scriptc/types";
 import CardPile from "./cardpile.ts";
 import Dealer from "./dealer.ts";
 import Player from "./player.ts";
@@ -10,30 +10,31 @@ import {
   getAction,
 } from "./strategies.ts";
 
+// a constant (as in the Rust port) rather than a Table field, so the
+// verbose-only code compiles away
+export const Verbose = false;
+
 export default class Table {
-  declare mVerbose: boolean;
-  declare mBetSize: number;
-  declare mPlayers: Player[];
-  declare mNumOfDecks: number;
-  declare mCardPile: CardPile;
-  declare mMinCards: number;
-  declare mDealer: Dealer;
-  declare mCurrentPlayer: number;
-  declare mCasinoEarnings: number;
-  declare mRunningCount: number;
-  declare mTrueCount: number;
-  declare mStratHard: string[];
-  declare mStratSoft: string[];
-  declare mStratSplit: string[];
+  mBetSize: Int32;
+  mPlayers: Player[];
+  mNumOfDecks: Int32;
+  mCardPile: CardPile;
+  mMinCards: Int32;
+  mDealer: Dealer;
+  mCurrentPlayer: Int32;
+  mCasinoEarnings: number;
+  mRunningCount: Int32;
+  mTrueCount: Int32;
+  mStratHard: string[];
+  mStratSoft: string[];
+  mStratSplit: string[];
 
   constructor(
     numplayers: number,
-    numdecks: number,
-    betsize: number,
-    mincards: number,
-    verbose: boolean
+    numdecks: Int32,
+    betsize: Int32,
+    mincards: Int32
   ) {
-    this.mVerbose = verbose;
     this.mBetSize = betsize;
     this.mPlayers = [];
     this.mNumOfDecks = numdecks;
@@ -56,36 +57,37 @@ export default class Table {
 
   dealRound(): void {
     let runningCount = this.mRunningCount;
-    for (let i = 0; i < this.mPlayers.length; i++) {
-      const card = this.mCardPile.mCards.pop()!;
-      this.mPlayers[i].mHand.push(card);
+    const cards = this.mCardPile.mCards;
+    for (const player of this.mPlayers) {
+      const card = cards.pop()!;
+      player.mHand.push(card);
       runningCount += card.mCount;
     }
-    this.mRunningCount = runningCount;
+    this.mRunningCount = runningCount | 0;
     this.mCurrentPlayer = 0;
   }
 
   evaluateAll(): void {
-    for (let i = 0; i < this.mPlayers.length; i++) {
-      this.mPlayers[i].evaluate();
+    for (const player of this.mPlayers) {
+      player.evaluate();
     }
   }
 
   deal(): void {
     const card = this.mCardPile.mCards.pop()!;
     this.mPlayers[this.mCurrentPlayer].mHand.push(card);
-    this.mRunningCount += card.mCount;
+    this.mRunningCount = (this.mRunningCount + card.mCount) | 0;
   }
 
   preDeal(): void {
-    for (let i = 0; i < this.mPlayers.length; i++) {
-      this.selectBet(this.mPlayers[i]);
+    for (const player of this.mPlayers) {
+      this.selectBet(player);
     }
   }
 
   selectBet(player: Player): void {
     if (this.mTrueCount >= 2) {
-      player.mInitialBet = this.mBetSize * (this.mTrueCount - 1);
+      player.mInitialBet = (this.mBetSize * (this.mTrueCount - 1)) | 0;
     }
   }
 
@@ -94,13 +96,13 @@ export default class Table {
     card.mFaceDown = facedown;
     this.mDealer.mHand.push(card);
     if (!facedown) {
-      this.mRunningCount += card.mCount;
+      this.mRunningCount = (this.mRunningCount + card.mCount) | 0;
     }
   }
 
   startRound(): void {
     this.updateCount();
-    if (this.mVerbose) {
+    if (Verbose) {
       console.log(`${this.mCardPile.mCards.length} cards left`);
       console.log(
         `Running count is: ${this.mRunningCount}\tTrue count is: ${this.mTrueCount}`
@@ -118,7 +120,7 @@ export default class Table {
       this.finishRound();
     } else {
       this.checkPlayerNatural();
-      if (this.mVerbose) {
+      if (Verbose) {
         this.print();
       }
       this.autoPlay();
@@ -131,7 +133,7 @@ export default class Table {
       this.mCardPile.shuffle();
       this.mTrueCount = 0;
       this.mRunningCount = 0;
-      if (this.mVerbose) {
+      if (Verbose) {
         console.log(
           `Got ${this.mNumOfDecks} new decks as number of cards left is below ${this.mMinCards}`
         );
@@ -141,11 +143,12 @@ export default class Table {
 
   clear(): void {
     for (let i = this.mPlayers.length - 1; i >= 0; i--) {
-      if (this.mPlayers[i].mSplitFrom != null) {
-        this.mPlayers[i - 1].mEarnings += this.mPlayers[i].mEarnings;
+      const player = this.mPlayers[i];
+      if (player.mIsSplitHand) {
+        this.mPlayers[i - 1].mEarnings += player.mEarnings;
         this.mPlayers.splice(i, 1);
       } else {
-        this.mPlayers[i].resetHand();
+        player.resetHand();
       }
     }
     this.mDealer.resetHand();
@@ -165,7 +168,7 @@ export default class Table {
   hit(): void {
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();
-    if (this.mVerbose) {
+    if (Verbose) {
       console.log(
         `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} hits`
       );
@@ -173,7 +176,7 @@ export default class Table {
   }
 
   stand(): void {
-    if (this.mVerbose && this.mPlayers[this.mCurrentPlayer].mValue <= 21) {
+    if (Verbose && this.mPlayers[this.mCurrentPlayer].mValue <= 21) {
       console.log(
         `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} stands`
       );
@@ -187,7 +190,7 @@ export default class Table {
     this.mPlayers.splice(this.mCurrentPlayer + 1, 0, splitPlayer);
     this.mPlayers[this.mCurrentPlayer].evaluate();
     this.mPlayers[this.mCurrentPlayer + 1].evaluate();
-    if (this.mVerbose) {
+    if (Verbose) {
       console.log(
         `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits`
       );
@@ -195,7 +198,7 @@ export default class Table {
   }
 
   splitAces(): void {
-    if (this.mVerbose) {
+    if (Verbose) {
       console.log(
         `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} splits aces`
       );
@@ -205,32 +208,25 @@ export default class Table {
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();
     this.stand();
-    this.mCurrentPlayer++;
+    this.mCurrentPlayer = (this.mCurrentPlayer + 1) | 0;
     this.deal();
     this.mPlayers[this.mCurrentPlayer].evaluate();
     this.stand();
-    if (this.mVerbose) {
+    if (Verbose) {
       this.print();
     }
   }
 
   doubleBet(): void {
-    if (
-      this.mPlayers[this.mCurrentPlayer].mBetMult < 1.1 &&
-      this.mPlayers[this.mCurrentPlayer].mHand.length === 2
-    ) {
-      this.mPlayers[this.mCurrentPlayer].doubleBet();
-      if (this.mVerbose) {
-        console.log(
-          `Player ${this.mPlayers[this.mCurrentPlayer].mPlayerNum} doubles`
-        );
+    const player = this.mPlayers[this.mCurrentPlayer];
+    if (player.mBetMult < 1.1 && player.mHand.length === 2) {
+      player.doubleBet();
+      if (Verbose) {
+        console.log(`Player ${player.mPlayerNum} doubles`);
       }
       this.hit();
       this.stand();
-    } else if (
-      this.mPlayers[this.mCurrentPlayer].mIsSoft &&
-      this.mPlayers[this.mCurrentPlayer].mValue === 18
-    ) {
+    } else if (player.mIsSoft && player.mValue === 18) {
       this.stand();
     } else {
       this.hit();
@@ -241,19 +237,18 @@ export default class Table {
     const dealerUp = this.mDealer.upCard();
     while (this.mCurrentPlayer < this.mPlayers.length) {
       while (!this.mPlayers[this.mCurrentPlayer].mIsDone) {
-        if (this.mPlayers[this.mCurrentPlayer].mHand.length === 1) {
-          if (this.mVerbose) {
+        const player = this.mPlayers[this.mCurrentPlayer];
+        if (player.mHand.length === 1) {
+          if (Verbose) {
             console.log(
-              `Player ${
-                this.mPlayers[this.mCurrentPlayer].mPlayerNum
-              } gets 2nd card after splitting`
+              `Player ${player.mPlayerNum} gets 2nd card after splitting`
             );
           }
           this.deal();
-          this.mPlayers[this.mCurrentPlayer].evaluate();
+          player.evaluate();
         }
-        if (this.mPlayers[this.mCurrentPlayer].mValue < 21) {
-          const splitCardVal = this.mPlayers[this.mCurrentPlayer].canSplit();
+        if (player.mValue < 21) {
+          const splitCardVal = player.canSplit();
           if (splitCardVal === 11) {
             this.splitAces();
           } else if (
@@ -262,28 +257,16 @@ export default class Table {
             splitCardVal !== 10
           ) {
             this.action(getAction(splitCardVal, dealerUp, this.mStratSplit));
-          } else if (this.mPlayers[this.mCurrentPlayer].mIsSoft) {
-            this.action(
-              getAction(
-                this.mPlayers[this.mCurrentPlayer].mValue,
-                dealerUp,
-                this.mStratSoft
-              )
-            );
+          } else if (player.mIsSoft) {
+            this.action(getAction(player.mValue, dealerUp, this.mStratSoft));
           } else {
-            this.action(
-              getAction(
-                this.mPlayers[this.mCurrentPlayer].mValue,
-                dealerUp,
-                this.mStratHard
-              )
-            );
+            this.action(getAction(player.mValue, dealerUp, this.mStratHard));
           }
         } else {
           this.stand();
         }
       }
-      this.mCurrentPlayer++;
+      this.mCurrentPlayer = (this.mCurrentPlayer + 1) | 0;
     }
     this.mCurrentPlayer = 0;
     this.dealerPlay();
@@ -299,27 +282,29 @@ export default class Table {
     } else if (action === "P") {
       this.split();
     } else {
-      console.log(`No action found. Action was: ${action}`);
-      exit(1);
+      // scriptc can't lower process.exit yet, so throw instead
+      throw new Error(`No action found. Action was: ${action}`);
     }
   }
 
   dealerPlay(): void {
     let allSettled = true;
     for (let i = 0; i < this.mPlayers.length; i++) {
-      if (this.mPlayers[i].mValue < 22 && !this.mPlayers[i].mHasNatural) {
+      const player = this.mPlayers[i];
+      if (player.mValue < 22 && !player.mHasNatural) {
         allSettled = false;
         break;
       }
     }
     this.mDealer.mHand[1].mFaceDown = false;
-    this.mRunningCount += this.mDealer.mHand[1].mCount;
-    if (this.mVerbose) {
+    this.mRunningCount =
+        (this.mRunningCount + this.mDealer.mHand[1].mCount) | 0;
+    if (Verbose) {
       console.log("Dealer's turn");
       this.print();
     }
     if (allSettled) {
-      if (this.mVerbose) {
+      if (Verbose) {
         console.log("Dealer does not draw because all player hands are settled");
       }
       this.finishRound();
@@ -327,7 +312,7 @@ export default class Table {
       while (this.mDealer.mValue < 17) {
         this.dealDealer();
         this.mDealer.evaluate();
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log("Dealer hits");
           this.print();
         }
@@ -338,12 +323,13 @@ export default class Table {
 
   checkPlayerNatural(): void {
     for (let i = 0; i < this.mPlayers.length; i++) {
+      const player = this.mPlayers[i];
       if (
-        this.mPlayers[i].mValue === 21 &&
-        this.mPlayers[i].mHand.length === 2 &&
-        this.mPlayers[i].mSplitCount.count === 0
+        player.mValue === 21 &&
+        player.mHand.length === 2 &&
+        player.mSplitCount.count === 0
       ) {
-        this.mPlayers[i].mHasNatural = true;
+        player.mHasNatural = true;
       }
     }
   }
@@ -352,8 +338,9 @@ export default class Table {
     this.mDealer.evaluate();
     if (this.mDealer.mValue === 21) {
       this.mDealer.mHand[1].mFaceDown = false;
-      this.mRunningCount += this.mDealer.mHand[1].mCount;
-      if (this.mVerbose) {
+      this.mRunningCount =
+        (this.mRunningCount + this.mDealer.mHand[1].mCount) | 0;
+      if (Verbose) {
         this.print();
         console.log("Dealer has a natural 21");
       }
@@ -364,17 +351,16 @@ export default class Table {
 
   checkEarnings(): void {
     let check = 0;
-    for (let i = 0; i < this.mPlayers.length; i++) {
-      check += this.mPlayers[i].mEarnings;
+    for (const player of this.mPlayers) {
+      check += player.mEarnings;
     }
     if (check + this.mCasinoEarnings !== 0) {
-      console.log("Earning's dont match");
-      exit(1);
+      throw new Error("Earning's dont match");
     }
   }
 
   finishRound(): void {
-    if (this.mVerbose) {
+    if (Verbose) {
       console.log("Scoring round");
     }
     let casinoEarnings = this.mCasinoEarnings;
@@ -382,7 +368,7 @@ export default class Table {
       const player = this.mPlayers[i];
       let mult: number;
       if (player.mHasNatural) {
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
               1.5 * player.mBetMult * player.mInitialBet
@@ -391,7 +377,7 @@ export default class Table {
         }
         mult = 1.5;
       } else if (player.mValue > 21) {
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log(
             `Player ${player.mPlayerNum} Busts and Loses ${Math.trunc(
               player.mBetMult * player.mInitialBet
@@ -403,7 +389,7 @@ export default class Table {
         this.mDealer.mValue > 21 ||
         player.mValue > this.mDealer.mValue
       ) {
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log(
             `Player ${player.mPlayerNum} Wins ${Math.trunc(
               player.mBetMult * player.mInitialBet
@@ -412,12 +398,12 @@ export default class Table {
         }
         mult = 1;
       } else if (player.mValue === this.mDealer.mValue) {
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log(`Player ${player.mPlayerNum} Draws`);
         }
         mult = 0;
       } else {
-        if (this.mVerbose) {
+        if (Verbose) {
           console.log(
             `Player ${player.mPlayerNum} Loses ${Math.trunc(
               player.mBetMult * player.mInitialBet
@@ -429,9 +415,9 @@ export default class Table {
       casinoEarnings += player.settle(mult);
     }
     this.mCasinoEarnings = casinoEarnings;
-    if (this.mVerbose) {
+    if (Verbose) {
       for (let i = 0; i < this.mPlayers.length; i++) {
-        if (this.mPlayers[i].mSplitFrom == null) {
+        if (!this.mPlayers[i].mIsSplitHand) {
           console.log(
             `Player ${this.mPlayers[i].mPlayerNum} Earnings: ${Math.trunc(
               this.mPlayers[i].mEarnings

@@ -18,7 +18,7 @@ const mRanks: string[] = [
 const mSuits: string[] = ["Clubs", "Hearts", "Spades", "Diamonds"];
 
 export default class Deck {
-  declare mCards: Card[];
+  mCards: Card[];
 
   constructor() {
     this.mCards = [];

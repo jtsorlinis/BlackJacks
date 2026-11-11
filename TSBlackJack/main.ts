@@ -1,4 +1,4 @@
-import Table from "./table.ts";
+import Table, { Verbose } from "./table.ts";
 
 const NumOfPlayers = 5;
 const NumOfDecks = 8;
@@ -6,7 +6,6 @@ const BetSize = 10;
 const MinCards = 52;
 
 let Rounds = 1000000;
-const Verbose = false;
 
 // toFixed rounds exact binary ties (e.g. 51.625) away from zero, while the
 // other ports round them to even, so step those back a digit to match
@@ -23,7 +22,7 @@ if (process.argv.length === 3) {
   Rounds = parseInt(process.argv[2], 10);
 }
 
-const t = new Table(NumOfPlayers, NumOfDecks, BetSize, MinCards, Verbose);
+const t = new Table(NumOfPlayers, NumOfDecks, BetSize, MinCards);
 t.mCardPile.shuffle();
 
 const start = Date.now();

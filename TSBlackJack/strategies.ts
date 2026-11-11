@@ -1,3 +1,5 @@
+import type { Int32 } from "@scriptc/types";
+
 export const stratHard: string[][] = [
   ["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
   ["2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"],
@@ -47,14 +49,14 @@ export const stratSplit: string[][] = [
   ["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
 ];
 
-export const getAction = (
-  playerVal: number,
-  dealerVal: number,
+export function getAction(
+  playerVal: Int32,
+  dealerVal: Int32,
   strategy: string[]
-): string => {
+): string {
   const key = playerVal * 12 + dealerVal;
   return strategy[key];
-};
+}
 
 export const array2dToMap = (array: string[][]): string[] => {
   const temp: string[] = [];

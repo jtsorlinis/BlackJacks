@@ -1,23 +1,24 @@
-import type Card from "./card.ts";
+import type { Int32 } from "@scriptc/types";
+import Card from "./card.ts";
 import type Table from "./table.ts";
 
 let PlayerNumCount = 0;
 const MaxHands = 4;
 
 export default class Player {
-  declare mHand: Card[];
-  declare mValue: number;
-  declare mEarnings: number;
-  declare mAces: number;
-  declare mIsSoft: boolean;
-  declare mSplitCount: { count: number };
-  declare mIsDone: boolean;
-  declare mSplitFrom: Player | null;
-  declare mBetMult: number;
-  declare mHasNatural: boolean;
-  declare mTable: Table | null;
-  declare mInitialBet: number;
-  declare mPlayerNum: number | string;
+  mHand: Card[];
+  mValue: Int32;
+  mEarnings: number;
+  mAces: Int32;
+  mIsSoft: boolean;
+  mSplitCount: { count: number };
+  mIsDone: boolean;
+  mIsSplitHand: boolean;
+  mBetMult: number;
+  mHasNatural: boolean;
+  mOriginalBet: Int32;
+  mInitialBet: Int32;
+  mPlayerNum: string = "";
 
   constructor(table: Table | null = null, split: Player | null = null) {
     this.mHand = new Array();
@@ -25,25 +26,29 @@ export default class Player {
     this.mEarnings = 0;
     this.mAces = 0;
     this.mIsSoft = false;
-    this.mSplitCount = { count: 0 };
     this.mIsDone = false;
-    this.mSplitFrom = null;
+    this.mIsSplitHand = false;
     this.mBetMult = 1;
     this.mHasNatural = false;
-    this.mTable = table;
+    this.mOriginalBet = 0;
     this.mInitialBet = 0;
+    if (split != null) {
+      this.mSplitCount = split.mSplitCount;
+    } else {
+      this.mSplitCount = { count: 0 };
+    }
     if (table != null) {
-      this.mInitialBet = this.mTable!.mBetSize;
+      this.mOriginalBet = table.mBetSize;
+      this.mInitialBet = table.mBetSize;
       if (split != null) {
-        this.mSplitCount = split.mSplitCount;
         this.mSplitCount.count++;
         this.mHand.push(split.mHand.pop()!);
         this.mPlayerNum = `${split.mPlayerNum}S`;
         this.mInitialBet = split.mInitialBet;
-        this.mSplitFrom = split;
+        this.mIsSplitHand = true;
       } else {
         PlayerNumCount++;
-        this.mPlayerNum = PlayerNumCount;
+        this.mPlayerNum = `${PlayerNumCount}`;
       }
     }
   }
@@ -53,8 +58,11 @@ export default class Player {
   }
 
   resetHand(): void {
-    // a fresh array beats clearing in place (length = 0): +17% Node, +4% Bun
-    this.mHand = new Array();
+    // popping is the cheapest way to empty the hand under scriptc (length = 0
+    // is a runtime call) and is as fast as a fresh array under Node
+    while (this.mHand.length > 0) {
+      this.mHand.pop();
+    }
     this.mValue = 0;
     this.mAces = 0;
     this.mIsSoft = false;
@@ -62,10 +70,10 @@ export default class Player {
     this.mIsDone = false;
     this.mBetMult = 1;
     this.mHasNatural = false;
-    this.mInitialBet = this.mTable!.mBetSize;
+    this.mInitialBet = this.mOriginalBet;
   }
 
-  canSplit(): number {
+  canSplit(): Int32 {
     if (
       this.mHand.length === 2 &&
       this.mHand[0].mRankId === this.mHand[1].mRankId &&
@@ -96,9 +104,7 @@ export default class Player {
     } else {
       output += "        ";
     }
-    if (this.mPlayerNum !== "D") {
-      output += `\tBet: ${Math.trunc(this.mInitialBet * this.mBetMult)}`;
-    }
+    output += `\tBet: ${Math.trunc(this.mInitialBet * this.mBetMult)}`;
     return output;
   }
 
@@ -117,8 +123,8 @@ export default class Player {
       aces--;
     }
 
-    this.mValue = value;
-    this.mAces = aces;
+    this.mValue = value | 0;
+    this.mAces = aces | 0;
     this.mIsSoft = aces > 0;
   }
 }
