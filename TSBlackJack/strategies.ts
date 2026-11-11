@@ -1,4 +1,4 @@
-export const stratHard = [
+export const stratHard: string[][] = [
   ["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
   ["2", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"],
   ["3", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H"],
@@ -22,7 +22,7 @@ export const stratHard = [
   ["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
 ];
 
-export const stratSoft = [
+export const stratSoft: string[][] = [
   ["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
   ["13", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"],
   ["14", "H", "H", "H", "D", "D", "H", "H", "H", "H", "H"],
@@ -35,7 +35,7 @@ export const stratSoft = [
   ["21", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"],
 ];
 
-export const stratSplit = [
+export const stratSplit: string[][] = [
   ["0", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
   ["2", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"],
   ["3", "P", "P", "P", "P", "P", "P", "H", "H", "H", "H"],
@@ -47,13 +47,17 @@ export const stratSplit = [
   ["11", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P"],
 ];
 
-export const getAction = (playerVal, dealerVal, strategy) => {
+export const getAction = (
+  playerVal: number,
+  dealerVal: number,
+  strategy: string[]
+): string => {
   const key = playerVal * 12 + dealerVal;
   return strategy[key];
 };
 
-export const array2dToMap = (array) => {
-  const temp = [];
+export const array2dToMap = (array: string[][]): string[] => {
+  const temp: string[] = [];
   for (let row = 0; row < array.length; row++) {
     for (let col = 0; col < array[0].length; col++) {
       const playerVal = parseInt(array[row][0], 10);

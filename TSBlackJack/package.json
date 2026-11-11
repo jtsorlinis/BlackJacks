@@ -1,9 +1,9 @@
 {
-  "name": "jsblackjack",
+  "name": "tsblackjack",
   "type": "module",
   "version": "1.0.0",
-  "description": "Javascript (Node) version of PyBlackJack",
-  "main": "main.js",
+  "description": "TypeScript version of PyBlackJack",
+  "main": "main.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

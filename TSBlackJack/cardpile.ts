@@ -1,7 +1,11 @@
-import Deck from "./deck.js";
+import type Card from "./card.ts";
+import Deck from "./deck.ts";
 
 export default class CardPile {
-  constructor(numofdecks) {
+  declare mCards: Card[];
+  declare mOriginalCards: Card[];
+
+  constructor(numofdecks: number) {
     this.mCards = [];
     this.mOriginalCards = [];
     for (let x = 0; x < numofdecks; x++) {
@@ -11,11 +15,11 @@ export default class CardPile {
     this.mOriginalCards = [...this.mCards];
   }
 
-  refresh() {
+  refresh(): void {
     this.mCards = [...this.mOriginalCards];
   }
 
-  print() {
+  print(): string {
     let output = "";
     this.mCards.forEach((card) => {
       output += card.print();
@@ -23,7 +27,7 @@ export default class CardPile {
     return output;
   }
 
-  shuffle() {
+  shuffle(): void {
     for (let i = this.mCards.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = this.mCards[i];

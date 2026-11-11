@@ -1,6 +1,6 @@
-import Card from "./card.js";
+import Card from "./card.ts";
 
-const mRanks = [
+const mRanks: string[] = [
   "A",
   "2",
   "3",
@@ -15,9 +15,11 @@ const mRanks = [
   "Q",
   "K",
 ];
-const mSuits = ["Clubs", "Hearts", "Spades", "Diamonds"];
+const mSuits: string[] = ["Clubs", "Hearts", "Spades", "Diamonds"];
 
 export default class Deck {
+  declare mCards: Card[];
+
   constructor() {
     this.mCards = [];
     for (let i = 0; i < mSuits.length; i++) {
@@ -27,7 +29,7 @@ export default class Deck {
     }
   }
 
-  print() {
+  print(): string {
     let output = "";
     this.mCards.forEach((card) => {
       output += card.print();
@@ -35,7 +37,7 @@ export default class Deck {
     return output;
   }
 
-  shuffle() {
+  shuffle(): void {
     for (let i = this.mCards.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.mCards[i], this.mCards[j]] = [this.mCards[j], this.mCards[i]];

@@ -1,4 +1,4 @@
-import Table from "./table.js";
+import Table from "./table.ts";
 
 const NumOfPlayers = 5;
 const NumOfDecks = 8;
@@ -10,7 +10,7 @@ const Verbose = false;
 
 // toFixed rounds exact binary ties (e.g. 51.625) away from zero, while the
 // other ports round them to even, so step those back a digit to match
-const toFixed2 = (value) => {
+const toFixed2 = (value: number): string => {
   const fixed = value.toFixed(2);
   const lastDigit = Number(fixed.at(-1));
   const isTie = Number.isInteger(value * 8) && (value * 8) % 2 !== 0;

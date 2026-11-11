@@ -1,8 +1,25 @@
+import type Card from "./card.ts";
+import type Table from "./table.ts";
+
 let PlayerNumCount = 0;
 const MaxHands = 4;
 
 export default class Player {
-  constructor(table = null, split = null) {
+  declare mHand: Card[];
+  declare mValue: number;
+  declare mEarnings: number;
+  declare mAces: number;
+  declare mIsSoft: boolean;
+  declare mSplitCount: { count: number };
+  declare mIsDone: boolean;
+  declare mSplitFrom: Player | null;
+  declare mBetMult: number;
+  declare mHasNatural: boolean;
+  declare mTable: Table | null;
+  declare mInitialBet: number;
+  declare mPlayerNum: number | string;
+
+  constructor(table: Table | null = null, split: Player | null = null) {
     this.mHand = new Array();
     this.mValue = 0;
     this.mEarnings = 0;
@@ -16,11 +33,11 @@ export default class Player {
     this.mTable = table;
     this.mInitialBet = 0;
     if (table != null) {
-      this.mInitialBet = this.mTable.mBetSize;
+      this.mInitialBet = this.mTable!.mBetSize;
       if (split != null) {
         this.mSplitCount = split.mSplitCount;
         this.mSplitCount.count++;
-        this.mHand.push(split.mHand.pop());
+        this.mHand.push(split.mHand.pop()!);
         this.mPlayerNum = `${split.mPlayerNum}S`;
         this.mInitialBet = split.mInitialBet;
         this.mSplitFrom = split;
@@ -31,11 +48,11 @@ export default class Player {
     }
   }
 
-  doubleBet() {
+  doubleBet(): void {
     this.mBetMult = 2;
   }
 
-  resetHand() {
+  resetHand(): void {
     // a fresh array beats clearing in place (length = 0): +17% Node, +4% Bun
     this.mHand = new Array();
     this.mValue = 0;
@@ -45,10 +62,10 @@ export default class Player {
     this.mIsDone = false;
     this.mBetMult = 1;
     this.mHasNatural = false;
-    this.mInitialBet = this.mTable.mBetSize;
+    this.mInitialBet = this.mTable!.mBetSize;
   }
 
-  canSplit() {
+  canSplit(): number {
     if (
       this.mHand.length === 2 &&
       this.mHand[0].mRankId === this.mHand[1].mRankId &&
@@ -59,13 +76,13 @@ export default class Player {
     return 0;
   }
 
-  settle(mult) {
+  settle(mult: number): number {
     const x = this.mInitialBet * this.mBetMult * mult;
     this.mEarnings += x;
     return -x;
   }
 
-  print() {
+  print(): string {
     let output = `Player ${this.mPlayerNum}: `;
     this.mHand.forEach((card) => {
       output += `${card.print()} `;
@@ -85,7 +102,7 @@ export default class Player {
     return output;
   }
 
-  evaluate() {
+  evaluate(): void {
     let value = 0;
     let aces = 0;
     for (let i = 0; i < this.mHand.length; i++) {

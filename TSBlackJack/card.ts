@@ -1,5 +1,13 @@
 export default class Card {
-  constructor(rank, suit) {
+  declare mRank: string;
+  declare mRankId: number;
+  declare mSuit: string;
+  declare mFaceDown: boolean;
+  declare mValue: number;
+  declare mCount: number;
+  declare mIsAce: boolean;
+
+  constructor(rank: string, suit: string) {
     this.mRank = rank;
     this.mRankId = rank.charCodeAt(0);
     this.mSuit = suit;
@@ -9,14 +17,14 @@ export default class Card {
     this.mIsAce = this.mRank === "A";
   }
 
-  print() {
+  print(): string {
     if (this.mFaceDown) {
       return "X";
     }
     return this.mRank;
   }
 
-  evaluate() {
+  evaluate(): number {
     if (this.mRank === "J" || this.mRank === "Q" || this.mRank === "K") {
       return 10;
     }
@@ -26,7 +34,7 @@ export default class Card {
     return parseInt(this.mRank, 10);
   }
 
-  count() {
+  count(): number {
     if (
       this.mRank === "10" ||
       this.mRank === "J" ||

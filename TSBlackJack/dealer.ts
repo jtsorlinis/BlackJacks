@@ -1,4 +1,4 @@
-import Player from "./player.js";
+import Player from "./player.ts";
 
 export default class Dealer extends Player {
   constructor() {
@@ -7,12 +7,12 @@ export default class Dealer extends Player {
     this.mValue = 0;
   }
 
-  resetHand() {
+  resetHand(): void {
     this.mHand = new Array();
     this.mValue = 0;
   }
 
-  upCard() {
+  upCard(): number {
     return this.mHand[0].mValue;
   }
 }
